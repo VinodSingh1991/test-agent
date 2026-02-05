@@ -1,0 +1,1 @@
+{"version":3,"sources":["businessnext_components.scss"],"names":[],"mappings":"AACA;EACI","sourcesContent":["\r\nhtml body * {\r\n    font-family: var(--bnds-g-font-family-normal, 'Nunito Sans'), sans-serif;\r\n\r\n\r\n}"],"file":"businessnext_components.css"}

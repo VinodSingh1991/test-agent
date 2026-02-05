@@ -1,0 +1,1 @@
+{"version":3,"sources":["themes/theme_root_1.scss"],"names":[],"mappings":"AAAA;EACI","sourcesContent":[":root {\r\n    --root: #000;\r\n}"],"file":"theme_root_1.css"}
