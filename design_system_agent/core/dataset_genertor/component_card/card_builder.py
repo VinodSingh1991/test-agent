@@ -148,7 +148,7 @@ class CardBuilder:
             })
         
         return Component(
-            type="div",
+            type="Card",
             classes=classes,
             props={},
             children=children,

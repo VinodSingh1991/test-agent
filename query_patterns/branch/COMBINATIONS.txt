@@ -1,0 +1,45 @@
+Pattern: COMBINATIONS
+Object: branch
+Total Queries: 40
+============================================================
+
+1. show branch wise loan and account balance summary
+2. total deposits vs loan amount grouped by branch
+3. show branch wise loan and account balance summary
+4. total deposits vs loan amount grouped by branch
+5. show branch wise loan and account balance summary
+6. total deposits vs loan amount grouped by branch
+7. show branch wise loan and account balance summary
+8. total deposits vs loan amount grouped by branch
+9. show branch wise loan and account balance summary
+10. total deposits vs loan amount grouped by branch
+11. show branch wise loan and account balance summary
+12. total deposits vs loan amount grouped by branch
+13. show branch wise loan and account balance summary
+14. total deposits vs loan amount grouped by branch
+15. show branch wise loan and account balance summary
+16. total deposits vs loan amount grouped by branch
+17. show branch wise loan and account balance summary
+18. total deposits vs loan amount grouped by branch
+19. show branch wise loan and account balance summary
+20. total deposits vs loan amount grouped by branch
+21. show branch wise loan and account balance summary
+22. total deposits vs loan amount grouped by branch
+23. show branch wise loan and account balance summary
+24. total deposits vs loan amount grouped by branch
+25. show branch wise loan and account balance summary
+26. total deposits vs loan amount grouped by branch
+27. show branch wise loan and account balance summary
+28. total deposits vs loan amount grouped by branch
+29. show branch wise loan and account balance summary
+30. total deposits vs loan amount grouped by branch
+31. show branch wise loan and account balance summary
+32. total deposits vs loan amount grouped by branch
+33. show branch wise loan and account balance summary
+34. total deposits vs loan amount grouped by branch
+35. show branch wise loan and account balance summary
+36. total deposits vs loan amount grouped by branch
+37. show branch wise loan and account balance summary
+38. total deposits vs loan amount grouped by branch
+39. show branch wise loan and account balance summary
+40. total deposits vs loan amount grouped by branch

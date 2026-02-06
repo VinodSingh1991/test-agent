@@ -161,7 +161,7 @@ class DashletBuilder:
             })
         
         return Component(
-            type="div",
+            type="Dashlet",
             classes=classes,
             props={},
             children=children,

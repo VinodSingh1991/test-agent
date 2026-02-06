@@ -141,7 +141,7 @@ class MetricBuilder:
             })
         
         return Component(
-            type="div",
+            type="Metric",
             classes=classes,
             props={},
             children=children,

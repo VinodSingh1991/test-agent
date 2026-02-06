@@ -1,0 +1,35 @@
+Pattern: BRANCH_MANAGER_QUERIES
+Object: loan
+Total Queries: 30
+============================================================
+
+1. show branch wise loan
+2. show my branch loan with status closed
+3. list accounts in branch with balance equal to 200000
+4. show branch performance summary: loan count, loan total, deposits total
+5. show branch wise loan
+6. show my branch loan with status in-progress
+7. list accounts in branch with balance not equal to 500000
+8. show branch performance summary: loan count, loan total, deposits total
+9. show branch wise loan
+10. show my branch loan with status pending
+11. list accounts in branch with balance greater than 1000000
+12. show branch performance summary: loan count, loan total, deposits total
+13. show branch wise loan
+14. show my branch loan with status approved
+15. list accounts in branch with balance less than 50000
+16. show branch performance summary: loan count, loan total, deposits total
+17. show branch wise loan
+18. show my branch loan with status rejected
+19. list accounts in branch with balance equal to 100000
+20. show branch performance summary: loan count, loan total, deposits total
+21. show branch wise loan
+22. show my branch loan with status open
+23. list accounts in branch with balance not equal to 200000
+24. show branch performance summary: loan count, loan total, deposits total
+25. show branch wise loan
+26. show my branch loan with status closed
+27. list accounts in branch with balance greater than 500000
+28. show branch performance summary: loan count, loan total, deposits total
+29. show branch wise loan
+30. show my branch loan with status in-progress

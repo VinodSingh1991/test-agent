@@ -96,11 +96,17 @@ class DescriptionBuilder:
         default_classes = ["bd-text-gray-600"] if not self._classes else []
         classes = default_classes + self._classes
         
+        # Use value structure with icon and text
+        value = {
+            "icon": "",
+            "text": self._text
+        }
+        
         return Component(
-            type="p",
+            type="Description",
             classes=classes,
             props={},
-            children=self._text,
+            value=value,
             id=self._id
         )
     

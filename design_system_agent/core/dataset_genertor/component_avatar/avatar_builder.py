@@ -126,7 +126,7 @@ class AvatarBuilder:
             })
         
         return Component(
-            type="div",
+            type="Avatar",
             classes=classes,
             props={},
             children=children,

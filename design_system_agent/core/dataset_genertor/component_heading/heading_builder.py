@@ -116,11 +116,17 @@ class HeadingBuilder:
         classes = default_classes.get(self._level, ["bd-fw-bold"]).copy()
         classes.extend(self._classes)
         
+        # Use value structure with icon and text
+        value = {
+            "icon": "",
+            "text": self._text
+        }
+        
         return Component(
-            type=f"h{self._level}",
+            type="Heading",
             classes=classes,
-            props={},
-            children=self._text,
+            props={"level": self._level},
+            value=value,
             id=self._id
         )
     

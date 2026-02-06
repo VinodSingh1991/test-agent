@@ -1,111 +1,176 @@
 """
 Component Type Registry
 Defines all available component types, their categories, and default properties
+Based on CRM Layout Dataset - 19 Active Components
 """
 
 class ComponentType:
     """Component type definitions with metadata"""
     
-    # Primitive Components (HTML elements - fully composable)
-    BUTTON = "button"
+    # ========================================
+    # ACTIVE COMPONENTS (Used in CRM Layouts)
+    # ========================================
+    
+    # Typography & Text Components
+    HEADING = "Heading"          # H1, H2, H3, H4, H5, H6 headings
+    TEXT = "Text"                # Body text, paragraphs
+    LABEL = "Label"              # Form labels, metadata labels
+    
+    # Interactive Components
+    BUTTON = "Button"            # Primary, secondary, tertiary, danger buttons
+    LINK = "Link"                # Text links, navigation links
+    
+    # Display Components
+    BADGE = "Badge"              # Status badges (success, warning, danger, info)
+    CHIP = "Chip"                # Removable tags, filters
+    AVATAR = "Avatar"            # User avatars, profile images
+    IMAGE = "Image"              # General images
+    DIVIDER = "Divider"          # Horizontal/vertical separators
+    
+    # Container Components
+    CARD = "Card"                # Content cards, panel cards
+    STACK = "Stack"              # Vertical/horizontal stacks, flex containers
+    
+    # Data Display Components
+    TABLE = "Table"              # Data tables with rows and columns
+    METRIC = "Metric"            # KPI metrics, statistics
+    DASHLET = "Dashlet"          # Dashboard widgets, mini charts
+    
+    # Complex/Composite Components
+    LISTCARD = "ListCard"        # List item cards with avatar, title, metadata
+    BIRTHDAYCARD = "BirthdayCard" # Special celebration cards
+    INSIGHTS = "Insights"        # AI insights, recommendations
+    ALERT = "Alert"              # Alert messages, notifications
+    
+    # ========================================
+    # LEGACY/UNUSED COMPONENTS (For Reference)
+    # ========================================
+    
+    # Form Components (not currently used)
     INPUT = "input"
     TEXTAREA = "textarea"
     SELECT = "select"
     CHECKBOX = "checkbox"
     RADIO = "radio"
-    TEXT = "text"
-    HEADING = "heading"
-    PARAGRAPH = "p"
-    SPAN = "span"
-    LABEL = "label"
-    LINK = "a"
-    IMAGE = "img"
-    ICON = "icon"
-    BADGE = "badge"
-    AVATAR = "avatar"
-    CARD = "card"
-    LIST = "list"
-    LIST_ITEM = "li"
-    DIVIDER = "divider"
+    FORM = "form"
     
-    # Layout Components
+    # Layout Components (not currently used)
     DIV = "div"
     SECTION = "section"
     CONTAINER = "container"
     GRID = "grid"
-    FLEX = "flex"
-    STACK = "stack"
     
-    # Composite Components (Complex - props-based)
+    # Other Composite Components (not currently used)
     CHART = "chart"
-    DASHLET = "dashlet"
-    TABLE = "table"
-    DATATABLE = "datatable"
-    CALENDAR = "calendar"
-    DATEPICKER = "datepicker"
     TIMELINE = "timeline"
-    KANBAN = "kanban"
-    CAROUSEL = "carousel"
-    TABS = "tabs"
-    ACCORDION = "accordion"
     MODAL = "modal"
-    DRAWER = "drawer"
-    TOAST = "toast"
     DROPDOWN = "dropdown"
-    NAVBAR = "navbar"
-    SIDEBAR = "sidebar"
-    FOOTER = "footer"
-    HEADER = "header"
-    FORM = "form"
-    FORM_FIELD = "form_field"
-    PROGRESS_BAR = "progress_bar"
-    SLIDER = "slider"
-    SPINNER = "spinner"
+    TABS = "tabs"
     TOOLTIP = "tooltip"
-    POPOVER = "popover"
-    BREADCRUMB = "breadcrumb"
     PAGINATION = "pagination"
-    SEARCH_BAR = "search_bar"
-    FILTER = "filter"
-    NOTIFICATION = "notification"
-    CHAT_WIDGET = "chat_widget"
-    MAP = "map"
-    VIDEO = "video"
-    AUDIO = "audio"
-    EMBED = "embed"
-    IFRAME = "iframe"
-    SOCIAL_SHARE = "social_share"
-    RATING = "rating"
-    REVIEW = "review"
-    FEEDBACK_FORM = "feedback_form"
-    LOGIN_FORM = "login_form"
-    SIGNUP_FORM = "signup_form"
-    PAYMENT_FORM = "payment_form"
-    SUBSCRIPTION_FORM = "subscription_form"
-    CONTACT_FORM = "contact_form"
-    SEARCH_PAGE = "search_page"
-    FILTER_PAGE = "filter_page"
-    SORT_PAGE = "sort_page"
-    PAGINATION_PAGE = "pagination_page"
-    INFINITE_SCROLL = "infinite_scroll"
-    VIRTUAL_SCROLL = "virtual_scroll",
-    DESCRIPTION = "description"
-    Heading = "heading"
-    FOOTNOTE = "footnote"
-    CAPTION = "caption"
-    BLOCKQUOTE = "blockquote"
-    PRE = "pre"
-    CODE = "code"
-    INLINE_CODE = "inline_code"
-    QUOTE = "quote"
-    PARAGRAPH = "paragraph"
-    SUBTITLE = "subtitle"
-    TITLE = "title"
-    OVERLINE = "overline"
-    STRONG = "strong"
-    EMPHASIS = "em"
-    UNDERLINE = "underline"
-    DELETE = "delete"
-    INSERT = "insert"
-    SUPERSCRIPT = "superscript"
-    SUBSCRIPT = "subscript"
+
+
+# Component Categories for grouping and filtering
+COMPONENT_CATEGORIES = {
+    "typography": [
+        ComponentType.HEADING,
+        ComponentType.TEXT,
+        ComponentType.LABEL,
+    ],
+    "interactive": [
+        ComponentType.BUTTON,
+        ComponentType.LINK,
+    ],
+    "display": [
+        ComponentType.BADGE,
+        ComponentType.CHIP,
+        ComponentType.AVATAR,
+        ComponentType.IMAGE,
+        ComponentType.DIVIDER,
+    ],
+    "containers": [
+        ComponentType.CARD,
+        ComponentType.STACK,
+    ],
+    "data": [
+        ComponentType.TABLE,
+        ComponentType.METRIC,
+        ComponentType.DASHLET,
+    ],
+    "complex": [
+        ComponentType.LISTCARD,
+        ComponentType.BIRTHDAYCARD,
+        ComponentType.INSIGHTS,
+        ComponentType.ALERT,
+    ],
+}
+
+# Active components used in CRM layouts (414 records)
+ACTIVE_COMPONENTS = [
+    ComponentType.ALERT,
+    ComponentType.AVATAR,
+    ComponentType.BADGE,
+    ComponentType.BIRTHDAYCARD,
+    ComponentType.BUTTON,
+    ComponentType.CARD,
+    ComponentType.CHIP,
+    ComponentType.DASHLET,
+    ComponentType.DIVIDER,
+    ComponentType.HEADING,
+    ComponentType.IMAGE,
+    ComponentType.INSIGHTS,
+    ComponentType.LABEL,
+    ComponentType.LINK,
+    ComponentType.LISTCARD,
+    ComponentType.METRIC,
+    ComponentType.STACK,
+    ComponentType.TABLE,
+    ComponentType.TEXT,
+]
+
+
+def get_component_category(component_type: str) -> str:
+    """
+    Get the category of a component type
+    
+    Args:
+        component_type: Component type name
+        
+    Returns:
+        Category name or "unknown"
+    """
+    for category, components in COMPONENT_CATEGORIES.items():
+        if component_type in components:
+            return category
+    return "unknown"
+
+
+def is_active_component(component_type: str) -> bool:
+    """
+    Check if a component is actively used in CRM layouts
+    
+    Args:
+        component_type: Component type name
+        
+    Returns:
+        True if component is actively used
+    """
+    return component_type in ACTIVE_COMPONENTS
+
+
+def get_all_components() -> list:
+    """Get list of all active component types"""
+    return ACTIVE_COMPONENTS.copy()
+
+
+def get_components_by_category(category: str) -> list:
+    """
+    Get all components in a specific category
+    
+    Args:
+        category: Category name (typography, interactive, display, containers, data, complex)
+        
+    Returns:
+        List of component types in the category
+    """
+    return COMPONENT_CATEGORIES.get(category, []).copy()

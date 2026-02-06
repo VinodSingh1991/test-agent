@@ -109,22 +109,17 @@ class BadgeBuilder:
         if self._pill:
             classes.append("bd-badge-pill")
         
-        children = self._text
-        if self._icon:
-            children = {
-                "type": "span",
-                "classes": ["bd-flex", "bd-items-center", "bd-gap-4"],
-                "children": [
-                    {"type": "i", "classes": [self._icon]},
-                    {"type": "span", "children": self._text}
-                ]
-            }
+        # Use value structure with icon and text
+        value = {
+            "icon": self._icon if self._icon else "",
+            "text": self._text
+        }
         
         return Component(
-            type="span",
+            type="Badge",
             classes=classes,
             props={},
-            children=children,
+            value=value,
             id=self._id
         )
     

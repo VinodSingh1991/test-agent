@@ -1,0 +1,375 @@
+{
+    "list_value": {
+        "additional_info": {
+            "total_value": 100,
+            "description": "This is a list component that displays a list of items with a header and footer."
+        },
+        "header": {
+            "image_url": "https://example.com/list-header-icon.png",
+            "action_url": "https://example.com/list-header-action",
+            "icon": "",
+            "text": "List Header",
+            "description": "This is a description for the list component"
+        },
+        "footer": {
+            "view_more_url": "https://example.com/view-more",
+            "icon": "",
+            "text": "List Footer",
+            "description": "This is a description for the list footer"
+        },
+        "cells": [
+            {
+                "cell_key": "cell_1",
+                "cell_type": "text",
+                "cell_display_name": "List Item 1"
+            },
+            {
+                "cell_key": "cell_2",
+                "cell_type": "text",
+                "cell_display_name": "List Item 2"
+            },
+            {
+                "cell_key": "cell_3",
+                "cell_type": "link",
+                "cell_display_name": "List Item 3"
+            }
+        ],
+        "data": [
+            {
+                "cell_1": {
+                    "icon": "",
+                    "text": "First item in the list"
+                },
+                "cell_2": {
+                    "icon": "",
+                    "text": "Second item in the list"
+                },
+                "cell_3": {
+                    "icon": "",
+                    "text": "Third item in the list",
+                    "url": "https://example.com/item3"
+                }
+            }
+        ]
+    },
+    "grid_value": {
+        "additional_info": {
+            "total_value": 50,
+            "description": "This is a grid component that displays items in a grid layout with header and footer."
+        },
+        "header": {
+            "image_url": "https://example.com/grid-header-icon.png",
+            "action_url": "https://example.com/grid-header-action",
+            "icon": "",
+            "text": "Grid Header",
+            "description": "This is a description for the grid component"
+        },
+        "footer": {
+            "view_more_url": "https://example.com/view-more",
+            "icon": "",
+            "text": "Grid Footer",
+            "description": "This is a description for the grid footer"
+        },
+        "cells": [
+            {
+                "cell_key": "cell_1",
+                "cell_type": "text",
+                "cell_display_name": "Title"
+            },
+            {
+                "cell_key": "cell_2",
+                "cell_type": "text",
+                "cell_display_name": "Description"
+            },
+            {
+                "cell_key": "cell_3",
+                "cell_type": "badge",
+                "cell_display_name": "Status"
+            }
+        ],
+        "data": [
+            {
+                "cell_1": {
+                    "icon": "",
+                    "text": "Grid Item 1"
+                },
+                "cell_2": {
+                    "icon": "",
+                    "text": "Description for grid item 1"
+                },
+                "cell_3": {
+                    "icon": "",
+                    "text": "Active"
+                }
+            },
+            {
+                "cell_1": {
+                    "icon": "",
+                    "text": "Grid Item 2"
+                },
+                "cell_2": {
+                    "icon": "",
+                    "text": "Description for grid item 2"
+                },
+                "cell_3": {
+                    "icon": "",
+                    "text": "Pending"
+                }
+            }
+        ]
+    },
+    "dashlet_value": {
+        "additional_info": {
+            "total_value": 250,
+            "description": "This is a dashlet component for displaying dashboard widgets and metrics."
+        },
+        "header": {
+            "image_url": "https://example.com/dashlet-icon.png",
+            "action_url": "https://example.com/dashlet-action",
+            "icon": "",
+            "text": "Sales Overview",
+            "description": "Monthly sales performance metrics"
+        },
+        "footer": {
+            "view_more_url": "https://example.com/sales-details",
+            "icon": "",
+            "text": "View Details",
+            "description": "See complete sales report"
+        },
+        "cells": [
+            {
+                "cell_key": "cell_1",
+                "cell_type": "metric",
+                "cell_display_name": "Total Revenue"
+            },
+            {
+                "cell_key": "cell_2",
+                "cell_type": "metric",
+                "cell_display_name": "Total Orders"
+            },
+            {
+                "cell_key": "cell_3",
+                "cell_type": "text",
+                "cell_display_name": "Trend"
+            }
+        ],
+        "data": [
+            {
+                "cell_1": {
+                    "icon": "",
+                    "text": "$125,450"
+                },
+                "cell_2": {
+                    "icon": "",
+                    "text": "1,234"
+                },
+                "cell_3": {
+                    "icon": "trending-up",
+                    "text": "+15% from last month"
+                }
+            }
+        ]
+    },
+    "listcard_value": {
+        "additional_info": {
+            "total_value": 75,
+            "description": "This is a listcard component that displays cards in a list format with rich content."
+        },
+        "header": {
+            "image_url": "https://example.com/listcard-header.png",
+            "action_url": "https://example.com/listcard-action",
+            "icon": "",
+            "text": "Recent Activities",
+            "description": "View all recent user activities"
+        },
+        "footer": {
+            "view_more_url": "https://example.com/all-activities",
+            "icon": "",
+            "text": "Load More",
+            "description": "View all activities"
+        },
+        "cells": [
+            {
+                "cell_key": "cell_1",
+                "cell_type": "text",
+                "cell_display_name": "Activity Title"
+            },
+            {
+                "cell_key": "cell_2",
+                "cell_type": "text",
+                "cell_display_name": "Activity Description"
+            },
+            {
+                "cell_key": "cell_3",
+                "cell_type": "badge",
+                "cell_display_name": "Activity Type"
+            },
+            {
+                "cell_key": "cell_4",
+                "cell_type": "text",
+                "cell_display_name": "Timestamp"
+            }
+        ],
+        "data": [
+            {
+                "cell_1": {
+                    "icon": "user",
+                    "text": "User Registration"
+                },
+                "cell_2": {
+                    "icon": "",
+                    "text": "New user John Doe registered"
+                },
+                "cell_3": {
+                    "icon": "",
+                    "text": "Registration"
+                },
+                "cell_4": {
+                    "icon": "",
+                    "text": "2 hours ago"
+                }
+            },
+            {
+                "cell_1": {
+                    "icon": "shopping-cart",
+                    "text": "Order Placed"
+                },
+                "cell_2": {
+                    "icon": "",
+                    "text": "Order #12345 placed successfully"
+                },
+                "cell_3": {
+                    "icon": "",
+                    "text": "Order"
+                },
+                "cell_4": {
+                    "icon": "",
+                    "text": "5 hours ago"
+                }
+            }
+        ]
+    },
+    "profile_value": {
+        "additional_info": {
+            "total_value": 1,
+            "description": "This is a profile component for displaying user information and details."
+        },
+        "header": {
+            "image_url": "https://example.com/user-avatar.jpg",
+            "action_url": "https://example.com/edit-profile",
+            "icon": "",
+            "text": "User Profile",
+            "description": "View and manage user profile information"
+        },
+        "footer": {
+            "view_more_url": "https://example.com/full-profile",
+            "icon": "",
+            "text": "View Full Profile",
+            "description": "See complete profile details"
+        },
+        "cells": [
+            {
+                "cell_key": "cell_1",
+                "cell_type": "text",
+                "cell_display_name": "Full Name"
+            },
+            {
+                "cell_key": "cell_2",
+                "cell_type": "link",
+                "cell_display_name": "Email"
+            },
+            {
+                "cell_key": "cell_3",
+                "cell_type": "text",
+                "cell_display_name": "Phone"
+            },
+            {
+                "cell_key": "cell_4",
+                "cell_type": "badge",
+                "cell_display_name": "Role"
+            },
+            {
+                "cell_key": "cell_5",
+                "cell_type": "text",
+                "cell_display_name": "Department"
+            }
+        ],
+        "data": [
+            {
+                "cell_1": {
+                    "icon": "user",
+                    "text": "John Smith"
+                },
+                "cell_2": {
+                    "icon": "mail",
+                    "text": "john.smith@example.com",
+                    "url": "mailto:john.smith@example.com"
+                },
+                "cell_3": {
+                    "icon": "phone",
+                    "text": "+1 (555) 123-4567"
+                },
+                "cell_4": {
+                    "icon": "",
+                    "text": "Administrator"
+                },
+                "cell_5": {
+                    "icon": "",
+                    "text": "Engineering"
+                }
+            }
+        ]
+    },
+    "card_value": {
+        "additional_info": {
+            "total_value": 1,
+            "description": "This is a card component for displaying content in a card layout with header, body and footer."
+        },
+        "header": {
+            "image_url": "https://example.com/card-header-bg.jpg",
+            "action_url": "https://example.com/card-action",
+            "icon": "",
+            "text": "Card Title",
+            "description": "This is a card component header"
+        },
+        "footer": {
+            "view_more_url": "https://example.com/card-details",
+            "icon": "",
+            "text": "Learn More",
+            "description": "View more information"
+        },
+        "cells": [
+            {
+                "cell_key": "cell_1",
+                "cell_type": "heading",
+                "cell_display_name": "Card Heading"
+            },
+            {
+                "cell_key": "cell_2",
+                "cell_type": "text",
+                "cell_display_name": "Card Content"
+            },
+            {
+                "cell_key": "cell_3",
+                "cell_type": "button",
+                "cell_display_name": "Action Button"
+            }
+        ],
+        "data": [
+            {
+                "cell_1": {
+                    "icon": "",
+                    "text": "Welcome to the Dashboard"
+                },
+                "cell_2": {
+                    "icon": "",
+                    "text": "This is the main content area of the card where you can display detailed information and rich content."
+                },
+                "cell_3": {
+                    "icon": "arrow-right",
+                    "text": "Get Started"
+                }
+            }
+        ]
+    }
+}

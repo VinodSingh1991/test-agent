@@ -94,50 +94,23 @@ class ChipBuilder:
         if self._clickable:
             classes.append("bd-chip-clickable")
         
-        children = []
+        # Use value structure with icon and text
+        icon_value = ""
+        if self._icon:
+            icon_value = self._icon
+        elif self._avatar:
+            icon_value = self._avatar
         
-        # Avatar or Icon
-        if self._avatar:
-            is_image = self._avatar.startswith("http") or self._avatar.endswith((".jpg", ".png", ".svg"))
-            if is_image:
-                children.append({
-                    "type": "img",
-                    "classes": ["bd-chip-avatar"],
-                    "props": {"src": self._avatar, "alt": self._text}
-                })
-            else:
-                children.append({
-                    "type": "span",
-                    "classes": ["bd-chip-avatar", "bd-avatar-initials"],
-                    "children": self._avatar[:2].upper()
-                })
-        elif self._icon:
-            children.append({
-                "type": "i",
-                "classes": [self._icon, "bd-chip-icon"]
-            })
-        
-        # Text
-        children.append({
-            "type": "span",
-            "classes": ["bd-chip-label"],
-            "children": self._text
-        })
-        
-        # Close button
-        if self._closeable:
-            children.append({
-                "type": "button",
-                "classes": ["bd-chip-close"],
-                "props": {"aria-label": "Remove"},
-                "children": "×"
-            })
+        value = {
+            "icon": icon_value,
+            "text": self._text
+        }
         
         return Component(
-            type="div",
+            type="Chip",
             classes=classes,
             props={},
-            children=children,
+            value=value,
             id=self._id
         )
     

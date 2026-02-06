@@ -1,0 +1,35 @@
+Pattern: LIST_ADVANCED
+Object: task
+Total Queries: 30
+============================================================
+
+1. show top 10 task where status is open
+2. show task sorted by due_date desc
+3. filter task where status is equal to 200000
+4. show task created last month
+5. show top 10 task where status is closed
+6. show task sorted by status asc
+7. filter task where assigned_to is not equal to 500000
+8. show task created last 3 months
+9. show top 10 task where status is in-progress
+10. show task sorted by assigned_to desc
+11. filter task where related_to is greater than 1000000
+12. show task created this quarter
+13. show top 10 task where status is pending
+14. show task sorted by related_to asc
+15. filter task where task_name is less than 50000
+16. show task created this year
+17. show top 10 task where status is approved
+18. show task sorted by task_name desc
+19. filter task where due_date is equal to 100000
+20. show task created today
+21. show top 10 task where status is rejected
+22. show task sorted by due_date asc
+23. filter task where status is not equal to 200000
+24. show task created yesterday
+25. show top 10 task where status is open
+26. show task sorted by status desc
+27. filter task where assigned_to is greater than 500000
+28. show task created last week
+29. show top 10 task where status is closed
+30. show task sorted by assigned_to asc

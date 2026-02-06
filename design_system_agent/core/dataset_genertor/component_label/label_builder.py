@@ -54,36 +54,24 @@ class LabelBuilder:
         if self._for_id:
             props["for"] = self._for_id
         
-        children = []
-        
-        # Label text with required indicator
-        label_text = [{"type": "span", "children": self._text}]
+        # Use value structure with icon and text
+        # Combine label text with required indicator and hint
+        text_content = self._text
         if self._required:
-            label_text.append({
-                "type": "span",
-                "classes": ["bd-text-danger", "bd-ml-4"],
-                "children": "*"
-            })
-        
-        children.append({
-            "type": "span",
-            "classes": ["bd-label-text"],
-            "children": label_text
-        })
-        
-        # Hint text
+            text_content = f"{self._text} *"
         if self._hint:
-            children.append({
-                "type": "span",
-                "classes": ["bd-label-hint", "bd-text-sm", "bd-text-muted", "bd-mt-4"],
-                "children": self._hint
-            })
+            text_content = f"{text_content} ({self._hint})"
+        
+        value = {
+            "icon": "",
+            "text": text_content
+        }
         
         return Component(
-            type="label",
+            type="Label",
             classes=classes,
             props=props,
-            children=children if len(children) > 1 else children[0],
+            value=value,
             id=self._id
         )
     

@@ -1,0 +1,35 @@
+Pattern: BRANCH_MANAGER_QUERIES
+Object: lead
+Total Queries: 30
+============================================================
+
+1. show branch wise lead
+2. show my branch lead with status closed
+3. list accounts in branch with balance equal to 200000
+4. show branch performance summary: lead count, loan total, deposits total
+5. show branch wise lead
+6. show my branch lead with status in-progress
+7. list accounts in branch with balance not equal to 500000
+8. show branch performance summary: lead count, loan total, deposits total
+9. show branch wise lead
+10. show my branch lead with status pending
+11. list accounts in branch with balance greater than 1000000
+12. show branch performance summary: lead count, loan total, deposits total
+13. show branch wise lead
+14. show my branch lead with status approved
+15. list accounts in branch with balance less than 50000
+16. show branch performance summary: lead count, loan total, deposits total
+17. show branch wise lead
+18. show my branch lead with status rejected
+19. list accounts in branch with balance equal to 100000
+20. show branch performance summary: lead count, loan total, deposits total
+21. show branch wise lead
+22. show my branch lead with status open
+23. list accounts in branch with balance not equal to 200000
+24. show branch performance summary: lead count, loan total, deposits total
+25. show branch wise lead
+26. show my branch lead with status closed
+27. list accounts in branch with balance greater than 500000
+28. show branch performance summary: lead count, loan total, deposits total
+29. show branch wise lead
+30. show my branch lead with status in-progress

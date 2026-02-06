@@ -1,0 +1,35 @@
+Pattern: LIST_ADVANCED
+Object: customer
+Total Queries: 30
+============================================================
+
+1. show top 10 customer where status is open
+2. show customer sorted by age desc
+3. filter customer where city is equal to 200000
+4. show customer created last month
+5. show top 10 customer where status is closed
+6. show customer sorted by city asc
+7. filter customer where type is not equal to 500000
+8. show customer created last 3 months
+9. show top 10 customer where status is in-progress
+10. show customer sorted by type desc
+11. filter customer where total_balance is greater than 1000000
+12. show customer created this quarter
+13. show top 10 customer where status is pending
+14. show customer sorted by total_balance asc
+15. filter customer where relationship_manager is less than 50000
+16. show customer created this year
+17. show top 10 customer where status is approved
+18. show customer sorted by relationship_manager desc
+19. filter customer where name is equal to 100000
+20. show customer created today
+21. show top 10 customer where status is rejected
+22. show customer sorted by name asc
+23. filter customer where age is not equal to 200000
+24. show customer created yesterday
+25. show top 10 customer where status is open
+26. show customer sorted by age desc
+27. filter customer where city is greater than 500000
+28. show customer created last week
+29. show top 10 customer where status is closed
+30. show customer sorted by city asc

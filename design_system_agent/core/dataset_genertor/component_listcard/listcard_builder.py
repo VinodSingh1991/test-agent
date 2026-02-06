@@ -187,7 +187,7 @@ class ListCardBuilder:
         })
         
         return Component(
-            type="div",
+            type="ListCard",
             classes=classes,
             props={},
             children=children,

@@ -113,11 +113,17 @@ class TextBuilder:
         if self._underline:
             classes.append("bd-underline")
         
+        # Use value structure with icon and text
+        value = {
+            "icon": "",
+            "text": self._content
+        }
+        
         return Component(
-            type="span",
+            type="Text",
             classes=classes,
             props={},
-            children=self._content,
+            value=value,
             id=self._id
         )
     

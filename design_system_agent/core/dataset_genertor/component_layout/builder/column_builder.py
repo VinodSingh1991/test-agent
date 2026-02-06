@@ -27,32 +27,44 @@ class ColumnBuilder:
         self._children: Union[Component, Dict[str, Any], None] = None
         self._component_type: str = None
     
-    def add_component(self, component_type: str, content: Any, classes: List[str] = None, props: Dict[str, Any] = None) -> 'ColumnBuilder':
+    def add_component(self, component_or_type: Union[Component, str], content: Any = None, classes: List[str] = None, props: Dict[str, Any] = None, value: Dict[str, str] = None, events: Dict[str, str] = None) -> 'ColumnBuilder':
         """
-        Add a component to this column using ComponentBuilder
+        Add a component to this column
         
         Args:
-            component_type: Component type (e.g., 'h2', 'p', 'button')
-            content: Component content/children
-            classes: Optional CSS classes for the component
-            props: Optional properties for the component
+            component_or_type: Either a Component object or component type string
+            content: Component content/children (for complex components, when type is string)
+            classes: Optional CSS classes (when type is string)
+            props: Optional properties (when type is string)
+            value: Optional value dict with icon and text (when type is string)
+            events: Optional event handlers (when type is string)
             
         Returns:
             Self for method chaining
         """
-        # Create component using ComponentBuilder
-        component_builder = ComponentBuilder(component_type)
+        # If this is a Component object being passed directly, use it
+        if isinstance(component_or_type, Component):
+            self._children = component_or_type
+            self._component_type = component_or_type.type
+            return self
         
-        # Add classes if provided
-        if classes:
-            component_builder.with_classes(*classes)
+        # Otherwise build component from parameters
+        component_type = component_or_type
+        component_dict = {
+            "type": component_type,
+            "classes": classes if classes else [],
+            "props": props if props else {},
+        }
         
-        # Add props if provided
-        if props:
-            component_builder.with_props(**props)
+        if value is not None:
+            component_dict["value"] = value
+        elif content is not None:
+            component_dict["children"] = content
         
-        # Build with type and content
-        self._children = component_builder.build(component_type=component_type, content=content)
+        if events:
+            component_dict["events"] = events
+        
+        self._children = component_dict
         self._component_type = component_type
         return self
     

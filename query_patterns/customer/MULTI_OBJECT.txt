@@ -1,0 +1,35 @@
+Pattern: MULTI_OBJECT
+Object: customer
+Total Queries: 30
+============================================================
+
+1. show customer with related account
+2. show customer where customer age is 100000
+3. list customer and related loan filtered by in-progress
+4. show customer with related customer
+5. show customer where loan city is 200000
+6. list customer and related task filtered by pending
+7. show customer with related loan
+8. show customer where task type is 500000
+9. list customer and related branch filtered by approved
+10. show customer with related task
+11. show customer where branch total_balance is 1000000
+12. list customer and related lead filtered by rejected
+13. show customer with related branch
+14. show customer where lead relationship_manager is 50000
+15. list customer and related account filtered by open
+16. show customer with related lead
+17. show customer where account name is 100000
+18. list customer and related customer filtered by closed
+19. show customer with related account
+20. show customer where customer age is 200000
+21. list customer and related loan filtered by in-progress
+22. show customer with related customer
+23. show customer where loan city is 500000
+24. list customer and related task filtered by pending
+25. show customer with related loan
+26. show customer where task type is 1000000
+27. list customer and related branch filtered by approved
+28. show customer with related task
+29. show customer where branch total_balance is 50000
+30. list customer and related lead filtered by rejected

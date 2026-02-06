@@ -1,0 +1,35 @@
+Pattern: MULTI_OBJECT
+Object: account
+Total Queries: 30
+============================================================
+
+1. show account with related account
+2. show account where customer balance is 100000
+3. list account and related loan filtered by in-progress
+4. show account with related customer
+5. show account where loan type is 200000
+6. list account and related task filtered by pending
+7. show account with related loan
+8. show account where task branch is 500000
+9. list account and related branch filtered by approved
+10. show account with related task
+11. show account where branch customer_id is 1000000
+12. list account and related lead filtered by rejected
+13. show account with related branch
+14. show account where lead account_no is 50000
+15. list account and related account filtered by open
+16. show account with related lead
+17. show account where account balance is 100000
+18. list account and related customer filtered by closed
+19. show account with related account
+20. show account where customer type is 200000
+21. list account and related loan filtered by in-progress
+22. show account with related customer
+23. show account where loan branch is 500000
+24. list account and related task filtered by pending
+25. show account with related loan
+26. show account where task customer_id is 1000000
+27. list account and related branch filtered by approved
+28. show account with related task
+29. show account where branch account_no is 50000
+30. list account and related lead filtered by rejected

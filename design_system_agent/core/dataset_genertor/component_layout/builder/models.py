@@ -11,11 +11,12 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Component:
-    """Represents a UI component with type, classes, props, children, events"""
+    """Represents a UI component with type, classes, props, children/value, events"""
     type: str
     classes: List[str] = field(default_factory=list)
     props: Dict[str, Any] = field(default_factory=dict)
     children: Optional[Union[str, List[Any], Dict[str, Any]]] = None
+    value: Optional[Dict[str, str]] = None  # For primitive components: {icon: "", text: ""}
     events: Optional[Dict[str, str]] = None
     id: Optional[str] = None
     
@@ -26,7 +27,10 @@ class Component:
             "classes": self.classes,
             "props": self.props,
         }
-        if self.children is not None:
+        # Use value for primitive components, children for complex components
+        if self.value is not None:
+            result["value"] = self.value
+        elif self.children is not None:
             result["children"] = self.children
         if self.events:
             result["events"] = self.events

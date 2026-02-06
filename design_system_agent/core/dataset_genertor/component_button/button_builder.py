@@ -153,22 +153,17 @@ class ButtonBuilder:
         if self._on_click:
             events["onClick"] = self._on_click
         
-        children = self._text
-        if self._icon:
-            children = {
-                "type": "span",
-                "classes": ["bd-flex", "bd-items-center", "bd-gap-8"],
-                "children": [
-                    {"type": "i", "classes": [self._icon]},
-                    {"type": "span", "children": self._text}
-                ]
-            }
+        # Use value structure with icon and text
+        value = {
+            "icon": self._icon if self._icon else "",
+            "text": self._text
+        }
         
         return Component(
-            type="button",
+            type="Button",
             classes=classes,
             props=props,
-            children=children,
+            value=value,
             events=events if events else None,
             id=self._id
         )

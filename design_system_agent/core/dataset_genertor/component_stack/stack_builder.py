@@ -100,7 +100,7 @@ class StackBuilder:
                 children.append(child)
         
         return Component(
-            type="div",
+            type="Stack",
             classes=classes,
             props={},
             children=children,

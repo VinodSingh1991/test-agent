@@ -152,7 +152,7 @@ class BirthdayCardBuilder:
         })
         
         return Component(
-            type="div",
+            type="BirthdayCard",
             classes=classes,
             props={},
             children=children,

@@ -1,23 +1,23 @@
 ﻿"""
-Main agent controller using LangGraph multi-agent system.
+Main agent controller using Streaming Agent.
 """
-from .graph_agent import DesignSystemGraph
+from .layout_graph_agent import GraphAgent
 
 
 class AgentController:
-    """Simplified controller using LangGraph multi-agent system."""
+    """Controller using streaming agent with real-time updates."""
     
     def __init__(self):
-        self.graph = DesignSystemGraph()
-        print("AgentController initialized with LangGraph multi-agent system")
+        self.agent = GraphAgent(verbose=False)
+        print("AgentController initialized with Streaming Agent")
     
     def process_query(self, query: str):
-        """Process query through multi-agent graph.
+        """Process query through streaming agent.
         
         Args:
             query: User's natural language query
         
         Returns:
-            Dict with generated code and metadata
+            Dict with generated layout and metadata
         """
-        return self.graph.invoke(query)
+        return self.agent.invoke(query)

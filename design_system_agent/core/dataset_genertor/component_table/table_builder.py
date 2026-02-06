@@ -116,7 +116,7 @@ class TableBuilder:
             })
         
         return Component(
-            type="table",
+            type="Table",
             classes=classes,
             props={},
             children=children,

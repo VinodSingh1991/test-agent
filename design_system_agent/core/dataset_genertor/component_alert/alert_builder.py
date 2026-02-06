@@ -104,77 +104,22 @@ class AlertBuilder:
         if self._dismissible:
             classes.append("bd-alert-dismissible")
         
-        children = []
-        
-        # Main content wrapper
-        content_children = []
-        
-        # Icon
-        if self._icon:
-            content_children.append({
-                "type": "span",
-                "classes": ["bd-alert-icon", "bd-mr-12"],
-                "children": self._icon
-            })
-        
-        # Text content
-        text_children = []
-        
+        # Use value structure with icon and text
+        # Combine title and message for text field
+        text_content = self._message
         if self._title:
-            text_children.append({
-                "type": "h5",
-                "classes": ["bd-alert-title", "bd-fw-semibold", "bd-mb-4"],
-                "children": self._title
-            })
+            text_content = f"{self._title}: {self._message}"
         
-        text_children.append({
-            "type": "p",
-            "classes": ["bd-alert-message"],
-            "children": self._message
-        })
-        
-        content_children.append({
-            "type": "div",
-            "classes": ["bd-alert-content", "bd-flex-1"],
-            "children": text_children
-        })
-        
-        children.append({
-            "type": "div",
-            "classes": ["bd-flex", "bd-items-start", "bd-gap-8"],
-            "children": content_children
-        })
-        
-        # Actions
-        actions = []
-        
-        if self._action_label:
-            actions.append({
-                "type": "button",
-                "classes": ["bd-btn", "bd-btn-sm", f"bd-btn-{self._variant}", "bd-mr-8"],
-                "children": self._action_label
-            })
-        
-        if self._dismissible:
-            actions.append({
-                "type": "button",
-                "classes": ["bd-alert-close", "bd-btn-icon"],
-                "props": {"aria-label": "Close"},
-                "children": "×"
-            })
-        
-        if actions:
-            children.append({
-                "type": "div",
-                "classes": ["bd-alert-actions", "bd-flex", "bd-items-center", "bd-mt-12"],
-                "children": actions
-            })
+        value = {
+            "icon": self._icon if self._icon else "",
+            "text": text_content
+        }
         
         return Component(
-            type="div",
+            type="Alert",
             classes=classes,
             props={"role": "alert"},
-            children=children,
+            value=value,
             id=self._id
         )
     

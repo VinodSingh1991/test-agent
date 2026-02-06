@@ -1,0 +1,35 @@
+Pattern: LIST_SIMPLE
+Object: account
+Total Queries: 30
+============================================================
+
+1. show all account
+2. show all account yesterday
+3. show my account with status in-progress
+4. list account where priority is high
+5. show all account
+6. show all account last week
+7. show my account with status pending
+8. list account where priority is medium
+9. show all account
+10. show all account last month
+11. show my account with status approved
+12. list account where priority is low
+13. show all account
+14. show all account last 3 months
+15. show my account with status rejected
+16. list account where priority is high
+17. show all account
+18. show all account this quarter
+19. show my account with status open
+20. list account where priority is medium
+21. show all account
+22. show all account this year
+23. show my account with status closed
+24. list account where priority is low
+25. show all account
+26. show all account today
+27. show my account with status in-progress
+28. list account where priority is high
+29. show all account
+30. show all account yesterday

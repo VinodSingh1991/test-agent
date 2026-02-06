@@ -79,7 +79,7 @@ class ImageBuilder:
             props["height"] = self._height
         
         return Component(
-            type="img",
+            type="Image",
             classes=classes,
             props=props,
             children=None,

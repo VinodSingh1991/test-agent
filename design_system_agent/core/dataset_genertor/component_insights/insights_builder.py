@@ -197,7 +197,7 @@ class InsightsBuilder:
             })
         
         return Component(
-            type="div",
+            type="Insights",
             classes=classes,
             props={},
             children=children,

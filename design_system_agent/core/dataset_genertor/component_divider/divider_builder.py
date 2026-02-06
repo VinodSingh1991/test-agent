@@ -71,9 +71,9 @@ class DividerBuilder:
         
         if self._label:
             return Component(
-                type="div",
+                type="Divider",
                 classes=["bd-divider-wrapper", f"bd-my-{self._spacing}"],
-                props={},
+                props={"label": self._label, "orientation": self._orientation},
                 children=[
                     {"type": "hr", "classes": classes[:2] + [self._variant]},
                     {"type": "span", "classes": ["bd-divider-label", "bd-px-8"], "children": self._label},
@@ -83,9 +83,9 @@ class DividerBuilder:
             )
         
         return Component(
-            type="hr",
+            type="Divider",
             classes=classes,
-            props={},
+            props={"orientation": self._orientation},
             children=None,
             id=self._id
         )

@@ -70,31 +70,21 @@ class LinkBuilder:
             props["target"] = "_blank"
             props["rel"] = "noopener noreferrer"
         
-        children = self._text
-        if self._icon:
-            children = {
-                "type": "span",
-                "classes": ["bd-flex", "bd-items-center", "bd-gap-4"],
-                "children": [
-                    {"type": "span", "children": self._text},
-                    {"type": "i", "classes": [self._icon, "bd-text-xs"]}
-                ]
-            }
-        elif self._external:
-            children = {
-                "type": "span",
-                "classes": ["bd-flex", "bd-items-center", "bd-gap-4"],
-                "children": [
-                    {"type": "span", "children": self._text},
-                    {"type": "span", "children": "↗", "classes": ["bd-text-xs"]}
-                ]
-            }
+        # Use value structure with icon and text
+        icon_value = self._icon if self._icon else ""
+        if self._external and not self._icon:
+            icon_value = "external-link"
+        
+        value = {
+            "icon": icon_value,
+            "text": self._text
+        }
         
         return Component(
-            type="a",
+            type="Link",
             classes=classes,
             props=props,
-            children=children,
+            value=value,
             id=self._id
         )
     

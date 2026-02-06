@@ -1,0 +1,2001 @@
+ID,Query,Object Type,View Type,Length
+1,show all customer,customer,table,17
+2,show all customer yesterday,customer,table,27
+3,show my customer with status in-progress,customer,table,40
+4,list customer where priority is high,customer,table,36
+5,show all customer,customer,table,17
+6,show all customer last week,customer,table,27
+7,show my customer with status pending,customer,table,36
+8,list customer where priority is medium,customer,table,38
+9,show all customer,customer,table,17
+10,show all customer last month,customer,table,28
+11,show my customer with status approved,customer,table,37
+12,list customer where priority is low,customer,table,35
+13,show all customer,customer,table,17
+14,show all customer last 3 months,customer,table,31
+15,show my customer with status rejected,customer,table,37
+16,list customer where priority is high,customer,table,36
+17,show all customer,customer,table,17
+18,show all customer this quarter,customer,table,30
+19,show my customer with status open,customer,table,33
+20,list customer where priority is medium,customer,table,38
+21,show all customer,customer,table,17
+22,show all customer this year,customer,table,27
+23,show my customer with status closed,customer,table,35
+24,list customer where priority is low,customer,table,35
+25,show all customer,customer,table,17
+26,show all customer today,customer,table,23
+27,show my customer with status in-progress,customer,table,40
+28,list customer where priority is high,customer,table,36
+29,show all customer,customer,table,17
+30,show all customer yesterday,customer,table,27
+31,show my customer with status pending,customer,table,36
+32,list customer where priority is medium,customer,table,38
+33,show all customer,customer,table,17
+34,show all customer last week,customer,table,27
+35,show my customer with status approved,customer,table,37
+36,list customer where priority is low,customer,table,35
+37,show all customer,customer,table,17
+38,show all customer last month,customer,table,28
+39,show my customer with status rejected,customer,table,37
+40,list customer where priority is high,customer,table,36
+41,show all customer,customer,table,17
+42,show all customer last 3 months,customer,table,31
+43,show my customer with status open,customer,table,33
+44,list customer where priority is medium,customer,table,38
+45,show all customer,customer,table,17
+46,show all customer this quarter,customer,table,30
+47,show my customer with status closed,customer,table,35
+48,list customer where priority is low,customer,table,35
+49,show all customer,customer,table,17
+50,show all customer this year,customer,table,27
+51,show my customer with status in-progress,customer,table,40
+52,list customer where priority is high,customer,table,36
+53,show all customer,customer,table,17
+54,show all customer today,customer,table,23
+55,show my customer with status pending,customer,table,36
+56,list customer where priority is medium,customer,table,38
+57,show all customer,customer,table,17
+58,show all customer yesterday,customer,table,27
+59,show my customer with status approved,customer,table,37
+60,list customer where priority is low,customer,table,35
+61,show all customer,customer,table,17
+62,show all customer last week,customer,table,27
+63,show my customer with status rejected,customer,table,37
+64,list customer where priority is high,customer,table,36
+65,show all customer,customer,table,17
+66,show all customer last month,customer,table,28
+67,show my customer with status open,customer,table,33
+68,list customer where priority is medium,customer,table,38
+69,show all customer,customer,table,17
+70,show all customer last 3 months,customer,table,31
+71,show my customer with status closed,customer,table,35
+72,list customer where priority is low,customer,table,35
+73,show all customer,customer,table,17
+74,show all customer this quarter,customer,table,30
+75,show my customer with status in-progress,customer,table,40
+76,list customer where priority is high,customer,table,36
+77,show all customer,customer,table,17
+78,show all customer this year,customer,table,27
+79,show my customer with status pending,customer,table,36
+80,list customer where priority is medium,customer,table,38
+81,show all customer,customer,table,17
+82,show all customer today,customer,table,23
+83,show my customer with status approved,customer,table,37
+84,show top 10 customer where status is open,customer,table,41
+85,show customer sorted by age desc,customer,table,32
+86,filter customer where city is equal to 200000,customer,table,45
+87,show customer created last month,customer,table,32
+88,show top 10 customer where status is closed,customer,table,43
+89,show customer sorted by city asc,customer,table,32
+90,filter customer where type is not equal to 500000,customer,table,49
+91,show customer created last 3 months,customer,table,35
+92,show top 10 customer where status is in-progress,customer,table,48
+93,show customer sorted by type desc,customer,table,33
+94,filter customer where total_balance is greater than 1000000,customer,chart,59
+95,show customer created this quarter,customer,table,34
+96,show top 10 customer where status is pending,customer,table,44
+97,show customer sorted by total_balance asc,customer,chart,41
+98,filter customer where relationship_manager is less than 50000,customer,table,61
+99,show customer created this year,customer,table,31
+100,show top 10 customer where status is approved,customer,table,45
+101,show customer sorted by relationship_manager desc,customer,table,49
+102,filter customer where name is equal to 100000,customer,table,45
+103,show customer created today,customer,table,27
+104,show top 10 customer where status is rejected,customer,table,45
+105,show customer sorted by name asc,customer,table,32
+106,filter customer where age is not equal to 200000,customer,table,48
+107,show customer created yesterday,customer,table,31
+108,show top 10 customer where status is open,customer,table,41
+109,show customer sorted by age desc,customer,table,32
+110,filter customer where city is greater than 500000,customer,table,49
+111,show customer created last week,customer,table,31
+112,show top 10 customer where status is closed,customer,table,43
+113,show customer sorted by city asc,customer,table,32
+114,filter customer where type is less than 1000000,customer,table,47
+115,show customer created last month,customer,table,32
+116,show top 10 customer where status is in-progress,customer,table,48
+117,show customer sorted by type desc,customer,table,33
+118,filter customer where total_balance is equal to 50000,customer,chart,53
+119,show customer created last 3 months,customer,table,35
+120,show top 10 customer where status is pending,customer,table,44
+121,show customer sorted by total_balance asc,customer,chart,41
+122,filter customer where relationship_manager is not equal to 100000,customer,table,65
+123,show customer created this quarter,customer,table,34
+124,show top 10 customer where status is approved,customer,table,45
+125,show customer sorted by relationship_manager desc,customer,table,49
+126,filter customer where name is greater than 200000,customer,table,49
+127,show customer created this year,customer,table,31
+128,show top 10 customer where status is rejected,customer,table,45
+129,show customer sorted by name asc,customer,table,32
+130,filter customer where age is less than 500000,customer,table,45
+131,show customer created today,customer,table,27
+132,show top 10 customer where status is open,customer,table,41
+133,show customer sorted by age desc,customer,table,32
+134,filter customer where city is equal to 1000000,customer,table,46
+135,show customer created yesterday,customer,table,31
+136,show top 10 customer where status is closed,customer,table,43
+137,show customer sorted by city asc,customer,table,32
+138,filter customer where type is not equal to 50000,customer,table,48
+139,show customer created last week,customer,table,31
+140,show top 10 customer where status is in-progress,customer,table,48
+141,show customer sorted by type desc,customer,table,33
+142,filter customer where total_balance is greater than 100000,customer,chart,58
+143,show customer created last month,customer,table,32
+144,show top 10 customer where status is pending,customer,table,44
+145,show customer sorted by total_balance asc,customer,chart,41
+146,filter customer where relationship_manager is less than 200000,customer,table,62
+147,show customer created last 3 months,customer,table,35
+148,show top 10 customer where status is approved,customer,table,45
+149,show customer sorted by relationship_manager desc,customer,table,49
+150,filter customer where name is equal to 500000,customer,table,45
+151,show customer created this quarter,customer,table,34
+152,show top 10 customer where status is rejected,customer,table,45
+153,show customer sorted by name asc,customer,table,32
+154,filter customer where age is not equal to 1000000,customer,table,49
+155,show customer created this year,customer,table,31
+156,show top 10 customer where status is open,customer,table,41
+157,show customer sorted by age desc,customer,table,32
+158,filter customer where city is greater than 50000,customer,table,48
+159,show customer created today,customer,table,27
+160,show top 10 customer where status is closed,customer,table,43
+161,show customer sorted by city asc,customer,table,32
+162,filter customer where type is less than 100000,customer,table,46
+163,show customer created yesterday,customer,table,31
+164,show top 10 customer where status is in-progress,customer,table,48
+165,show customer sorted by type desc,customer,table,33
+166,filter customer where total_balance is equal to 200000,customer,chart,54
+167,show customer with related account,account,chart,34
+168,show customer where customer age is 100000,customer,table,42
+169,list customer and related loan filtered by in-progress,customer,table,54
+170,show customer with related customer,customer,table,35
+171,show customer where loan city is 200000,customer,table,39
+172,list customer and related task filtered by pending,customer,table,50
+173,show customer with related loan,customer,table,31
+174,show customer where task type is 500000,customer,table,39
+175,list customer and related branch filtered by approved,customer,table,53
+176,show customer with related task,customer,table,31
+177,show customer where branch total_balance is 1000000,customer,chart,51
+178,list customer and related lead filtered by rejected,lead,table,51
+179,show customer with related branch,customer,table,33
+180,show customer where lead relationship_manager is 50000,lead,table,54
+181,list customer and related account filtered by open,account,chart,50
+182,show customer with related lead,lead,table,31
+183,show customer where account name is 100000,account,chart,42
+184,list customer and related customer filtered by closed,customer,table,53
+185,show customer with related account,account,chart,34
+186,show customer where customer age is 200000,customer,table,42
+187,list customer and related loan filtered by in-progress,customer,table,54
+188,show customer with related customer,customer,table,35
+189,show customer where loan city is 500000,customer,table,39
+190,list customer and related task filtered by pending,customer,table,50
+191,show customer with related loan,customer,table,31
+192,show customer where task type is 1000000,customer,table,40
+193,list customer and related branch filtered by approved,customer,table,53
+194,show customer with related task,customer,table,31
+195,show customer where branch total_balance is 50000,customer,chart,49
+196,list customer and related lead filtered by rejected,lead,table,51
+197,show customer with related branch,customer,table,33
+198,show customer where lead relationship_manager is 100000,lead,table,55
+199,list customer and related account filtered by open,account,chart,50
+200,show customer with related lead,lead,table,31
+201,show customer where account name is 200000,account,chart,42
+202,list customer and related customer filtered by closed,customer,table,53
+203,show customer with related account,account,chart,34
+204,show customer where customer age is 500000,customer,table,42
+205,list customer and related loan filtered by in-progress,customer,table,54
+206,show customer with related customer,customer,table,35
+207,show customer where loan city is 1000000,customer,table,40
+208,list customer and related task filtered by pending,customer,table,50
+209,show customer with related loan,customer,table,31
+210,show customer where task type is 50000,customer,table,38
+211,list customer and related branch filtered by approved,customer,table,53
+212,show customer with related task,customer,table,31
+213,show customer where branch total_balance is 100000,customer,chart,50
+214,list customer and related lead filtered by rejected,lead,table,51
+215,show customer with related branch,customer,table,33
+216,show customer where lead relationship_manager is 200000,lead,table,55
+217,list customer and related account filtered by open,account,chart,50
+218,show customer with related lead,lead,table,31
+219,show customer where account name is 500000,account,chart,42
+220,list customer and related customer filtered by closed,customer,table,53
+221,show customer with related account,account,chart,34
+222,show customer where customer age is 1000000,customer,table,43
+223,list customer and related loan filtered by in-progress,customer,table,54
+224,show customer with related customer,customer,table,35
+225,show customer where loan city is 50000,customer,table,38
+226,list customer and related task filtered by pending,customer,table,50
+227,show customer with related loan,customer,table,31
+228,show customer where task type is 100000,customer,table,39
+229,list customer and related branch filtered by approved,customer,table,53
+230,show customer with related task,customer,table,31
+231,show customer where branch total_balance is 200000,customer,chart,50
+232,list customer and related lead filtered by rejected,lead,table,51
+233,show customer with related branch,customer,table,33
+234,show customer where lead relationship_manager is 500000,lead,table,55
+235,list customer and related account filtered by open,account,chart,50
+236,show customer with related lead,lead,table,31
+237,show customer where account name is 1000000,account,chart,43
+238,list customer and related customer filtered by closed,customer,table,53
+239,show customer with related account,account,chart,34
+240,show customer where customer age is 50000,customer,table,41
+241,list customer and related loan filtered by in-progress,customer,table,54
+242,show customer with related customer,customer,table,35
+243,show customer where loan city is 100000,customer,table,39
+244,list customer and related task filtered by pending,customer,table,50
+245,show customer with related loan,customer,table,31
+246,show customer where task type is 200000,customer,table,39
+247,list customer and related branch filtered by approved,customer,table,53
+248,show customer with related task,customer,table,31
+249,show customer where branch total_balance is 500000,customer,chart,50
+250,show sum of amount in customer,customer,chart,30
+251,show count of balance for customer yesterday,customer,chart,44
+252,calculate total loan_amount across all customer,customer,chart,47
+253,show customer grouped by customer_type with min of emi_amount,customer,chart,61
+254,show count of balance in customer,customer,chart,33
+255,show average of loan_amount for customer last week,customer,chart,50
+256,calculate total emi_amount across all customer,customer,chart,46
+257,show customer grouped by status with max of premium_amount,customer,chart,58
+258,show average of loan_amount in customer,customer,chart,39
+259,show min of emi_amount for customer last month,customer,table,46
+260,calculate total premium_amount across all customer,customer,chart,50
+261,show customer grouped by branch with sum of amount,customer,chart,50
+262,show min of emi_amount in customer,customer,table,34
+263,show max of premium_amount for customer last 3 months,customer,table,53
+264,calculate total amount across all customer,customer,chart,42
+265,show customer grouped by manager with count of balance,customer,chart,54
+266,show max of premium_amount in customer,customer,table,38
+267,show sum of amount for customer this quarter,customer,chart,44
+268,calculate total balance across all customer,customer,chart,43
+269,show customer grouped by product with average of loan_amount,customer,chart,60
+270,show sum of amount in customer,customer,chart,30
+271,show count of balance for customer this year,customer,chart,44
+272,calculate total loan_amount across all customer,customer,chart,47
+273,show customer grouped by customer_type with min of emi_amount,customer,chart,61
+274,show count of balance in customer,customer,chart,33
+275,show average of loan_amount for customer today,customer,chart,46
+276,calculate total emi_amount across all customer,customer,chart,46
+277,show customer grouped by status with max of premium_amount,customer,chart,58
+278,show average of loan_amount in customer,customer,chart,39
+279,show min of emi_amount for customer yesterday,customer,table,45
+280,calculate total premium_amount across all customer,customer,chart,50
+281,show customer grouped by branch with sum of amount,customer,chart,50
+282,show min of emi_amount in customer,customer,table,34
+283,show max of premium_amount for customer last week,customer,table,49
+284,calculate total amount across all customer,customer,chart,42
+285,show customer grouped by manager with count of balance,customer,chart,54
+286,show max of premium_amount in customer,customer,table,38
+287,show sum of amount for customer last month,customer,chart,42
+288,calculate total balance across all customer,customer,chart,43
+289,show customer grouped by product with average of loan_amount,customer,chart,60
+290,show sum of amount in customer,customer,chart,30
+291,show count of balance for customer last 3 months,customer,chart,48
+292,calculate total loan_amount across all customer,customer,chart,47
+293,show customer grouped by customer_type with min of emi_amount,customer,chart,61
+294,show count of balance in customer,customer,chart,33
+295,show average of loan_amount for customer this quarter,customer,chart,53
+296,calculate total emi_amount across all customer,customer,chart,46
+297,show customer grouped by status with max of premium_amount,customer,chart,58
+298,show average of loan_amount in customer,customer,chart,39
+299,show min of emi_amount for customer this year,customer,table,45
+300,calculate total premium_amount across all customer,customer,chart,50
+301,show customer grouped by branch with sum of amount,customer,chart,50
+302,show min of emi_amount in customer,customer,table,34
+303,show max of premium_amount for customer today,customer,table,45
+304,calculate total amount across all customer,customer,chart,42
+305,show customer grouped by manager with count of balance,customer,chart,54
+306,show max of premium_amount in customer,customer,table,38
+307,show sum of amount for customer yesterday,customer,chart,41
+308,calculate total balance across all customer,customer,chart,43
+309,show customer grouped by product with average of loan_amount,customer,chart,60
+310,show sum of amount in customer,customer,chart,30
+311,show count of balance for customer last week,customer,chart,44
+312,calculate total loan_amount across all customer,customer,chart,47
+313,show customer grouped by customer_type with min of emi_amount,customer,chart,61
+314,show count of balance in customer,customer,chart,33
+315,show average of loan_amount for customer last month,customer,chart,51
+316,calculate total emi_amount across all customer,customer,chart,46
+317,show customer grouped by status with max of premium_amount,customer,chart,58
+318,show average of loan_amount in customer,customer,chart,39
+319,show min of emi_amount for customer last 3 months,customer,table,49
+320,calculate total premium_amount across all customer,customer,chart,50
+321,show customer grouped by branch with sum of amount,customer,chart,50
+322,show min of emi_amount in customer,customer,table,34
+323,show max of premium_amount for customer this quarter,customer,table,52
+324,calculate total amount across all customer,customer,chart,42
+325,show customer grouped by manager with count of balance,customer,chart,54
+326,show max of premium_amount in customer,customer,table,38
+327,show sum of amount for customer this year,customer,chart,41
+328,calculate total balance across all customer,customer,chart,43
+329,show customer grouped by product with average of loan_amount,customer,chart,60
+330,show sum of amount in customer,customer,chart,30
+331,show count of balance for customer today,customer,chart,40
+332,calculate total loan_amount across all customer,customer,chart,47
+333,show sum of loan amount for customers grouped by branch,customer,chart,55
+334,total loan amount for customers who have accounts greater than 100000,account,chart,69
+335,sum of account balance for customers having loans,account,chart,49
+336,show branch wise min of emi amount,branch,summary,34
+337,show count of loan amount for customers grouped by branch,customer,chart,57
+338,total loan amount for customers who have accounts greater than 200000,account,chart,69
+339,sum of account balance for customers having loans,account,chart,49
+340,show branch wise max of emi amount,branch,summary,34
+341,show average of loan amount for customers grouped by branch,customer,chart,59
+342,total loan amount for customers who have accounts greater than 500000,account,chart,69
+343,sum of account balance for customers having loans,account,chart,49
+344,show branch wise sum of emi amount,branch,chart,34
+345,show min of loan amount for customers grouped by branch,customer,chart,55
+346,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+347,sum of account balance for customers having loans,account,chart,49
+348,show branch wise count of emi amount,branch,chart,36
+349,show max of loan amount for customers grouped by branch,customer,chart,55
+350,total loan amount for customers who have accounts greater than 50000,account,chart,68
+351,sum of account balance for customers having loans,account,chart,49
+352,show branch wise average of emi amount,branch,chart,38
+353,show sum of loan amount for customers grouped by branch,customer,chart,55
+354,total loan amount for customers who have accounts greater than 100000,account,chart,69
+355,sum of account balance for customers having loans,account,chart,49
+356,show branch wise min of emi amount,branch,summary,34
+357,show count of loan amount for customers grouped by branch,customer,chart,57
+358,total loan amount for customers who have accounts greater than 200000,account,chart,69
+359,sum of account balance for customers having loans,account,chart,49
+360,show branch wise max of emi amount,branch,summary,34
+361,show average of loan amount for customers grouped by branch,customer,chart,59
+362,total loan amount for customers who have accounts greater than 500000,account,chart,69
+363,sum of account balance for customers having loans,account,chart,49
+364,show branch wise sum of emi amount,branch,chart,34
+365,show min of loan amount for customers grouped by branch,customer,chart,55
+366,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+367,sum of account balance for customers having loans,account,chart,49
+368,show branch wise count of emi amount,branch,chart,36
+369,show max of loan amount for customers grouped by branch,customer,chart,55
+370,total loan amount for customers who have accounts greater than 50000,account,chart,68
+371,sum of account balance for customers having loans,account,chart,49
+372,show branch wise average of emi amount,branch,chart,38
+373,show sum of loan amount for customers grouped by branch,customer,chart,55
+374,total loan amount for customers who have accounts greater than 100000,account,chart,69
+375,sum of account balance for customers having loans,account,chart,49
+376,show branch wise min of emi amount,branch,summary,34
+377,show count of loan amount for customers grouped by branch,customer,chart,57
+378,total loan amount for customers who have accounts greater than 200000,account,chart,69
+379,sum of account balance for customers having loans,account,chart,49
+380,show branch wise max of emi amount,branch,summary,34
+381,show average of loan amount for customers grouped by branch,customer,chart,59
+382,total loan amount for customers who have accounts greater than 500000,account,chart,69
+383,sum of account balance for customers having loans,account,chart,49
+384,show branch wise sum of emi amount,branch,chart,34
+385,show min of loan amount for customers grouped by branch,customer,chart,55
+386,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+387,sum of account balance for customers having loans,account,chart,49
+388,show branch wise count of emi amount,branch,chart,36
+389,show max of loan amount for customers grouped by branch,customer,chart,55
+390,total loan amount for customers who have accounts greater than 50000,account,chart,68
+391,sum of account balance for customers having loans,account,chart,49
+392,show branch wise average of emi amount,branch,chart,38
+393,show sum of loan amount for customers grouped by branch,customer,chart,55
+394,total loan amount for customers who have accounts greater than 100000,account,chart,69
+395,sum of account balance for customers having loans,account,chart,49
+396,show branch wise min of emi amount,branch,summary,34
+397,show count of loan amount for customers grouped by branch,customer,chart,57
+398,total loan amount for customers who have accounts greater than 200000,account,chart,69
+399,sum of account balance for customers having loans,account,chart,49
+400,show branch wise max of emi amount,branch,summary,34
+401,show average of loan amount for customers grouped by branch,customer,chart,59
+402,total loan amount for customers who have accounts greater than 500000,account,chart,69
+403,sum of account balance for customers having loans,account,chart,49
+404,show branch wise sum of emi amount,branch,chart,34
+405,show min of loan amount for customers grouped by branch,customer,chart,55
+406,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+407,sum of account balance for customers having loans,account,chart,49
+408,show branch wise count of emi amount,branch,chart,36
+409,show max of loan amount for customers grouped by branch,customer,chart,55
+410,total loan amount for customers who have accounts greater than 50000,account,chart,68
+411,sum of account balance for customers having loans,account,chart,49
+412,show branch wise average of emi amount,branch,chart,38
+413,show sum of loan amount for customers grouped by branch,customer,chart,55
+414,total loan amount for customers who have accounts greater than 100000,account,chart,69
+415,sum of account balance for customers having loans,account,chart,49
+416,show customers with total account balance greater than 50000 and loan amount greater than 50000,account,chart,95
+417,show branch wise count of leads where loan status is closed,lead,chart,59
+418,show average of loan amount for customers having tasks pending,customer,chart,62
+419,show customers who have loans and also leads in pending status,lead,table,62
+420,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+421,show customers with total account balance less than 100000 and loan amount less than 100000,account,chart,91
+422,show branch wise count of leads where loan status is in-progress,lead,chart,64
+423,show min of loan amount for customers having tasks pending,customer,table,58
+424,show customers who have loans and also leads in approved status,lead,table,63
+425,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+426,show customers with total account balance equal to 200000 and loan amount equal to 200000,account,chart,89
+427,show branch wise count of leads where loan status is pending,lead,chart,60
+428,show max of loan amount for customers having tasks pending,customer,table,58
+429,show customers who have loans and also leads in rejected status,lead,table,63
+430,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+431,show customers with total account balance not equal to 500000 and loan amount not equal to 500000,account,chart,97
+432,show branch wise count of leads where loan status is approved,lead,chart,61
+433,show sum of loan amount for customers having tasks pending,customer,chart,58
+434,show customers who have loans and also leads in open status,lead,table,59
+435,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+436,show customers with total account balance greater than 1000000 and loan amount greater than 1000000,account,chart,99
+437,show branch wise count of leads where loan status is rejected,lead,chart,61
+438,show count of loan amount for customers having tasks pending,customer,chart,60
+439,show customers who have loans and also leads in closed status,lead,table,61
+440,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+441,show customers with total account balance less than 50000 and loan amount less than 50000,account,chart,89
+442,show branch wise count of leads where loan status is open,lead,chart,57
+443,show average of loan amount for customers having tasks pending,customer,chart,62
+444,show customers who have loans and also leads in in-progress status,lead,table,66
+445,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+446,show customers with total account balance equal to 100000 and loan amount equal to 100000,account,chart,89
+447,show branch wise count of leads where loan status is closed,lead,chart,59
+448,show min of loan amount for customers having tasks pending,customer,table,58
+449,show customers who have loans and also leads in pending status,lead,table,62
+450,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+451,show customers with total account balance not equal to 200000 and loan amount not equal to 200000,account,chart,97
+452,show branch wise count of leads where loan status is in-progress,lead,chart,64
+453,show max of loan amount for customers having tasks pending,customer,table,58
+454,show customers who have loans and also leads in approved status,lead,table,63
+455,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+456,show customers with total account balance greater than 500000 and loan amount greater than 500000,account,chart,97
+457,show branch wise count of leads where loan status is pending,lead,chart,60
+458,show sum of loan amount for customers having tasks pending,customer,chart,58
+459,show customers who have loans and also leads in rejected status,lead,table,63
+460,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+461,show customers with total account balance less than 1000000 and loan amount less than 1000000,account,chart,93
+462,show branch wise count of leads where loan status is approved,lead,chart,61
+463,show count of loan amount for customers having tasks pending,customer,chart,60
+464,show customers who have loans and also leads in open status,lead,table,59
+465,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+466,show customers with total account balance equal to 50000 and loan amount equal to 50000,account,chart,87
+467,show branch wise count of leads where loan status is rejected,lead,chart,61
+468,show average of loan amount for customers having tasks pending,customer,chart,62
+469,show customers who have loans and also leads in closed status,lead,table,61
+470,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+471,show customers with total account balance not equal to 100000 and loan amount not equal to 100000,account,chart,97
+472,show branch wise count of leads where loan status is open,lead,chart,57
+473,show min of loan amount for customers having tasks pending,customer,table,58
+474,show customers who have loans and also leads in in-progress status,lead,table,66
+475,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+476,show customers with total account balance greater than 200000 and loan amount greater than 200000,account,chart,97
+477,show branch wise count of leads where loan status is closed,lead,chart,59
+478,show max of loan amount for customers having tasks pending,customer,table,58
+479,show customers who have loans and also leads in pending status,lead,table,62
+480,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+481,show customers with total account balance less than 500000 and loan amount less than 500000,account,chart,91
+482,show branch wise count of leads where loan status is in-progress,lead,chart,64
+483,show sum of loan amount for customers having tasks pending,customer,chart,58
+484,show customers who have loans and also leads in approved status,lead,table,63
+485,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+486,show customers with total account balance equal to 1000000 and loan amount equal to 1000000,account,chart,91
+487,show branch wise count of leads where loan status is pending,lead,chart,60
+488,show count of loan amount for customers having tasks pending,customer,chart,60
+489,show customers who have loans and also leads in rejected status,lead,table,63
+490,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+491,show customers with total account balance not equal to 50000 and loan amount not equal to 50000,account,chart,95
+492,show branch wise count of leads where loan status is approved,lead,chart,61
+493,show average of loan amount for customers having tasks pending,customer,chart,62
+494,show customers who have loans and also leads in open status,lead,table,59
+495,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+496,show customers with total account balance greater than 100000 and loan amount greater than 100000,account,chart,97
+497,show branch wise count of leads where loan status is rejected,lead,chart,61
+498,show min of loan amount for customers having tasks pending,customer,table,58
+499,show all loan,loan,table,13
+500,show all loan yesterday,loan,table,23
+501,show my loan with status in-progress,loan,table,36
+502,list loan where priority is high,loan,table,32
+503,show all loan,loan,table,13
+504,show all loan last week,loan,table,23
+505,show my loan with status pending,loan,table,32
+506,list loan where priority is medium,loan,table,34
+507,show all loan,loan,table,13
+508,show all loan last month,loan,table,24
+509,show my loan with status approved,loan,table,33
+510,list loan where priority is low,loan,table,31
+511,show all loan,loan,table,13
+512,show all loan last 3 months,loan,table,27
+513,show my loan with status rejected,loan,table,33
+514,list loan where priority is high,loan,table,32
+515,show all loan,loan,table,13
+516,show all loan this quarter,loan,table,26
+517,show my loan with status open,loan,table,29
+518,list loan where priority is medium,loan,table,34
+519,show all loan,loan,table,13
+520,show all loan this year,loan,table,23
+521,show my loan with status closed,loan,table,31
+522,list loan where priority is low,loan,table,31
+523,show all loan,loan,table,13
+524,show all loan today,loan,table,19
+525,show my loan with status in-progress,loan,table,36
+526,list loan where priority is high,loan,table,32
+527,show all loan,loan,table,13
+528,show all loan yesterday,loan,table,23
+529,show my loan with status pending,loan,table,32
+530,list loan where priority is medium,loan,table,34
+531,show all loan,loan,table,13
+532,show all loan last week,loan,table,23
+533,show my loan with status approved,loan,table,33
+534,list loan where priority is low,loan,table,31
+535,show all loan,loan,table,13
+536,show all loan last month,loan,table,24
+537,show my loan with status rejected,loan,table,33
+538,list loan where priority is high,loan,table,32
+539,show all loan,loan,table,13
+540,show all loan last 3 months,loan,table,27
+541,show my loan with status open,loan,table,29
+542,list loan where priority is medium,loan,table,34
+543,show all loan,loan,table,13
+544,show all loan this quarter,loan,table,26
+545,show my loan with status closed,loan,table,31
+546,list loan where priority is low,loan,table,31
+547,show all loan,loan,table,13
+548,show all loan this year,loan,table,23
+549,show my loan with status in-progress,loan,table,36
+550,list loan where priority is high,loan,table,32
+551,show all loan,loan,table,13
+552,show all loan today,loan,table,19
+553,show my loan with status pending,loan,table,32
+554,list loan where priority is medium,loan,table,34
+555,show all loan,loan,table,13
+556,show top 10 loan where status is open,loan,table,37
+557,show loan sorted by loan_amount desc,loan,table,36
+558,filter loan where status is equal to 200000,loan,table,43
+559,show loan created last month,loan,table,28
+560,show top 10 loan where status is closed,loan,table,39
+561,show loan sorted by status asc,loan,table,30
+562,filter loan where emi_amount is not equal to 500000,loan,table,51
+563,show loan created last 3 months,loan,table,31
+564,show top 10 loan where status is in-progress,loan,table,44
+565,show loan sorted by emi_amount desc,loan,table,35
+566,filter loan where customer_id is greater than 1000000,customer,table,53
+567,show loan created this quarter,loan,table,30
+568,show top 10 loan where status is pending,loan,table,40
+569,show loan sorted by customer_id asc,customer,table,35
+570,filter loan where branch is less than 50000,loan,table,43
+571,show loan created this year,loan,table,27
+572,show top 10 loan where status is approved,loan,table,41
+573,show loan sorted by branch desc,loan,table,31
+574,filter loan where loan_id is equal to 100000,loan,table,44
+575,show loan created today,loan,table,23
+576,show top 10 loan where status is rejected,loan,table,41
+577,show loan sorted by loan_id asc,loan,table,31
+578,filter loan where loan_amount is not equal to 200000,loan,table,52
+579,show loan created yesterday,loan,table,27
+580,show top 10 loan where status is open,loan,table,37
+581,show loan sorted by loan_amount desc,loan,table,36
+582,filter loan where status is greater than 500000,loan,table,47
+583,show loan created last week,loan,table,27
+584,show top 10 loan where status is closed,loan,table,39
+585,show loan sorted by status asc,loan,table,30
+586,filter loan where emi_amount is less than 1000000,loan,table,49
+587,show loan created last month,loan,table,28
+588,show top 10 loan where status is in-progress,loan,table,44
+589,show loan sorted by emi_amount desc,loan,table,35
+590,filter loan where customer_id is equal to 50000,customer,table,47
+591,show loan created last 3 months,loan,table,31
+592,show top 10 loan where status is pending,loan,table,40
+593,show loan sorted by customer_id asc,customer,table,35
+594,filter loan where branch is not equal to 100000,loan,table,47
+595,show loan created this quarter,loan,table,30
+596,show top 10 loan where status is approved,loan,table,41
+597,show loan sorted by branch desc,loan,table,31
+598,filter loan where loan_id is greater than 200000,loan,table,48
+599,show loan created this year,loan,table,27
+600,show top 10 loan where status is rejected,loan,table,41
+601,show loan sorted by loan_id asc,loan,table,31
+602,filter loan where loan_amount is less than 500000,loan,table,49
+603,show loan created today,loan,table,23
+604,show top 10 loan where status is open,loan,table,37
+605,show loan sorted by loan_amount desc,loan,table,36
+606,filter loan where status is equal to 1000000,loan,table,44
+607,show loan created yesterday,loan,table,27
+608,show top 10 loan where status is closed,loan,table,39
+609,show loan sorted by status asc,loan,table,30
+610,filter loan where emi_amount is not equal to 50000,loan,table,50
+611,show loan created last week,loan,table,27
+612,show top 10 loan where status is in-progress,loan,table,44
+613,show loan with related account,account,chart,30
+614,show loan where customer loan_amount is 100000,customer,table,46
+615,list loan and related loan filtered by in-progress,loan,table,50
+616,show loan with related customer,customer,table,31
+617,show loan where loan status is 200000,loan,table,37
+618,list loan and related task filtered by pending,loan,table,46
+619,show loan with related loan,loan,table,27
+620,show loan where task emi_amount is 500000,loan,table,41
+621,list loan and related branch filtered by approved,loan,table,49
+622,show loan with related task,loan,table,27
+623,show loan where branch customer_id is 1000000,customer,table,45
+624,list loan and related lead filtered by rejected,lead,table,47
+625,show loan with related branch,loan,table,29
+626,show loan where lead branch is 50000,lead,table,36
+627,list loan and related account filtered by open,account,chart,46
+628,show loan with related lead,lead,table,27
+629,show loan where account loan_id is 100000,account,chart,41
+630,list loan and related customer filtered by closed,customer,table,49
+631,show loan with related account,account,chart,30
+632,show loan where customer loan_amount is 200000,customer,table,46
+633,list loan and related loan filtered by in-progress,loan,table,50
+634,show loan with related customer,customer,table,31
+635,show loan where loan status is 500000,loan,table,37
+636,list loan and related task filtered by pending,loan,table,46
+637,show loan with related loan,loan,table,27
+638,show loan where task emi_amount is 1000000,loan,table,42
+639,list loan and related branch filtered by approved,loan,table,49
+640,show loan with related task,loan,table,27
+641,show loan where branch customer_id is 50000,customer,table,43
+642,list loan and related lead filtered by rejected,lead,table,47
+643,show loan with related branch,loan,table,29
+644,show loan where lead branch is 100000,lead,table,37
+645,list loan and related account filtered by open,account,chart,46
+646,show loan with related lead,lead,table,27
+647,show loan where account loan_id is 200000,account,chart,41
+648,list loan and related customer filtered by closed,customer,table,49
+649,show loan with related account,account,chart,30
+650,show loan where customer loan_amount is 500000,customer,table,46
+651,list loan and related loan filtered by in-progress,loan,table,50
+652,show loan with related customer,customer,table,31
+653,show loan where loan status is 1000000,loan,table,38
+654,list loan and related task filtered by pending,loan,table,46
+655,show loan with related loan,loan,table,27
+656,show loan where task emi_amount is 50000,loan,table,40
+657,list loan and related branch filtered by approved,loan,table,49
+658,show loan with related task,loan,table,27
+659,show loan where branch customer_id is 100000,customer,table,44
+660,list loan and related lead filtered by rejected,lead,table,47
+661,show loan with related branch,loan,table,29
+662,show loan where lead branch is 200000,lead,table,37
+663,list loan and related account filtered by open,account,chart,46
+664,show loan with related lead,lead,table,27
+665,show loan where account loan_id is 500000,account,chart,41
+666,list loan and related customer filtered by closed,customer,table,49
+667,show loan with related account,account,chart,30
+668,show loan where customer loan_amount is 1000000,customer,table,47
+669,list loan and related loan filtered by in-progress,loan,table,50
+670,show sum of amount in loan,loan,chart,26
+671,show count of balance for loan yesterday,loan,chart,40
+672,calculate total loan_amount across all loan,loan,chart,43
+673,show loan grouped by customer_type with min of emi_amount,customer,chart,57
+674,show count of balance in loan,loan,chart,29
+675,show average of loan_amount for loan last week,loan,chart,46
+676,calculate total emi_amount across all loan,loan,chart,42
+677,show loan grouped by status with max of premium_amount,loan,chart,54
+678,show average of loan_amount in loan,loan,chart,35
+679,show min of emi_amount for loan last month,loan,table,42
+680,calculate total premium_amount across all loan,loan,chart,46
+681,show loan grouped by branch with sum of amount,loan,chart,46
+682,show min of emi_amount in loan,loan,table,30
+683,show max of premium_amount for loan last 3 months,loan,table,49
+684,calculate total amount across all loan,loan,chart,38
+685,show loan grouped by manager with count of balance,loan,chart,50
+686,show max of premium_amount in loan,loan,table,34
+687,show sum of amount for loan this quarter,loan,chart,40
+688,calculate total balance across all loan,loan,chart,39
+689,show loan grouped by product with average of loan_amount,loan,chart,56
+690,show sum of amount in loan,loan,chart,26
+691,show count of balance for loan this year,loan,chart,40
+692,calculate total loan_amount across all loan,loan,chart,43
+693,show loan grouped by customer_type with min of emi_amount,customer,chart,57
+694,show count of balance in loan,loan,chart,29
+695,show average of loan_amount for loan today,loan,chart,42
+696,calculate total emi_amount across all loan,loan,chart,42
+697,show loan grouped by status with max of premium_amount,loan,chart,54
+698,show average of loan_amount in loan,loan,chart,35
+699,show min of emi_amount for loan yesterday,loan,table,41
+700,calculate total premium_amount across all loan,loan,chart,46
+701,show loan grouped by branch with sum of amount,loan,chart,46
+702,show min of emi_amount in loan,loan,table,30
+703,show max of premium_amount for loan last week,loan,table,45
+704,calculate total amount across all loan,loan,chart,38
+705,show loan grouped by manager with count of balance,loan,chart,50
+706,show max of premium_amount in loan,loan,table,34
+707,show sum of amount for loan last month,loan,chart,38
+708,calculate total balance across all loan,loan,chart,39
+709,show loan grouped by product with average of loan_amount,loan,chart,56
+710,show sum of amount in loan,loan,chart,26
+711,show count of balance for loan last 3 months,loan,chart,44
+712,calculate total loan_amount across all loan,loan,chart,43
+713,show loan grouped by customer_type with min of emi_amount,customer,chart,57
+714,show count of balance in loan,loan,chart,29
+715,show average of loan_amount for loan this quarter,loan,chart,49
+716,calculate total emi_amount across all loan,loan,chart,42
+717,show loan grouped by status with max of premium_amount,loan,chart,54
+718,show average of loan_amount in loan,loan,chart,35
+719,show min of emi_amount for loan this year,loan,table,41
+720,calculate total premium_amount across all loan,loan,chart,46
+721,show loan grouped by branch with sum of amount,loan,chart,46
+722,show min of emi_amount in loan,loan,table,30
+723,show max of premium_amount for loan today,loan,table,41
+724,calculate total amount across all loan,loan,chart,38
+725,show loan grouped by manager with count of balance,loan,chart,50
+726,show max of premium_amount in loan,loan,table,34
+727,show sum of loan amount for customers grouped by branch,customer,chart,55
+728,total loan amount for customers who have accounts greater than 100000,account,chart,69
+729,sum of account balance for customers having loans,account,chart,49
+730,show branch wise min of emi amount,branch,summary,34
+731,show count of loan amount for customers grouped by branch,customer,chart,57
+732,total loan amount for customers who have accounts greater than 200000,account,chart,69
+733,sum of account balance for customers having loans,account,chart,49
+734,show branch wise max of emi amount,branch,summary,34
+735,show average of loan amount for customers grouped by branch,customer,chart,59
+736,total loan amount for customers who have accounts greater than 500000,account,chart,69
+737,sum of account balance for customers having loans,account,chart,49
+738,show branch wise sum of emi amount,branch,chart,34
+739,show min of loan amount for customers grouped by branch,customer,chart,55
+740,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+741,sum of account balance for customers having loans,account,chart,49
+742,show branch wise count of emi amount,branch,chart,36
+743,show max of loan amount for customers grouped by branch,customer,chart,55
+744,total loan amount for customers who have accounts greater than 50000,account,chart,68
+745,sum of account balance for customers having loans,account,chart,49
+746,show branch wise average of emi amount,branch,chart,38
+747,show sum of loan amount for customers grouped by branch,customer,chart,55
+748,total loan amount for customers who have accounts greater than 100000,account,chart,69
+749,sum of account balance for customers having loans,account,chart,49
+750,show branch wise min of emi amount,branch,summary,34
+751,show count of loan amount for customers grouped by branch,customer,chart,57
+752,total loan amount for customers who have accounts greater than 200000,account,chart,69
+753,sum of account balance for customers having loans,account,chart,49
+754,show branch wise max of emi amount,branch,summary,34
+755,show average of loan amount for customers grouped by branch,customer,chart,59
+756,total loan amount for customers who have accounts greater than 500000,account,chart,69
+757,sum of account balance for customers having loans,account,chart,49
+758,show branch wise sum of emi amount,branch,chart,34
+759,show min of loan amount for customers grouped by branch,customer,chart,55
+760,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+761,sum of account balance for customers having loans,account,chart,49
+762,show branch wise count of emi amount,branch,chart,36
+763,show max of loan amount for customers grouped by branch,customer,chart,55
+764,total loan amount for customers who have accounts greater than 50000,account,chart,68
+765,sum of account balance for customers having loans,account,chart,49
+766,show branch wise average of emi amount,branch,chart,38
+767,show sum of loan amount for customers grouped by branch,customer,chart,55
+768,total loan amount for customers who have accounts greater than 100000,account,chart,69
+769,sum of account balance for customers having loans,account,chart,49
+770,show branch wise min of emi amount,branch,summary,34
+771,show count of loan amount for customers grouped by branch,customer,chart,57
+772,total loan amount for customers who have accounts greater than 200000,account,chart,69
+773,sum of account balance for customers having loans,account,chart,49
+774,show branch wise max of emi amount,branch,summary,34
+775,show average of loan amount for customers grouped by branch,customer,chart,59
+776,total loan amount for customers who have accounts greater than 500000,account,chart,69
+777,sum of account balance for customers having loans,account,chart,49
+778,show branch wise sum of emi amount,branch,chart,34
+779,show min of loan amount for customers grouped by branch,customer,chart,55
+780,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+781,sum of account balance for customers having loans,account,chart,49
+782,show branch wise count of emi amount,branch,chart,36
+783,show max of loan amount for customers grouped by branch,customer,chart,55
+784,show customers with total account balance greater than 50000 and loan amount greater than 50000,account,chart,95
+785,show branch wise count of leads where loan status is closed,lead,chart,59
+786,show average of loan amount for customers having tasks pending,customer,chart,62
+787,show customers who have loans and also leads in pending status,lead,table,62
+788,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+789,show customers with total account balance less than 100000 and loan amount less than 100000,account,chart,91
+790,show branch wise count of leads where loan status is in-progress,lead,chart,64
+791,show min of loan amount for customers having tasks pending,customer,table,58
+792,show customers who have loans and also leads in approved status,lead,table,63
+793,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+794,show customers with total account balance equal to 200000 and loan amount equal to 200000,account,chart,89
+795,show branch wise count of leads where loan status is pending,lead,chart,60
+796,show max of loan amount for customers having tasks pending,customer,table,58
+797,show customers who have loans and also leads in rejected status,lead,table,63
+798,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+799,show customers with total account balance not equal to 500000 and loan amount not equal to 500000,account,chart,97
+800,show branch wise count of leads where loan status is approved,lead,chart,61
+801,show sum of loan amount for customers having tasks pending,customer,chart,58
+802,show customers who have loans and also leads in open status,lead,table,59
+803,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+804,show customers with total account balance greater than 1000000 and loan amount greater than 1000000,account,chart,99
+805,show branch wise count of leads where loan status is rejected,lead,chart,61
+806,show count of loan amount for customers having tasks pending,customer,chart,60
+807,show customers who have loans and also leads in closed status,lead,table,61
+808,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+809,show customers with total account balance less than 50000 and loan amount less than 50000,account,chart,89
+810,show branch wise count of leads where loan status is open,lead,chart,57
+811,show average of loan amount for customers having tasks pending,customer,chart,62
+812,show customers who have loans and also leads in in-progress status,lead,table,66
+813,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+814,show customers with total account balance equal to 100000 and loan amount equal to 100000,account,chart,89
+815,show branch wise count of leads where loan status is closed,lead,chart,59
+816,show min of loan amount for customers having tasks pending,customer,table,58
+817,show customers who have loans and also leads in pending status,lead,table,62
+818,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+819,show customers with total account balance not equal to 200000 and loan amount not equal to 200000,account,chart,97
+820,show branch wise count of leads where loan status is in-progress,lead,chart,64
+821,show max of loan amount for customers having tasks pending,customer,table,58
+822,show customers who have loans and also leads in approved status,lead,table,63
+823,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+824,show customers with total account balance greater than 500000 and loan amount greater than 500000,account,chart,97
+825,show branch wise count of leads where loan status is pending,lead,chart,60
+826,show sum of loan amount for customers having tasks pending,customer,chart,58
+827,show customers who have loans and also leads in rejected status,lead,table,63
+828,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+829,show customers with total account balance less than 1000000 and loan amount less than 1000000,account,chart,93
+830,show branch wise count of leads where loan status is approved,lead,chart,61
+831,show count of loan amount for customers having tasks pending,customer,chart,60
+832,show customers who have loans and also leads in open status,lead,table,59
+833,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+834,show customers with total account balance equal to 50000 and loan amount equal to 50000,account,chart,87
+835,show branch wise count of leads where loan status is rejected,lead,chart,61
+836,show average of loan amount for customers having tasks pending,customer,chart,62
+837,show customers who have loans and also leads in closed status,lead,table,61
+838,show total portfolio (loans + accounts) for each relationship manager,account,chart,69
+839,show customers with total account balance not equal to 100000 and loan amount not equal to 100000,account,chart,97
+840,show branch wise count of leads where loan status is open,lead,chart,57
+841,show branch wise loan,loan,summary,21
+842,show my branch loan with status closed,loan,table,38
+843,list accounts in branch with balance equal to 200000,account,chart,52
+844,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+845,show branch wise loan,loan,summary,21
+846,show my branch loan with status in-progress,loan,table,43
+847,list accounts in branch with balance not equal to 500000,account,chart,56
+848,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+849,show branch wise loan,loan,summary,21
+850,show my branch loan with status pending,loan,table,39
+851,list accounts in branch with balance greater than 1000000,account,chart,57
+852,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+853,show branch wise loan,loan,summary,21
+854,show my branch loan with status approved,loan,table,40
+855,list accounts in branch with balance less than 50000,account,chart,52
+856,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+857,show branch wise loan,loan,summary,21
+858,show my branch loan with status rejected,loan,table,40
+859,list accounts in branch with balance equal to 100000,account,chart,52
+860,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+861,show branch wise loan,loan,summary,21
+862,show my branch loan with status open,loan,table,36
+863,list accounts in branch with balance not equal to 200000,account,chart,56
+864,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+865,show branch wise loan,loan,summary,21
+866,show my branch loan with status closed,loan,table,38
+867,list accounts in branch with balance greater than 500000,account,chart,56
+868,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+869,show branch wise loan,loan,summary,21
+870,show my branch loan with status in-progress,loan,table,43
+871,list accounts in branch with balance less than 1000000,account,chart,54
+872,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+873,show branch wise loan,loan,summary,21
+874,show my branch loan with status pending,loan,table,39
+875,list accounts in branch with balance equal to 50000,account,chart,51
+876,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+877,show branch wise loan,loan,summary,21
+878,show my branch loan with status approved,loan,table,40
+879,list accounts in branch with balance not equal to 100000,account,chart,56
+880,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+881,show branch wise loan,loan,summary,21
+882,show my branch loan with status rejected,loan,table,40
+883,list accounts in branch with balance greater than 200000,account,chart,56
+884,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+885,show branch wise loan,loan,summary,21
+886,show my branch loan with status open,loan,table,36
+887,list accounts in branch with balance less than 500000,account,chart,53
+888,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+889,show branch wise loan,loan,summary,21
+890,show my branch loan with status closed,loan,table,38
+891,list accounts in branch with balance equal to 1000000,account,chart,53
+892,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+893,show branch wise loan,loan,summary,21
+894,show my branch loan with status in-progress,loan,table,43
+895,list accounts in branch with balance not equal to 50000,account,chart,55
+896,"show branch performance summary: loan count, loan total, deposits total",loan,chart,71
+897,show branch wise loan,loan,summary,21
+898,show all lead,lead,table,13
+899,show all lead yesterday,lead,table,23
+900,show my lead with status in-progress,lead,table,36
+901,list lead where priority is high,lead,table,32
+902,show all lead,lead,table,13
+903,show all lead last week,lead,table,23
+904,show my lead with status pending,lead,table,32
+905,list lead where priority is medium,lead,table,34
+906,show all lead,lead,table,13
+907,show all lead last month,lead,table,24
+908,show my lead with status approved,lead,table,33
+909,list lead where priority is low,lead,table,31
+910,show all lead,lead,table,13
+911,show all lead last 3 months,lead,table,27
+912,show my lead with status rejected,lead,table,33
+913,list lead where priority is high,lead,table,32
+914,show all lead,lead,table,13
+915,show all lead this quarter,lead,table,26
+916,show my lead with status open,lead,table,29
+917,list lead where priority is medium,lead,table,34
+918,show all lead,lead,table,13
+919,show all lead this year,lead,table,23
+920,show my lead with status closed,lead,table,31
+921,list lead where priority is low,lead,table,31
+922,show all lead,lead,table,13
+923,show all lead today,lead,table,19
+924,show my lead with status in-progress,lead,table,36
+925,list lead where priority is high,lead,table,32
+926,show all lead,lead,table,13
+927,show all lead yesterday,lead,table,23
+928,show my lead with status pending,lead,table,32
+929,list lead where priority is medium,lead,table,34
+930,show all lead,lead,table,13
+931,show all lead last week,lead,table,23
+932,show my lead with status approved,lead,table,33
+933,list lead where priority is low,lead,table,31
+934,show all lead,lead,table,13
+935,show all lead last month,lead,table,24
+936,show my lead with status rejected,lead,table,33
+937,list lead where priority is high,lead,table,32
+938,show all lead,lead,table,13
+939,show all lead last 3 months,lead,table,27
+940,show my lead with status open,lead,table,29
+941,list lead where priority is medium,lead,table,34
+942,show all lead,lead,table,13
+943,show all lead this quarter,lead,table,26
+944,show my lead with status closed,lead,table,31
+945,list lead where priority is low,lead,table,31
+946,show all lead,lead,table,13
+947,show all lead this year,lead,table,23
+948,show my lead with status in-progress,lead,table,36
+949,list lead where priority is high,lead,table,32
+950,show all lead,lead,table,13
+951,show all lead today,lead,table,19
+952,show my lead with status pending,lead,table,32
+953,list lead where priority is medium,lead,table,34
+954,show all lead,lead,table,13
+955,show top 10 lead where status is open,lead,table,37
+956,show lead sorted by status desc,lead,table,31
+957,filter lead where priority is equal to 200000,lead,table,45
+958,show lead created last month,lead,table,28
+959,show top 10 lead where status is closed,lead,table,39
+960,show lead sorted by priority asc,lead,table,32
+961,filter lead where created_date is not equal to 500000,lead,table,53
+962,show lead created last 3 months,lead,table,31
+963,show top 10 lead where status is in-progress,lead,table,44
+964,show lead sorted by created_date desc,lead,table,37
+965,filter lead where assigned_to is greater than 1000000,lead,table,53
+966,show lead created this quarter,lead,table,30
+967,show top 10 lead where status is pending,lead,table,40
+968,show lead sorted by assigned_to asc,lead,table,35
+969,filter lead where product is less than 50000,lead,table,44
+970,show lead created this year,lead,table,27
+971,show top 10 lead where status is approved,lead,table,41
+972,show lead sorted by product desc,lead,table,32
+973,filter lead where branch is equal to 100000,lead,table,43
+974,show lead created today,lead,table,23
+975,show top 10 lead where status is rejected,lead,table,41
+976,show lead sorted by branch asc,lead,table,30
+977,filter lead where name is not equal to 200000,lead,table,45
+978,show lead created yesterday,lead,table,27
+979,show top 10 lead where status is open,lead,table,37
+980,show lead sorted by name desc,lead,table,29
+981,filter lead where status is greater than 500000,lead,table,47
+982,show lead created last week,lead,table,27
+983,show top 10 lead where status is closed,lead,table,39
+984,show lead sorted by status asc,lead,table,30
+985,filter lead where priority is less than 1000000,lead,table,47
+986,show lead created last month,lead,table,28
+987,show top 10 lead where status is in-progress,lead,table,44
+988,show lead sorted by priority desc,lead,table,33
+989,filter lead where created_date is equal to 50000,lead,table,48
+990,show lead created last 3 months,lead,table,31
+991,show top 10 lead where status is pending,lead,table,40
+992,show lead sorted by created_date asc,lead,table,36
+993,filter lead where assigned_to is not equal to 100000,lead,table,52
+994,show lead created this quarter,lead,table,30
+995,show top 10 lead where status is approved,lead,table,41
+996,show lead sorted by assigned_to desc,lead,table,36
+997,filter lead where product is greater than 200000,lead,table,48
+998,show lead created this year,lead,table,27
+999,show top 10 lead where status is rejected,lead,table,41
+1000,show lead sorted by product asc,lead,table,31
+1001,filter lead where branch is less than 500000,lead,table,44
+1002,show lead created today,lead,table,23
+1003,show top 10 lead where status is open,lead,table,37
+1004,show lead sorted by branch desc,lead,table,31
+1005,filter lead where name is equal to 1000000,lead,table,42
+1006,show lead created yesterday,lead,table,27
+1007,show top 10 lead where status is closed,lead,table,39
+1008,show lead sorted by name asc,lead,table,28
+1009,filter lead where status is not equal to 50000,lead,table,46
+1010,show lead created last week,lead,table,27
+1011,show top 10 lead where status is in-progress,lead,table,44
+1012,show lead with related account,lead,chart,30
+1013,show lead where customer status is 100000,lead,table,41
+1014,list lead and related loan filtered by in-progress,lead,table,50
+1015,show lead with related customer,lead,table,31
+1016,show lead where loan priority is 200000,lead,table,39
+1017,list lead and related task filtered by pending,lead,table,46
+1018,show lead with related loan,lead,table,27
+1019,show lead where task created_date is 500000,lead,table,43
+1020,list lead and related branch filtered by approved,lead,table,49
+1021,show lead with related task,lead,table,27
+1022,show lead where branch assigned_to is 1000000,lead,table,45
+1023,list lead and related lead filtered by rejected,lead,table,47
+1024,show lead with related branch,lead,table,29
+1025,show lead where lead product is 50000,lead,table,37
+1026,list lead and related account filtered by open,lead,chart,46
+1027,show lead with related lead,lead,table,27
+1028,show lead where account branch is 100000,lead,chart,40
+1029,list lead and related customer filtered by closed,lead,table,49
+1030,show lead with related account,lead,chart,30
+1031,show lead where customer name is 200000,lead,table,39
+1032,list lead and related loan filtered by in-progress,lead,table,50
+1033,show lead with related customer,lead,table,31
+1034,show lead where loan status is 500000,lead,table,37
+1035,list lead and related task filtered by pending,lead,table,46
+1036,show lead with related loan,lead,table,27
+1037,show lead where task priority is 1000000,lead,table,40
+1038,list lead and related branch filtered by approved,lead,table,49
+1039,show lead with related task,lead,table,27
+1040,show lead where branch created_date is 50000,lead,table,44
+1041,list lead and related lead filtered by rejected,lead,table,47
+1042,show lead with related branch,lead,table,29
+1043,show lead where lead assigned_to is 100000,lead,table,42
+1044,list lead and related account filtered by open,lead,chart,46
+1045,show lead with related lead,lead,table,27
+1046,show lead where account product is 200000,lead,chart,41
+1047,list lead and related customer filtered by closed,lead,table,49
+1048,show lead with related account,lead,chart,30
+1049,show lead where customer branch is 500000,lead,table,41
+1050,list lead and related loan filtered by in-progress,lead,table,50
+1051,show lead with related customer,lead,table,31
+1052,show lead where loan name is 1000000,lead,table,36
+1053,list lead and related task filtered by pending,lead,table,46
+1054,show lead with related loan,lead,table,27
+1055,show lead where task status is 50000,lead,table,36
+1056,list lead and related branch filtered by approved,lead,table,49
+1057,show lead with related task,lead,table,27
+1058,show lead where branch priority is 100000,lead,table,41
+1059,list lead and related lead filtered by rejected,lead,table,47
+1060,show lead with related branch,lead,table,29
+1061,show lead where lead created_date is 200000,lead,table,43
+1062,list lead and related account filtered by open,lead,chart,46
+1063,show lead with related lead,lead,table,27
+1064,show lead where account assigned_to is 500000,lead,chart,45
+1065,list lead and related customer filtered by closed,lead,table,49
+1066,show lead with related account,lead,chart,30
+1067,show lead where customer product is 1000000,lead,table,43
+1068,list lead and related loan filtered by in-progress,lead,table,50
+1069,show sum of amount in lead,lead,chart,26
+1070,show count of balance for lead yesterday,lead,chart,40
+1071,calculate total loan_amount across all lead,lead,chart,43
+1072,show lead grouped by customer_type with min of emi_amount,lead,chart,57
+1073,show count of balance in lead,lead,chart,29
+1074,show average of loan_amount for lead last week,lead,chart,46
+1075,calculate total emi_amount across all lead,lead,chart,42
+1076,show lead grouped by status with max of premium_amount,lead,chart,54
+1077,show average of loan_amount in lead,lead,chart,35
+1078,show min of emi_amount for lead last month,lead,table,42
+1079,calculate total premium_amount across all lead,lead,chart,46
+1080,show lead grouped by branch with sum of amount,lead,chart,46
+1081,show min of emi_amount in lead,lead,table,30
+1082,show max of premium_amount for lead last 3 months,lead,table,49
+1083,calculate total amount across all lead,lead,chart,38
+1084,show lead grouped by manager with count of balance,lead,chart,50
+1085,show max of premium_amount in lead,lead,table,34
+1086,show sum of amount for lead this quarter,lead,chart,40
+1087,calculate total balance across all lead,lead,chart,39
+1088,show lead grouped by product with average of loan_amount,lead,chart,56
+1089,show sum of amount in lead,lead,chart,26
+1090,show count of balance for lead this year,lead,chart,40
+1091,calculate total loan_amount across all lead,lead,chart,43
+1092,show lead grouped by customer_type with min of emi_amount,lead,chart,57
+1093,show count of balance in lead,lead,chart,29
+1094,show average of loan_amount for lead today,lead,chart,42
+1095,calculate total emi_amount across all lead,lead,chart,42
+1096,show lead grouped by status with max of premium_amount,lead,chart,54
+1097,show average of loan_amount in lead,lead,chart,35
+1098,show min of emi_amount for lead yesterday,lead,table,41
+1099,calculate total premium_amount across all lead,lead,chart,46
+1100,show lead grouped by branch with sum of amount,lead,chart,46
+1101,show min of emi_amount in lead,lead,table,30
+1102,show max of premium_amount for lead last week,lead,table,45
+1103,calculate total amount across all lead,lead,chart,38
+1104,show lead grouped by manager with count of balance,lead,chart,50
+1105,show max of premium_amount in lead,lead,table,34
+1106,show sum of amount for lead last month,lead,chart,38
+1107,calculate total balance across all lead,lead,chart,39
+1108,show lead grouped by product with average of loan_amount,lead,chart,56
+1109,show sum of amount in lead,lead,chart,26
+1110,show count of balance for lead last 3 months,lead,chart,44
+1111,calculate total loan_amount across all lead,lead,chart,43
+1112,show lead grouped by customer_type with min of emi_amount,lead,chart,57
+1113,show count of balance in lead,lead,chart,29
+1114,show average of loan_amount for lead this quarter,lead,chart,49
+1115,calculate total emi_amount across all lead,lead,chart,42
+1116,show lead grouped by status with max of premium_amount,lead,chart,54
+1117,show average of loan_amount in lead,lead,chart,35
+1118,show min of emi_amount for lead this year,lead,table,41
+1119,calculate total premium_amount across all lead,lead,chart,46
+1120,show lead grouped by branch with sum of amount,lead,chart,46
+1121,show min of emi_amount in lead,lead,table,30
+1122,show max of premium_amount for lead today,lead,table,41
+1123,calculate total amount across all lead,lead,chart,38
+1124,show lead grouped by manager with count of balance,lead,chart,50
+1125,show max of premium_amount in lead,lead,table,34
+1126,show overdue tasks related to lead,lead,table,34
+1127,list tasks for lead assigned to me,lead,table,34
+1128,tasks last week for lead with status in-progress,lead,table,48
+1129,show overdue tasks related to lead,lead,table,34
+1130,list tasks for lead assigned to me,lead,table,34
+1131,tasks last month for lead with status pending,lead,table,45
+1132,show overdue tasks related to lead,lead,table,34
+1133,list tasks for lead assigned to me,lead,table,34
+1134,tasks last 3 months for lead with status approved,lead,table,49
+1135,show overdue tasks related to lead,lead,table,34
+1136,list tasks for lead assigned to me,lead,table,34
+1137,tasks this quarter for lead with status rejected,lead,table,48
+1138,show overdue tasks related to lead,lead,table,34
+1139,list tasks for lead assigned to me,lead,table,34
+1140,tasks this year for lead with status open,lead,table,41
+1141,show overdue tasks related to lead,lead,table,34
+1142,list tasks for lead assigned to me,lead,table,34
+1143,tasks today for lead with status closed,lead,table,39
+1144,show overdue tasks related to lead,lead,table,34
+1145,list tasks for lead assigned to me,lead,table,34
+1146,tasks yesterday for lead with status in-progress,lead,table,48
+1147,show overdue tasks related to lead,lead,table,34
+1148,list tasks for lead assigned to me,lead,table,34
+1149,tasks last week for lead with status pending,lead,table,44
+1150,show overdue tasks related to lead,lead,table,34
+1151,list tasks for lead assigned to me,lead,table,34
+1152,tasks last month for lead with status approved,lead,table,46
+1153,show overdue tasks related to lead,lead,table,34
+1154,list tasks for lead assigned to me,lead,table,34
+1155,tasks last 3 months for lead with status rejected,lead,table,49
+1156,show overdue tasks related to lead,lead,table,34
+1157,list tasks for lead assigned to me,lead,table,34
+1158,tasks this quarter for lead with status open,lead,table,44
+1159,show overdue tasks related to lead,lead,table,34
+1160,list tasks for lead assigned to me,lead,table,34
+1161,tasks this year for lead with status closed,lead,table,43
+1162,show overdue tasks related to lead,lead,table,34
+1163,list tasks for lead assigned to me,lead,table,34
+1164,tasks today for lead with status in-progress,lead,table,44
+1165,show overdue tasks related to lead,lead,table,34
+1166,list tasks for lead assigned to me,lead,table,34
+1167,tasks yesterday for lead with status pending,lead,table,44
+1168,show overdue tasks related to lead,lead,table,34
+1169,list tasks for lead assigned to me,lead,table,34
+1170,tasks last week for lead with status approved,lead,table,45
+1171,show overdue tasks related to lead,lead,table,34
+1172,list tasks for lead assigned to me,lead,table,34
+1173,tasks last month for lead with status rejected,lead,table,46
+1174,show overdue tasks related to lead,lead,table,34
+1175,list tasks for lead assigned to me,lead,table,34
+1176,tasks last 3 months for lead with status open,lead,table,45
+1177,show overdue tasks related to lead,lead,table,34
+1178,list tasks for lead assigned to me,lead,table,34
+1179,tasks this quarter for lead with status closed,lead,table,46
+1180,show overdue tasks related to lead,lead,table,34
+1181,list tasks for lead assigned to me,lead,table,34
+1182,tasks this year for lead with status in-progress,lead,table,48
+1183,show month wise sum of lead,lead,chart,27
+1184,daily breakup of lead for yesterday,lead,table,35
+1185,show quarterly performance of leads by branch,lead,summary,45
+1186,show month wise count of lead,lead,chart,29
+1187,daily breakup of lead for last week,lead,table,35
+1188,show quarterly performance of leads by branch,lead,summary,45
+1189,show month wise average of lead,lead,chart,31
+1190,daily breakup of lead for last month,lead,table,36
+1191,show quarterly performance of leads by branch,lead,summary,45
+1192,show month wise min of lead,lead,table,27
+1193,daily breakup of lead for last 3 months,lead,table,39
+1194,show quarterly performance of leads by branch,lead,summary,45
+1195,show month wise max of lead,lead,table,27
+1196,daily breakup of lead for this quarter,lead,table,38
+1197,show quarterly performance of leads by branch,lead,summary,45
+1198,show month wise sum of lead,lead,chart,27
+1199,daily breakup of lead for this year,lead,table,35
+1200,show quarterly performance of leads by branch,lead,summary,45
+1201,show month wise count of lead,lead,chart,29
+1202,daily breakup of lead for today,lead,table,31
+1203,show quarterly performance of leads by branch,lead,summary,45
+1204,show month wise average of lead,lead,chart,31
+1205,daily breakup of lead for yesterday,lead,table,35
+1206,show quarterly performance of leads by branch,lead,summary,45
+1207,show month wise min of lead,lead,table,27
+1208,daily breakup of lead for last week,lead,table,35
+1209,show quarterly performance of leads by branch,lead,summary,45
+1210,show month wise max of lead,lead,table,27
+1211,daily breakup of lead for last month,lead,table,36
+1212,show quarterly performance of leads by branch,lead,summary,45
+1213,show month wise sum of lead,lead,chart,27
+1214,daily breakup of lead for last 3 months,lead,table,39
+1215,show quarterly performance of leads by branch,lead,summary,45
+1216,show month wise count of lead,lead,chart,29
+1217,daily breakup of lead for this quarter,lead,table,38
+1218,show quarterly performance of leads by branch,lead,summary,45
+1219,show month wise average of lead,lead,chart,31
+1220,daily breakup of lead for this year,lead,table,35
+1221,show quarterly performance of leads by branch,lead,summary,45
+1222,show month wise min of lead,lead,table,27
+1223,daily breakup of lead for today,lead,table,31
+1224,show quarterly performance of leads by branch,lead,summary,45
+1225,show month wise max of lead,lead,table,27
+1226,daily breakup of lead for yesterday,lead,table,35
+1227,show quarterly performance of leads by branch,lead,summary,45
+1228,show month wise sum of lead,lead,chart,27
+1229,daily breakup of lead for last week,lead,table,35
+1230,show quarterly performance of leads by branch,lead,summary,45
+1231,show month wise count of lead,lead,chart,29
+1232,daily breakup of lead for last month,lead,table,36
+1233,show quarterly performance of leads by branch,lead,summary,45
+1234,show month wise average of lead,lead,chart,31
+1235,daily breakup of lead for last 3 months,lead,table,39
+1236,show quarterly performance of leads by branch,lead,summary,45
+1237,show month wise min of lead,lead,table,27
+1238,daily breakup of lead for this quarter,lead,table,38
+1239,show quarterly performance of leads by branch,lead,summary,45
+1240,show branch wise lead,lead,summary,21
+1241,show my branch lead with status closed,lead,table,38
+1242,list accounts in branch with balance equal to 200000,account,chart,52
+1243,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1244,show branch wise lead,lead,summary,21
+1245,show my branch lead with status in-progress,lead,table,43
+1246,list accounts in branch with balance not equal to 500000,account,chart,56
+1247,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1248,show branch wise lead,lead,summary,21
+1249,show my branch lead with status pending,lead,table,39
+1250,list accounts in branch with balance greater than 1000000,account,chart,57
+1251,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1252,show branch wise lead,lead,summary,21
+1253,show my branch lead with status approved,lead,table,40
+1254,list accounts in branch with balance less than 50000,account,chart,52
+1255,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1256,show branch wise lead,lead,summary,21
+1257,show my branch lead with status rejected,lead,table,40
+1258,list accounts in branch with balance equal to 100000,account,chart,52
+1259,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1260,show branch wise lead,lead,summary,21
+1261,show my branch lead with status open,lead,table,36
+1262,list accounts in branch with balance not equal to 200000,account,chart,56
+1263,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1264,show branch wise lead,lead,summary,21
+1265,show my branch lead with status closed,lead,table,38
+1266,list accounts in branch with balance greater than 500000,account,chart,56
+1267,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1268,show branch wise lead,lead,summary,21
+1269,show my branch lead with status in-progress,lead,table,43
+1270,list accounts in branch with balance less than 1000000,account,chart,54
+1271,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1272,show branch wise lead,lead,summary,21
+1273,show my branch lead with status pending,lead,table,39
+1274,list accounts in branch with balance equal to 50000,account,chart,51
+1275,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1276,show branch wise lead,lead,summary,21
+1277,show my branch lead with status approved,lead,table,40
+1278,list accounts in branch with balance not equal to 100000,account,chart,56
+1279,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1280,show branch wise lead,lead,summary,21
+1281,show my branch lead with status rejected,lead,table,40
+1282,list accounts in branch with balance greater than 200000,account,chart,56
+1283,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1284,show branch wise lead,lead,summary,21
+1285,show my branch lead with status open,lead,table,36
+1286,list accounts in branch with balance less than 500000,account,chart,53
+1287,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1288,show branch wise lead,lead,summary,21
+1289,show my branch lead with status closed,lead,table,38
+1290,list accounts in branch with balance equal to 1000000,account,chart,53
+1291,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1292,show branch wise lead,lead,summary,21
+1293,show my branch lead with status in-progress,lead,table,43
+1294,list accounts in branch with balance not equal to 50000,account,chart,55
+1295,"show branch performance summary: lead count, loan total, deposits total",lead,chart,71
+1296,show branch wise lead,lead,summary,21
+1297,show all account,account,chart,16
+1298,show all account yesterday,account,chart,26
+1299,show my account with status in-progress,account,chart,39
+1300,list account where priority is high,account,chart,35
+1301,show all account,account,chart,16
+1302,show all account last week,account,chart,26
+1303,show my account with status pending,account,chart,35
+1304,list account where priority is medium,account,chart,37
+1305,show all account,account,chart,16
+1306,show all account last month,account,chart,27
+1307,show my account with status approved,account,chart,36
+1308,list account where priority is low,account,chart,34
+1309,show all account,account,chart,16
+1310,show all account last 3 months,account,chart,30
+1311,show my account with status rejected,account,chart,36
+1312,list account where priority is high,account,chart,35
+1313,show all account,account,chart,16
+1314,show all account this quarter,account,chart,29
+1315,show my account with status open,account,chart,32
+1316,list account where priority is medium,account,chart,37
+1317,show all account,account,chart,16
+1318,show all account this year,account,chart,26
+1319,show my account with status closed,account,chart,34
+1320,list account where priority is low,account,chart,34
+1321,show all account,account,chart,16
+1322,show all account today,account,chart,22
+1323,show my account with status in-progress,account,chart,39
+1324,list account where priority is high,account,chart,35
+1325,show all account,account,chart,16
+1326,show all account yesterday,account,chart,26
+1327,show my account with status pending,account,chart,35
+1328,list account where priority is medium,account,chart,37
+1329,show all account,account,chart,16
+1330,show all account last week,account,chart,26
+1331,show my account with status approved,account,chart,36
+1332,list account where priority is low,account,chart,34
+1333,show all account,account,chart,16
+1334,show all account last month,account,chart,27
+1335,show my account with status rejected,account,chart,36
+1336,list account where priority is high,account,chart,35
+1337,show all account,account,chart,16
+1338,show all account last 3 months,account,chart,30
+1339,show my account with status open,account,chart,32
+1340,list account where priority is medium,account,chart,37
+1341,show all account,account,chart,16
+1342,show all account this quarter,account,chart,29
+1343,show my account with status closed,account,chart,34
+1344,list account where priority is low,account,chart,34
+1345,show all account,account,chart,16
+1346,show all account this year,account,chart,26
+1347,show top 10 account where status is open,account,chart,40
+1348,show account sorted by balance desc,account,chart,35
+1349,filter account where type is equal to 200000,account,chart,44
+1350,show account created last month,account,chart,31
+1351,show top 10 account where status is closed,account,chart,42
+1352,show account sorted by type asc,account,chart,31
+1353,filter account where branch is not equal to 500000,account,chart,50
+1354,show account created last 3 months,account,chart,34
+1355,show top 10 account where status is in-progress,account,chart,47
+1356,show account sorted by branch desc,account,chart,34
+1357,filter account where customer_id is greater than 1000000,account,chart,56
+1358,show account created this quarter,account,chart,33
+1359,show top 10 account where status is pending,account,chart,43
+1360,show account sorted by customer_id asc,account,chart,38
+1361,filter account where account_no is less than 50000,account,chart,50
+1362,show account created this year,account,chart,30
+1363,show top 10 account where status is approved,account,chart,44
+1364,show account sorted by account_no desc,account,chart,38
+1365,filter account where balance is equal to 100000,account,chart,47
+1366,show account created today,account,chart,26
+1367,show top 10 account where status is rejected,account,chart,44
+1368,show account sorted by balance asc,account,chart,34
+1369,filter account where type is not equal to 200000,account,chart,48
+1370,show account created yesterday,account,chart,30
+1371,show top 10 account where status is open,account,chart,40
+1372,show account sorted by type desc,account,chart,32
+1373,filter account where branch is greater than 500000,account,chart,50
+1374,show account created last week,account,chart,30
+1375,show top 10 account where status is closed,account,chart,42
+1376,show account sorted by branch asc,account,chart,33
+1377,filter account where customer_id is less than 1000000,account,chart,53
+1378,show account created last month,account,chart,31
+1379,show top 10 account where status is in-progress,account,chart,47
+1380,show account sorted by customer_id desc,account,chart,39
+1381,filter account where account_no is equal to 50000,account,chart,49
+1382,show account created last 3 months,account,chart,34
+1383,show top 10 account where status is pending,account,chart,43
+1384,show account sorted by account_no asc,account,chart,37
+1385,filter account where balance is not equal to 100000,account,chart,51
+1386,show account created this quarter,account,chart,33
+1387,show top 10 account where status is approved,account,chart,44
+1388,show account sorted by balance desc,account,chart,35
+1389,filter account where type is greater than 200000,account,chart,48
+1390,show account created this year,account,chart,30
+1391,show top 10 account where status is rejected,account,chart,44
+1392,show account sorted by type asc,account,chart,31
+1393,filter account where branch is less than 500000,account,chart,47
+1394,show account created today,account,chart,26
+1395,show top 10 account where status is open,account,chart,40
+1396,show account sorted by branch desc,account,chart,34
+1397,show account with related account,account,chart,33
+1398,show account where customer balance is 100000,account,chart,45
+1399,list account and related loan filtered by in-progress,account,chart,53
+1400,show account with related customer,account,chart,34
+1401,show account where loan type is 200000,account,chart,38
+1402,list account and related task filtered by pending,account,chart,49
+1403,show account with related loan,account,chart,30
+1404,show account where task branch is 500000,account,chart,40
+1405,list account and related branch filtered by approved,account,chart,52
+1406,show account with related task,account,chart,30
+1407,show account where branch customer_id is 1000000,account,chart,48
+1408,list account and related lead filtered by rejected,lead,chart,50
+1409,show account with related branch,account,chart,32
+1410,show account where lead account_no is 50000,lead,chart,43
+1411,list account and related account filtered by open,account,chart,49
+1412,show account with related lead,lead,chart,30
+1413,show account where account balance is 100000,account,chart,44
+1414,list account and related customer filtered by closed,account,chart,52
+1415,show account with related account,account,chart,33
+1416,show account where customer type is 200000,account,chart,42
+1417,list account and related loan filtered by in-progress,account,chart,53
+1418,show account with related customer,account,chart,34
+1419,show account where loan branch is 500000,account,chart,40
+1420,list account and related task filtered by pending,account,chart,49
+1421,show account with related loan,account,chart,30
+1422,show account where task customer_id is 1000000,account,chart,46
+1423,list account and related branch filtered by approved,account,chart,52
+1424,show account with related task,account,chart,30
+1425,show account where branch account_no is 50000,account,chart,45
+1426,list account and related lead filtered by rejected,lead,chart,50
+1427,show account with related branch,account,chart,32
+1428,show account where lead balance is 100000,lead,chart,41
+1429,list account and related account filtered by open,account,chart,49
+1430,show account with related lead,lead,chart,30
+1431,show account where account type is 200000,account,chart,41
+1432,list account and related customer filtered by closed,account,chart,52
+1433,show account with related account,account,chart,33
+1434,show account where customer branch is 500000,account,chart,44
+1435,list account and related loan filtered by in-progress,account,chart,53
+1436,show account with related customer,account,chart,34
+1437,show account where loan customer_id is 1000000,account,chart,46
+1438,list account and related task filtered by pending,account,chart,49
+1439,show account with related loan,account,chart,30
+1440,show account where task account_no is 50000,account,chart,43
+1441,list account and related branch filtered by approved,account,chart,52
+1442,show account with related task,account,chart,30
+1443,show account where branch balance is 100000,account,chart,43
+1444,list account and related lead filtered by rejected,lead,chart,50
+1445,show account with related branch,account,chart,32
+1446,show account where lead type is 200000,lead,chart,38
+1447,show sum of amount in account,account,chart,29
+1448,show count of balance for account yesterday,account,chart,43
+1449,calculate total loan_amount across all account,account,chart,46
+1450,show account grouped by customer_type with min of emi_amount,account,chart,60
+1451,show count of balance in account,account,chart,32
+1452,show average of loan_amount for account last week,account,chart,49
+1453,calculate total emi_amount across all account,account,chart,45
+1454,show account grouped by status with max of premium_amount,account,chart,57
+1455,show average of loan_amount in account,account,chart,38
+1456,show min of emi_amount for account last month,account,chart,45
+1457,calculate total premium_amount across all account,account,chart,49
+1458,show account grouped by branch with sum of amount,account,chart,49
+1459,show min of emi_amount in account,account,chart,33
+1460,show max of premium_amount for account last 3 months,account,chart,52
+1461,calculate total amount across all account,account,chart,41
+1462,show account grouped by manager with count of balance,account,chart,53
+1463,show max of premium_amount in account,account,chart,37
+1464,show sum of amount for account this quarter,account,chart,43
+1465,calculate total balance across all account,account,chart,42
+1466,show account grouped by product with average of loan_amount,account,chart,59
+1467,show sum of amount in account,account,chart,29
+1468,show count of balance for account this year,account,chart,43
+1469,calculate total loan_amount across all account,account,chart,46
+1470,show account grouped by customer_type with min of emi_amount,account,chart,60
+1471,show count of balance in account,account,chart,32
+1472,show average of loan_amount for account today,account,chart,45
+1473,calculate total emi_amount across all account,account,chart,45
+1474,show account grouped by status with max of premium_amount,account,chart,57
+1475,show average of loan_amount in account,account,chart,38
+1476,show min of emi_amount for account yesterday,account,chart,44
+1477,calculate total premium_amount across all account,account,chart,49
+1478,show account grouped by branch with sum of amount,account,chart,49
+1479,show min of emi_amount in account,account,chart,33
+1480,show max of premium_amount for account last week,account,chart,48
+1481,calculate total amount across all account,account,chart,41
+1482,show account grouped by manager with count of balance,account,chart,53
+1483,show max of premium_amount in account,account,chart,37
+1484,show sum of amount for account last month,account,chart,41
+1485,calculate total balance across all account,account,chart,42
+1486,show account grouped by product with average of loan_amount,account,chart,59
+1487,show sum of amount in account,account,chart,29
+1488,show count of balance for account last 3 months,account,chart,47
+1489,calculate total loan_amount across all account,account,chart,46
+1490,show account grouped by customer_type with min of emi_amount,account,chart,60
+1491,show count of balance in account,account,chart,32
+1492,show average of loan_amount for account this quarter,account,chart,52
+1493,calculate total emi_amount across all account,account,chart,45
+1494,show account grouped by status with max of premium_amount,account,chart,57
+1495,show average of loan_amount in account,account,chart,38
+1496,show min of emi_amount for account this year,account,chart,44
+1497,show sum of loan amount for customers grouped by branch,customer,chart,55
+1498,total loan amount for customers who have accounts greater than 100000,account,chart,69
+1499,sum of account balance for customers having loans,account,chart,49
+1500,show branch wise min of emi amount,branch,summary,34
+1501,show count of loan amount for customers grouped by branch,customer,chart,57
+1502,total loan amount for customers who have accounts greater than 200000,account,chart,69
+1503,sum of account balance for customers having loans,account,chart,49
+1504,show branch wise max of emi amount,branch,summary,34
+1505,show average of loan amount for customers grouped by branch,customer,chart,59
+1506,total loan amount for customers who have accounts greater than 500000,account,chart,69
+1507,sum of account balance for customers having loans,account,chart,49
+1508,show branch wise sum of emi amount,branch,chart,34
+1509,show min of loan amount for customers grouped by branch,customer,chart,55
+1510,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+1511,sum of account balance for customers having loans,account,chart,49
+1512,show branch wise count of emi amount,branch,chart,36
+1513,show max of loan amount for customers grouped by branch,customer,chart,55
+1514,total loan amount for customers who have accounts greater than 50000,account,chart,68
+1515,sum of account balance for customers having loans,account,chart,49
+1516,show branch wise average of emi amount,branch,chart,38
+1517,show sum of loan amount for customers grouped by branch,customer,chart,55
+1518,total loan amount for customers who have accounts greater than 100000,account,chart,69
+1519,sum of account balance for customers having loans,account,chart,49
+1520,show branch wise min of emi amount,branch,summary,34
+1521,show count of loan amount for customers grouped by branch,customer,chart,57
+1522,total loan amount for customers who have accounts greater than 200000,account,chart,69
+1523,sum of account balance for customers having loans,account,chart,49
+1524,show branch wise max of emi amount,branch,summary,34
+1525,show average of loan amount for customers grouped by branch,customer,chart,59
+1526,total loan amount for customers who have accounts greater than 500000,account,chart,69
+1527,sum of account balance for customers having loans,account,chart,49
+1528,show branch wise sum of emi amount,branch,chart,34
+1529,show min of loan amount for customers grouped by branch,customer,chart,55
+1530,total loan amount for customers who have accounts greater than 1000000,account,chart,70
+1531,sum of account balance for customers having loans,account,chart,49
+1532,show branch wise count of emi amount,branch,chart,36
+1533,show max of loan amount for customers grouped by branch,customer,chart,55
+1534,total loan amount for customers who have accounts greater than 50000,account,chart,68
+1535,sum of account balance for customers having loans,account,chart,49
+1536,show branch wise average of emi amount,branch,chart,38
+1537,show sum of loan amount for customers grouped by branch,customer,chart,55
+1538,total loan amount for customers who have accounts greater than 100000,account,chart,69
+1539,sum of account balance for customers having loans,account,chart,49
+1540,show branch wise min of emi amount,branch,summary,34
+1541,show count of loan amount for customers grouped by branch,customer,chart,57
+1542,total loan amount for customers who have accounts greater than 200000,account,chart,69
+1543,sum of account balance for customers having loans,account,chart,49
+1544,show branch wise max of emi amount,branch,summary,34
+1545,show average of loan amount for customers grouped by branch,customer,chart,59
+1546,total loan amount for customers who have accounts greater than 500000,account,chart,69
+1547,show branch wise account,account,chart,24
+1548,show my branch account with status closed,account,chart,41
+1549,list accounts in branch with balance equal to 200000,account,chart,52
+1550,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1551,show branch wise account,account,chart,24
+1552,show my branch account with status in-progress,account,chart,46
+1553,list accounts in branch with balance not equal to 500000,account,chart,56
+1554,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1555,show branch wise account,account,chart,24
+1556,show my branch account with status pending,account,chart,42
+1557,list accounts in branch with balance greater than 1000000,account,chart,57
+1558,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1559,show branch wise account,account,chart,24
+1560,show my branch account with status approved,account,chart,43
+1561,list accounts in branch with balance less than 50000,account,chart,52
+1562,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1563,show branch wise account,account,chart,24
+1564,show my branch account with status rejected,account,chart,43
+1565,list accounts in branch with balance equal to 100000,account,chart,52
+1566,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1567,show branch wise account,account,chart,24
+1568,show my branch account with status open,account,chart,39
+1569,list accounts in branch with balance not equal to 200000,account,chart,56
+1570,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1571,show branch wise account,account,chart,24
+1572,show my branch account with status closed,account,chart,41
+1573,list accounts in branch with balance greater than 500000,account,chart,56
+1574,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1575,show branch wise account,account,chart,24
+1576,show my branch account with status in-progress,account,chart,46
+1577,list accounts in branch with balance less than 1000000,account,chart,54
+1578,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1579,show branch wise account,account,chart,24
+1580,show my branch account with status pending,account,chart,42
+1581,list accounts in branch with balance equal to 50000,account,chart,51
+1582,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1583,show branch wise account,account,chart,24
+1584,show my branch account with status approved,account,chart,43
+1585,list accounts in branch with balance not equal to 100000,account,chart,56
+1586,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1587,show branch wise account,account,chart,24
+1588,show my branch account with status rejected,account,chart,43
+1589,list accounts in branch with balance greater than 200000,account,chart,56
+1590,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1591,show branch wise account,account,chart,24
+1592,show my branch account with status open,account,chart,39
+1593,list accounts in branch with balance less than 500000,account,chart,53
+1594,"show branch performance summary: account count, loan total, deposits total",account,chart,74
+1595,show branch wise account,account,chart,24
+1596,show my branch account with status closed,account,chart,41
+1597,show all task,task,table,13
+1598,show all task yesterday,task,table,23
+1599,show my task with status in-progress,task,table,36
+1600,list task where priority is high,task,table,32
+1601,show all task,task,table,13
+1602,show all task last week,task,table,23
+1603,show my task with status pending,task,table,32
+1604,list task where priority is medium,task,table,34
+1605,show all task,task,table,13
+1606,show all task last month,task,table,24
+1607,show my task with status approved,task,table,33
+1608,list task where priority is low,task,table,31
+1609,show all task,task,table,13
+1610,show all task last 3 months,task,table,27
+1611,show my task with status rejected,task,table,33
+1612,list task where priority is high,task,table,32
+1613,show all task,task,table,13
+1614,show all task this quarter,task,table,26
+1615,show my task with status open,task,table,29
+1616,list task where priority is medium,task,table,34
+1617,show all task,task,table,13
+1618,show all task this year,task,table,23
+1619,show my task with status closed,task,table,31
+1620,list task where priority is low,task,table,31
+1621,show all task,task,table,13
+1622,show all task today,task,table,19
+1623,show my task with status in-progress,task,table,36
+1624,list task where priority is high,task,table,32
+1625,show all task,task,table,13
+1626,show all task yesterday,task,table,23
+1627,show my task with status pending,task,table,32
+1628,list task where priority is medium,task,table,34
+1629,show all task,task,table,13
+1630,show all task last week,task,table,23
+1631,show my task with status approved,task,table,33
+1632,list task where priority is low,task,table,31
+1633,show all task,task,table,13
+1634,show all task last month,task,table,24
+1635,show my task with status rejected,task,table,33
+1636,list task where priority is high,task,table,32
+1637,show all task,task,table,13
+1638,show all task last 3 months,task,table,27
+1639,show my task with status open,task,table,29
+1640,list task where priority is medium,task,table,34
+1641,show all task,task,table,13
+1642,show all task this quarter,task,table,26
+1643,show my task with status closed,task,table,31
+1644,list task where priority is low,task,table,31
+1645,show all task,task,table,13
+1646,show all task this year,task,table,23
+1647,show top 10 task where status is open,task,table,37
+1648,show task sorted by due_date desc,task,table,33
+1649,filter task where status is equal to 200000,task,table,43
+1650,show task created last month,task,table,28
+1651,show top 10 task where status is closed,task,table,39
+1652,show task sorted by status asc,task,table,30
+1653,filter task where assigned_to is not equal to 500000,task,table,52
+1654,show task created last 3 months,task,table,31
+1655,show top 10 task where status is in-progress,task,table,44
+1656,show task sorted by assigned_to desc,task,table,36
+1657,filter task where related_to is greater than 1000000,task,table,52
+1658,show task created this quarter,task,table,30
+1659,show top 10 task where status is pending,task,table,40
+1660,show task sorted by related_to asc,task,table,34
+1661,filter task where task_name is less than 50000,task,table,46
+1662,show task created this year,task,table,27
+1663,show top 10 task where status is approved,task,table,41
+1664,show task sorted by task_name desc,task,table,34
+1665,filter task where due_date is equal to 100000,task,table,45
+1666,show task created today,task,table,23
+1667,show top 10 task where status is rejected,task,table,41
+1668,show task sorted by due_date asc,task,table,32
+1669,filter task where status is not equal to 200000,task,table,47
+1670,show task created yesterday,task,table,27
+1671,show top 10 task where status is open,task,table,37
+1672,show task sorted by status desc,task,table,31
+1673,filter task where assigned_to is greater than 500000,task,table,52
+1674,show task created last week,task,table,27
+1675,show top 10 task where status is closed,task,table,39
+1676,show task sorted by assigned_to asc,task,table,35
+1677,filter task where related_to is less than 1000000,task,table,49
+1678,show task created last month,task,table,28
+1679,show top 10 task where status is in-progress,task,table,44
+1680,show task sorted by related_to desc,task,table,35
+1681,filter task where task_name is equal to 50000,task,table,45
+1682,show task created last 3 months,task,table,31
+1683,show top 10 task where status is pending,task,table,40
+1684,show task sorted by task_name asc,task,table,33
+1685,filter task where due_date is not equal to 100000,task,table,49
+1686,show task created this quarter,task,table,30
+1687,show top 10 task where status is approved,task,table,41
+1688,show task sorted by due_date desc,task,table,33
+1689,filter task where status is greater than 200000,task,table,47
+1690,show task created this year,task,table,27
+1691,show top 10 task where status is rejected,task,table,41
+1692,show task sorted by status asc,task,table,30
+1693,filter task where assigned_to is less than 500000,task,table,49
+1694,show task created today,task,table,23
+1695,show top 10 task where status is open,task,table,37
+1696,show task sorted by assigned_to desc,task,table,36
+1697,show overdue tasks related to task,task,table,34
+1698,list tasks for task assigned to me,task,table,34
+1699,tasks last week for task with status in-progress,task,table,48
+1700,show overdue tasks related to task,task,table,34
+1701,list tasks for task assigned to me,task,table,34
+1702,tasks last month for task with status pending,task,table,45
+1703,show overdue tasks related to task,task,table,34
+1704,list tasks for task assigned to me,task,table,34
+1705,tasks last 3 months for task with status approved,task,table,49
+1706,show overdue tasks related to task,task,table,34
+1707,list tasks for task assigned to me,task,table,34
+1708,tasks this quarter for task with status rejected,task,table,48
+1709,show overdue tasks related to task,task,table,34
+1710,list tasks for task assigned to me,task,table,34
+1711,tasks this year for task with status open,task,table,41
+1712,show overdue tasks related to task,task,table,34
+1713,list tasks for task assigned to me,task,table,34
+1714,tasks today for task with status closed,task,table,39
+1715,show overdue tasks related to task,task,table,34
+1716,list tasks for task assigned to me,task,table,34
+1717,tasks yesterday for task with status in-progress,task,table,48
+1718,show overdue tasks related to task,task,table,34
+1719,list tasks for task assigned to me,task,table,34
+1720,tasks last week for task with status pending,task,table,44
+1721,show overdue tasks related to task,task,table,34
+1722,list tasks for task assigned to me,task,table,34
+1723,tasks last month for task with status approved,task,table,46
+1724,show overdue tasks related to task,task,table,34
+1725,list tasks for task assigned to me,task,table,34
+1726,tasks last 3 months for task with status rejected,task,table,49
+1727,show overdue tasks related to task,task,table,34
+1728,list tasks for task assigned to me,task,table,34
+1729,tasks this quarter for task with status open,task,table,44
+1730,show overdue tasks related to task,task,table,34
+1731,list tasks for task assigned to me,task,table,34
+1732,tasks this year for task with status closed,task,table,43
+1733,show overdue tasks related to task,task,table,34
+1734,list tasks for task assigned to me,task,table,34
+1735,tasks today for task with status in-progress,task,table,44
+1736,show overdue tasks related to task,task,table,34
+1737,list tasks for task assigned to me,task,table,34
+1738,tasks yesterday for task with status pending,task,table,44
+1739,show overdue tasks related to task,task,table,34
+1740,list tasks for task assigned to me,task,table,34
+1741,tasks last week for task with status approved,task,table,45
+1742,show overdue tasks related to task,task,table,34
+1743,list tasks for task assigned to me,task,table,34
+1744,tasks last month for task with status rejected,task,table,46
+1745,show overdue tasks related to task,task,table,34
+1746,list tasks for task assigned to me,task,table,34
+1747,show month wise sum of task,task,chart,27
+1748,daily breakup of task for yesterday,task,table,35
+1749,show quarterly performance of leads by branch,lead,summary,45
+1750,show month wise count of task,task,chart,29
+1751,daily breakup of task for last week,task,table,35
+1752,show quarterly performance of leads by branch,lead,summary,45
+1753,show month wise average of task,task,chart,31
+1754,daily breakup of task for last month,task,table,36
+1755,show quarterly performance of leads by branch,lead,summary,45
+1756,show month wise min of task,task,table,27
+1757,daily breakup of task for last 3 months,task,table,39
+1758,show quarterly performance of leads by branch,lead,summary,45
+1759,show month wise max of task,task,table,27
+1760,daily breakup of task for this quarter,task,table,38
+1761,show quarterly performance of leads by branch,lead,summary,45
+1762,show month wise sum of task,task,chart,27
+1763,daily breakup of task for this year,task,table,35
+1764,show quarterly performance of leads by branch,lead,summary,45
+1765,show month wise count of task,task,chart,29
+1766,daily breakup of task for today,task,table,31
+1767,show quarterly performance of leads by branch,lead,summary,45
+1768,show month wise average of task,task,chart,31
+1769,daily breakup of task for yesterday,task,table,35
+1770,show quarterly performance of leads by branch,lead,summary,45
+1771,show month wise min of task,task,table,27
+1772,daily breakup of task for last week,task,table,35
+1773,show quarterly performance of leads by branch,lead,summary,45
+1774,show month wise max of task,task,table,27
+1775,daily breakup of task for last month,task,table,36
+1776,show quarterly performance of leads by branch,lead,summary,45
+1777,show month wise sum of task,task,chart,27
+1778,daily breakup of task for last 3 months,task,table,39
+1779,show quarterly performance of leads by branch,lead,summary,45
+1780,show month wise count of task,task,chart,29
+1781,daily breakup of task for this quarter,task,table,38
+1782,show quarterly performance of leads by branch,lead,summary,45
+1783,show month wise average of task,task,chart,31
+1784,daily breakup of task for this year,task,table,35
+1785,show quarterly performance of leads by branch,lead,summary,45
+1786,show month wise min of task,task,table,27
+1787,daily breakup of task for today,task,table,31
+1788,show quarterly performance of leads by branch,lead,summary,45
+1789,show month wise max of task,task,table,27
+1790,daily breakup of task for yesterday,task,table,35
+1791,show quarterly performance of leads by branch,lead,summary,45
+1792,show month wise sum of task,task,chart,27
+1793,daily breakup of task for last week,task,table,35
+1794,show quarterly performance of leads by branch,lead,summary,45
+1795,show month wise count of task,task,chart,29
+1796,daily breakup of task for last month,task,table,36
+1797,show all branch,branch,table,15
+1798,show all branch yesterday,branch,table,25
+1799,show my branch with status in-progress,branch,table,38
+1800,list branch where priority is high,branch,table,34
+1801,show all branch,branch,table,15
+1802,show all branch last week,branch,table,25
+1803,show my branch with status pending,branch,table,34
+1804,list branch where priority is medium,branch,table,36
+1805,show all branch,branch,table,15
+1806,show all branch last month,branch,table,26
+1807,show my branch with status approved,branch,table,35
+1808,list branch where priority is low,branch,table,33
+1809,show all branch,branch,table,15
+1810,show all branch last 3 months,branch,table,29
+1811,show my branch with status rejected,branch,table,35
+1812,list branch where priority is high,branch,table,34
+1813,show all branch,branch,table,15
+1814,show all branch this quarter,branch,table,28
+1815,show my branch with status open,branch,table,31
+1816,list branch where priority is medium,branch,table,36
+1817,show all branch,branch,table,15
+1818,show all branch this year,branch,table,25
+1819,show my branch with status closed,branch,table,33
+1820,list branch where priority is low,branch,table,33
+1821,show all branch,branch,table,15
+1822,show all branch today,branch,table,21
+1823,show my branch with status in-progress,branch,table,38
+1824,list branch where priority is high,branch,table,34
+1825,show all branch,branch,table,15
+1826,show all branch yesterday,branch,table,25
+1827,show my branch with status pending,branch,table,34
+1828,list branch where priority is medium,branch,table,36
+1829,show all branch,branch,table,15
+1830,show all branch last week,branch,table,25
+1831,show my branch with status approved,branch,table,35
+1832,list branch where priority is low,branch,table,33
+1833,show all branch,branch,table,15
+1834,show all branch last month,branch,table,26
+1835,show my branch with status rejected,branch,table,35
+1836,list branch where priority is high,branch,table,34
+1837,show all branch,branch,table,15
+1838,show all branch last 3 months,branch,table,29
+1839,show my branch with status open,branch,table,31
+1840,list branch where priority is medium,branch,table,36
+1841,show all branch,branch,table,15
+1842,show all branch this quarter,branch,table,28
+1843,show my branch with status closed,branch,table,33
+1844,list branch where priority is low,branch,table,33
+1845,show all branch,branch,table,15
+1846,show all branch this year,branch,table,25
+1847,show sum of amount in branch,branch,chart,28
+1848,show count of balance for branch yesterday,branch,chart,42
+1849,calculate total loan_amount across all branch,loan,chart,45
+1850,show branch grouped by customer_type with min of emi_amount,customer,chart,59
+1851,show count of balance in branch,branch,chart,31
+1852,show average of loan_amount for branch last week,loan,chart,48
+1853,calculate total emi_amount across all branch,branch,chart,44
+1854,show branch grouped by status with max of premium_amount,branch,chart,56
+1855,show average of loan_amount in branch,loan,chart,37
+1856,show min of emi_amount for branch last month,branch,table,44
+1857,calculate total premium_amount across all branch,branch,chart,48
+1858,show branch grouped by branch with sum of amount,branch,chart,48
+1859,show min of emi_amount in branch,branch,table,32
+1860,show max of premium_amount for branch last 3 months,branch,table,51
+1861,calculate total amount across all branch,branch,chart,40
+1862,show branch grouped by manager with count of balance,branch,chart,52
+1863,show max of premium_amount in branch,branch,table,36
+1864,show sum of amount for branch this quarter,branch,chart,42
+1865,calculate total balance across all branch,branch,chart,41
+1866,show branch grouped by product with average of loan_amount,loan,chart,58
+1867,show sum of amount in branch,branch,chart,28
+1868,show count of balance for branch this year,branch,chart,42
+1869,calculate total loan_amount across all branch,loan,chart,45
+1870,show branch grouped by customer_type with min of emi_amount,customer,chart,59
+1871,show count of balance in branch,branch,chart,31
+1872,show average of loan_amount for branch today,loan,chart,44
+1873,calculate total emi_amount across all branch,branch,chart,44
+1874,show branch grouped by status with max of premium_amount,branch,chart,56
+1875,show average of loan_amount in branch,loan,chart,37
+1876,show min of emi_amount for branch yesterday,branch,table,43
+1877,calculate total premium_amount across all branch,branch,chart,48
+1878,show branch grouped by branch with sum of amount,branch,chart,48
+1879,show min of emi_amount in branch,branch,table,32
+1880,show max of premium_amount for branch last week,branch,table,47
+1881,calculate total amount across all branch,branch,chart,40
+1882,show branch grouped by manager with count of balance,branch,chart,52
+1883,show max of premium_amount in branch,branch,table,36
+1884,show sum of amount for branch last month,branch,chart,40
+1885,calculate total balance across all branch,branch,chart,41
+1886,show branch grouped by product with average of loan_amount,loan,chart,58
+1887,show sum of amount in branch,branch,chart,28
+1888,show count of balance for branch last 3 months,branch,chart,46
+1889,calculate total loan_amount across all branch,loan,chart,45
+1890,show branch grouped by customer_type with min of emi_amount,customer,chart,59
+1891,show count of balance in branch,branch,chart,31
+1892,show average of loan_amount for branch this quarter,loan,chart,51
+1893,calculate total emi_amount across all branch,branch,chart,44
+1894,show branch grouped by status with max of premium_amount,branch,chart,56
+1895,show average of loan_amount in branch,loan,chart,37
+1896,show min of emi_amount for branch this year,branch,table,43
+1897,show month wise sum of branch,branch,chart,29
+1898,daily breakup of branch for yesterday,branch,table,37
+1899,show quarterly performance of leads by branch,lead,summary,45
+1900,show month wise count of branch,branch,chart,31
+1901,daily breakup of branch for last week,branch,table,37
+1902,show quarterly performance of leads by branch,lead,summary,45
+1903,show month wise average of branch,branch,chart,33
+1904,daily breakup of branch for last month,branch,table,38
+1905,show quarterly performance of leads by branch,lead,summary,45
+1906,show month wise min of branch,branch,summary,29
+1907,daily breakup of branch for last 3 months,branch,table,41
+1908,show quarterly performance of leads by branch,lead,summary,45
+1909,show month wise max of branch,branch,summary,29
+1910,daily breakup of branch for this quarter,branch,table,40
+1911,show quarterly performance of leads by branch,lead,summary,45
+1912,show month wise sum of branch,branch,chart,29
+1913,daily breakup of branch for this year,branch,table,37
+1914,show quarterly performance of leads by branch,lead,summary,45
+1915,show month wise count of branch,branch,chart,31
+1916,daily breakup of branch for today,branch,table,33
+1917,show quarterly performance of leads by branch,lead,summary,45
+1918,show month wise average of branch,branch,chart,33
+1919,daily breakup of branch for yesterday,branch,table,37
+1920,show quarterly performance of leads by branch,lead,summary,45
+1921,show month wise min of branch,branch,summary,29
+1922,daily breakup of branch for last week,branch,table,37
+1923,show quarterly performance of leads by branch,lead,summary,45
+1924,show month wise max of branch,branch,summary,29
+1925,daily breakup of branch for last month,branch,table,38
+1926,show quarterly performance of leads by branch,lead,summary,45
+1927,show month wise sum of branch,branch,chart,29
+1928,daily breakup of branch for last 3 months,branch,table,41
+1929,show quarterly performance of leads by branch,lead,summary,45
+1930,show month wise count of branch,branch,chart,31
+1931,daily breakup of branch for this quarter,branch,table,40
+1932,show quarterly performance of leads by branch,lead,summary,45
+1933,show month wise average of branch,branch,chart,33
+1934,daily breakup of branch for this year,branch,table,37
+1935,show quarterly performance of leads by branch,lead,summary,45
+1936,show month wise min of branch,branch,summary,29
+1937,daily breakup of branch for today,branch,table,33
+1938,show quarterly performance of leads by branch,lead,summary,45
+1939,show month wise max of branch,branch,summary,29
+1940,daily breakup of branch for yesterday,branch,table,37
+1941,show quarterly performance of leads by branch,lead,summary,45
+1942,show month wise sum of branch,branch,chart,29
+1943,daily breakup of branch for last week,branch,table,37
+1944,show quarterly performance of leads by branch,lead,summary,45
+1945,show month wise count of branch,branch,chart,31
+1946,daily breakup of branch for last month,branch,table,38
+1947,show branch wise branch,branch,summary,23
+1948,show my branch branch with status closed,branch,table,40
+1949,list accounts in branch with balance equal to 200000,account,chart,52
+1950,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1951,show branch wise branch,branch,summary,23
+1952,show my branch branch with status in-progress,branch,table,45
+1953,list accounts in branch with balance not equal to 500000,account,chart,56
+1954,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1955,show branch wise branch,branch,summary,23
+1956,show my branch branch with status pending,branch,table,41
+1957,list accounts in branch with balance greater than 1000000,account,chart,57
+1958,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1959,show branch wise branch,branch,summary,23
+1960,show my branch branch with status approved,branch,table,42
+1961,list accounts in branch with balance less than 50000,account,chart,52
+1962,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1963,show branch wise branch,branch,summary,23
+1964,show my branch branch with status rejected,branch,table,42
+1965,list accounts in branch with balance equal to 100000,account,chart,52
+1966,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1967,show branch wise branch,branch,summary,23
+1968,show my branch branch with status open,branch,table,38
+1969,list accounts in branch with balance not equal to 200000,account,chart,56
+1970,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1971,show branch wise branch,branch,summary,23
+1972,show my branch branch with status closed,branch,table,40
+1973,list accounts in branch with balance greater than 500000,account,chart,56
+1974,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1975,show branch wise branch,branch,summary,23
+1976,show my branch branch with status in-progress,branch,table,45
+1977,list accounts in branch with balance less than 1000000,account,chart,54
+1978,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1979,show branch wise branch,branch,summary,23
+1980,show my branch branch with status pending,branch,table,41
+1981,list accounts in branch with balance equal to 50000,account,chart,51
+1982,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1983,show branch wise branch,branch,summary,23
+1984,show my branch branch with status approved,branch,table,42
+1985,list accounts in branch with balance not equal to 100000,account,chart,56
+1986,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1987,show branch wise branch,branch,summary,23
+1988,show my branch branch with status rejected,branch,table,42
+1989,list accounts in branch with balance greater than 200000,account,chart,56
+1990,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1991,show branch wise branch,branch,summary,23
+1992,show my branch branch with status open,branch,table,38
+1993,list accounts in branch with balance less than 500000,account,chart,53
+1994,"show branch performance summary: branch count, loan total, deposits total",loan,chart,73
+1995,show branch wise branch,branch,summary,23
+1996,show my branch branch with status closed,branch,table,40
+1997,show leads with customer name containing 50000,lead,table,46
+1998,show customers whose account balance is greater than 50000,account,chart,58
+1999,show loan customers where EMI is greater than 50000,customer,table,51
+2000,show branch wise loan and account balance summary,account,chart,49

@@ -1,0 +1,35 @@
+Pattern: TASK_RELATED
+Object: lead
+Total Queries: 30
+============================================================
+
+1. show overdue tasks related to lead
+2. list tasks for lead assigned to me
+3. tasks last week for lead with status in-progress
+4. show overdue tasks related to lead
+5. list tasks for lead assigned to me
+6. tasks last month for lead with status pending
+7. show overdue tasks related to lead
+8. list tasks for lead assigned to me
+9. tasks last 3 months for lead with status approved
+10. show overdue tasks related to lead
+11. list tasks for lead assigned to me
+12. tasks this quarter for lead with status rejected
+13. show overdue tasks related to lead
+14. list tasks for lead assigned to me
+15. tasks this year for lead with status open
+16. show overdue tasks related to lead
+17. list tasks for lead assigned to me
+18. tasks today for lead with status closed
+19. show overdue tasks related to lead
+20. list tasks for lead assigned to me
+21. tasks yesterday for lead with status in-progress
+22. show overdue tasks related to lead
+23. list tasks for lead assigned to me
+24. tasks last week for lead with status pending
+25. show overdue tasks related to lead
+26. list tasks for lead assigned to me
+27. tasks last month for lead with status approved
+28. show overdue tasks related to lead
+29. list tasks for lead assigned to me
+30. tasks last 3 months for lead with status rejected
