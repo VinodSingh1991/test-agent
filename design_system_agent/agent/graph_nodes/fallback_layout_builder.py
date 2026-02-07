@@ -1,19 +1,20 @@
 """
 Fallback Layout Builder
 Creates generic layouts when no good match found
+Uses fixed JSON templates for consistency
+Data will be filled by LLM agents (DataFillingAgent)
 """
 from typing import Dict, List, Any, Optional
+from design_system_agent.agent.graph_nodes.layout_templates import (
+    get_fallback_layout,
+    validate_layout_structure
+)
 
 
 class FallbackLayoutBuilder:
     """
     Builds fallback layouts when no suitable layout found.
-    
-    Responsibilities:
-    - Create generic title + desc + list + badge layout
-    - Adapt to single or multi-object data
-    - Use design system components
-    - Ensure usable UI even without perfect match
+    Uses fixed JSON templates following structure: layout -> rows -> pattern_type + pattern_info
     """
     
     def build_fallback_layout(
@@ -23,321 +24,125 @@ class FallbackLayoutBuilder:
         analysis: Optional[Dict] = None
     ) -> Dict:
         """
-        Build fallback layout for data.
+        Build fallback layout using fixed JSON templates.
         
         Args:
             query: User query
-            data: Fetched data
+            data: Fetched data (should be dict)
             analysis: Query analysis
             
         Returns:
-            Generic layout with standard components
+            Fixed JSON layout following structure: layout -> rows -> pattern_type + pattern_info
         """
-        objects = self._detect_objects(data)
-        layout_type = self._detect_layout_type(analysis)
+        # Ensure data is a dict
+        if not isinstance(data, dict):
+            print(f"[FallbackLayoutBuilder] ⚠️  Data is not a dict (type: {type(data).__name__}), converting to empty dict")
+            data = {}
         
-        if len(objects) > 1:
-            return self._build_multi_object_fallback(query, data, objects)
+        # Detect object type from multiple sources
+        object_type = self._detect_object_type(query, data, analysis)
+        
+        # Get fixed template for object type
+        layout = get_fallback_layout(object_type)
+        
+        print(f"[FallbackLayoutBuilder] ✓ Using fixed JSON template for object: '{object_type}'")
+        print(f"[FallbackLayoutBuilder] ✓ Structure: layout -> rows -> pattern_type + pattern_info")
+        
+        # Validate structure
+        if validate_layout_structure(layout):
+            print(f"[FallbackLayoutBuilder] ✓ Layout structure validated successfully")
         else:
-            return self._build_single_object_fallback(query, data, objects[0], layout_type)
+            print(f"[FallbackLayoutBuilder] ⚠️  Layout structure validation failed, using emergency fallback")
+            layout = get_fallback_layout("unknown")
+        
+        print(f"[FallbackLayoutBuilder] ℹ️  Returning empty template - data will be filled by DataFillingAgent (LLM)")
+        return layout
     
-    def _detect_objects(self, data: Dict) -> List[str]:
-        """Detect objects in data"""
+    def _detect_object_type(self, query: str, data: Dict, analysis: Optional[Dict]) -> str:
+        """
+        Detect single object type from query, data, or analysis.
+        
+        Priority order:
+        1. analysis.objects or analysis.object_type
+        2. Data keys (_objects, object_type, etc.)
+        3. Query keywords (lead, case, account, etc.)
+        
+        Returns:
+            Single object type string (lead, case, account, etc.) or "unknown"
+        """
+        # Priority 1: Check analysis
+        if analysis:
+            # Check objects field (list)
+            objects = analysis.get("objects", [])
+            if isinstance(objects, list) and objects:
+                obj_type = objects[0]
+                print(f"[FallbackLayoutBuilder] Object type from analysis.objects: {obj_type}")
+                return obj_type
+            
+            # Check object_type field (string)
+            obj_type = analysis.get("object_type")
+            if obj_type and obj_type != "unknown":
+                print(f"[FallbackLayoutBuilder] Object type from analysis.object_type: {obj_type}")
+                return obj_type
+        
+        # Priority 2: Check data for object keys
+        objects = self._detect_objects_from_data(data)
+        if objects and objects != ["unknown"]:
+            obj_type = objects[0]
+            print(f"[FallbackLayoutBuilder] Object type from data keys: {obj_type}")
+            return obj_type
+        
+        # Priority 3: Detect from query keywords
+        obj_type = self._detect_object_from_query(query)
+        if obj_type != "unknown":
+            print(f"[FallbackLayoutBuilder] Object type from query keywords: {obj_type}")
+            return obj_type
+        
+        print(f"[FallbackLayoutBuilder] ⚠️  Could not detect object type, using 'unknown' template")
+        return "unknown"
+    
+    def _detect_object_from_query(self, query: str) -> str:
+        """Detect single object from query keywords (returns first match)"""
+        query_lower = query.lower()
+        object_keywords = {
+            "lead": ["lead", "leads"],
+            "case": ["case", "cases", "ticket", "tickets"],
+            "account": ["account", "accounts", "customer", "customers"],
+            "contact": ["contact", "contacts"],
+            "opportunity": ["opportunity", "opportunities", "deal", "deals"],
+            "task": ["task", "tasks"],
+            "loan": ["loan", "loans"],
+            "policy": ["policy", "policies"]
+        }
+        
+        for obj_type, keywords in object_keywords.items():
+            if any(keyword in query_lower for keyword in keywords):
+                return obj_type
+        
+        return "unknown"
+    
+    def _detect_objects_from_data(self, data: Dict) -> List[str]:
+        """Detect objects in data (helper for _detect_object_type)"""
+        # Ensure data is a dict
+        if not isinstance(data, dict) or not data:
+            return ["unknown"]
+        
+        # Check _objects metadata
         if "_objects" in data:
             return data["_objects"]
         
-        object_keys = ["account", "case", "lead", "task", "contact", "opportunity"]
+        # Check for object keys
+        object_keys = ["lead", "case", "account", "contact", "opportunity", "task", "loan", "policy"]
         objects = []
         
         for key in object_keys:
             if key in data or f"{key}_data" in data:
                 objects.append(key)
         
+        # Check _meta.object_type
         if not objects and "_meta" in data:
             object_type = data["_meta"].get("object_type")
-            if object_type:
+            if object_type and object_type != "unknown":
                 objects.append(object_type)
         
         return objects if objects else ["unknown"]
-    
-    def _detect_layout_type(self, analysis: Optional[Dict]) -> str:
-        """Detect layout type from analysis"""
-        if not analysis:
-            return "detail"
-        
-        intent = analysis.get("intent", "")
-        # Ensure intent is a string
-        if not isinstance(intent, str):
-            intent = ""
-        intent = intent.lower()
-        
-        if "list" in intent or "all" in intent or "show" in intent:
-            return "list"
-        elif "detail" in intent or "view" in intent or "info" in intent:
-            return "detail"
-        else:
-            return "detail"
-    
-    def _build_single_object_fallback(
-        self, query: str, data: Dict, obj_type: str, layout_type: str
-    ) -> Dict:
-        """Build fallback for single object using new rows/pattern structure"""
-        components = []
-        
-        # 1. Title/Heading
-        components.append({
-            "type": "Heading",
-            "props": {"level": 1},
-            "value": {
-                "icon": "",
-                "text": f"{obj_type.capitalize()} {layout_type.capitalize()}"
-            }
-        })
-        
-        # 2. Description (if available)
-        desc_text = self._extract_description(data)
-        if desc_text:
-            components.append({
-                "type": "Description",
-                "props": {},
-                "value": {
-                    "icon": "",
-                    "text": desc_text
-                }
-            })
-        
-        # 3. Status Badge (if available)
-        status = self._extract_status(data)
-        if status:
-            components.append({
-                "type": "Badge",
-                "props": {"variant": self._status_variant(status)},
-                "value": {
-                    "icon": "",
-                    "text": status
-                }
-            })
-        
-        # 4. Field List
-        list_items = self._extract_list_items(data)
-        if list_items:
-            components.append({
-                "type": "List",
-                "props": {
-                    "ordered": False,
-                    "variant": "default",
-                    "spacing": "medium",
-                    "marker": "disc"
-                },
-                "value": {
-                    "items": list_items,
-                    "additionalInfo": ""
-                }
-            })
-        
-        # Return in new simplified format with rows/pattern_info
-        return {
-            "id": f"fallback_{obj_type}_{layout_type}",
-            "query": query,
-            "object_type": obj_type,
-            "layout_type": layout_type,
-            "patterns_used": ["fallback"],
-            "layout": {
-                "query": query,
-                "object_type": obj_type,
-                "rows": [
-                    {
-                        "pattern_type": "fallback",
-                        "pattern_info": components
-                    }
-                ]
-            },
-            "metadata": {
-                "source": "fallback",
-                "auto_generated": True,
-                "num_rows": 1,
-                "num_components": len(components)
-            },
-            "score": 0.6
-        }
-    
-    def _build_multi_object_fallback(
-        self, query: str, data: Dict, objects: List[str]
-    ) -> Dict:
-        """Build fallback for multiple objects using new rows/pattern structure"""
-        all_components = []
-        
-        # Overall title
-        all_components.append({
-            "type": "Heading",
-            "props": {"level": 1},
-            "value": {
-                "icon": "",
-                "text": f"{' & '.join([o.capitalize() for o in objects])}"
-            }
-        })
-        
-        # Section for each object
-        for obj_type in objects:
-            obj_data = data.get(obj_type) or data.get(f"{obj_type}_data") or {}
-            
-            # Object section header
-            all_components.append({
-                "type": "Heading",
-                "props": {"level": 2},
-                "value": {
-                    "icon": "",
-                    "text": obj_type.capitalize()
-                }
-            })
-            
-            # Status badge
-            status = self._extract_status(obj_data)
-            if status:
-                all_components.append({
-                    "type": "Badge",
-                    "props": {"variant": self._status_variant(status)},
-                    "value": {
-                        "icon": "",
-                        "text": status
-                    }
-                })
-            
-            # Field list
-            list_items = self._extract_list_items(obj_data)
-            if list_items:
-                all_components.append({
-                    "type": "List",
-                    "props": {
-                        "ordered": False,
-                        "variant": "default",
-                        "spacing": "medium",
-                        "marker": "disc"
-                    },
-                    "value": {
-                        "items": list_items[:5],  # Limit per object
-                        "additionalInfo": ""
-                    }
-                })
-        
-        # Return in new simplified format
-        return {
-            "id": f"fallback_multi_{'_'.join(objects)}",
-            "query": query,
-            "object_type": objects[0],  # Primary object
-            "layout_type": "combined",
-            "patterns_used": ["fallback_multi"],
-            "layout": {
-                "query": query,
-                "object_type": objects[0],
-                "rows": [
-                    {
-                        "pattern_type": "fallback_multi",
-                        "pattern_info": all_components
-                    }
-                ]
-            },
-            "metadata": {
-                "source": "fallback",
-                "auto_generated": True,
-                "multi_object": True,
-                "objects": objects,
-                "num_rows": 1,
-                "num_components": len(all_components)
-            },
-            "score": 0.6
-        }
-    
-    def _extract_description(self, data: Dict) -> Optional[str]:
-        """Extract description from data"""
-        fields = data.get("fields", {})
-        return (
-            fields.get("description") or
-            fields.get("notes") or
-            fields.get("summary") or
-            None
-        )
-    
-    def _extract_status(self, data: Dict) -> Optional[str]:
-        """Extract status from data"""
-        fields = data.get("fields", {})
-        
-        # Try to get status, stage, or priority
-        for field_name in ["status", "stage", "priority"]:
-            field_value = fields.get(field_name)
-            if field_value:
-                # If it's a dict (like {"value": "open", "display_value": "Open"}), extract value
-                if isinstance(field_value, dict):
-                    return field_value.get("value") or field_value.get("display_value")
-                # If it's a string, return it
-                elif isinstance(field_value, str):
-                    return field_value
-        
-        return None
-    
-    def _status_variant(self, status: str) -> str:
-        """Map status to badge variant"""
-        # Ensure status is a string
-        if not isinstance(status, str):
-            status = str(status) if status is not None else "unknown"
-        
-        status_lower = status.lower()
-        
-        if status_lower in ["open", "active", "new", "in progress"]:
-            return "success"
-        elif status_lower in ["closed", "done", "completed", "resolved"]:
-            return "default"
-        elif status_lower in ["urgent", "high", "critical", "blocked"]:
-            return "danger"
-        elif status_lower in ["pending", "waiting", "on hold"]:
-            return "warning"
-        else:
-            return "info"
-    
-    def _extract_list_items(self, data: Dict) -> List[Dict]:
-        """Extract list items from data"""
-        items = []
-        
-        fields = data.get("fields", {})
-        metrics = data.get("metrics", {})
-        
-        # Add important fields
-        skip_keys = ["id", "description", "notes", "summary", "status", "stage", "priority"]
-        
-        for key, value in fields.items():
-            if key not in skip_keys and value is not None:
-                items.append({
-                    "label": key.replace("_", " ").title(),
-                    "value": str(value)
-                })
-        
-        # Add metrics
-        for key, value in metrics.items():
-            items.append({
-                "label": key.replace("_", " ").title(),
-                "value": str(value),
-                "highlight": True
-            })
-        
-        return items
-    
-    def _build_generic_actions(self, entity: str) -> List[Dict]:
-        """Build generic action buttons"""
-        return [
-            {
-                "type": "button",
-                "props": {
-                    "text": f"Edit {entity.capitalize()}",
-                    "variant": "primary",
-                    "action": f"edit_{entity}"
-                }
-            },
-            {
-                "type": "button",
-                "props": {
-                    "text": "View Details",
-                    "variant": "secondary",
-                    "action": f"view_{entity}_details"
-                }
-            }
-        ]

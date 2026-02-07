@@ -51,23 +51,18 @@ class WorkflowExecutor:
         """Single LLM call for query analysis: normalize, extract intent, generate variations, detect object/layout"""
         normalized_query = state.get("normalized_query", "")
         
-        try:
-            # Single LLM call does everything: normalize + intent + variations + object_type + layout_type
-            analysis = self.query_analyzer.invoke(normalized_query)
-            state["analysis"] = analysis.dict()
-            
-            # Build RAG query from analysis (no additional LLM call needed)
-            state["rag_query"] = {
-                "search_query": analysis.generated_queries[0] if analysis.generated_queries else analysis.normalized_query,
-                "search_queries": analysis.generated_queries,
-                "confidence": analysis.confidence
-            }
-            
-        except Exception as e:
-            print(f"[WorkflowExecutor] LLM analysis failed: {e}")
-            raise RuntimeError(
-                f"Failed to analyze query. LLM service unavailable or query analysis failed: {str(e)}"
-            )
+        # Single LLM call does everything: normalize + intent + variations + object_type + layout_type
+        # QueryAnalyzer has built-in fallback for when LLM is unavailable
+        analysis = self.query_analyzer.invoke(normalized_query)
+        state["analysis"] = analysis.dict()
+        
+        # Build RAG query from analysis (no additional LLM call needed)
+        state["rag_query"] = {
+            "search_query": analysis.generated_queries[0] if analysis.generated_queries else analysis.normalized_query,
+            "search_queries": analysis.generated_queries,
+            "confidence": analysis.confidence,
+            "object_type": analysis.object_type
+        }
         
         return state
     
@@ -111,9 +106,21 @@ class WorkflowExecutor:
         
         try:
             data = self.data_fetcher.detect_and_fetch(query, analysis, rag_query)
-            state["fetched_data"] = data
-        except Exception:
-            state["fetched_data"] = None
+            
+            # Check if data is empty
+            if not data or (isinstance(data, dict) and not any(v for v in data.values() if v)):
+                print(f"[WorkflowExecutor] ⚠️  Data fetcher returned empty data for query: '{query}'")
+                print(f"[WorkflowExecutor] 💡 This is expected if:")
+                print(f"[WorkflowExecutor]    - CRM data source is not connected")
+                print(f"[WorkflowExecutor]    - Query doesn't match any records")
+                print(f"[WorkflowExecutor]    - Using mock/test mode")
+                state["fetched_data"] = {}
+            else:
+                state["fetched_data"] = data
+        except Exception as e:
+            print(f"[WorkflowExecutor] ⚠️  Data fetching failed: {str(e)}")
+            print(f"[WorkflowExecutor] 💡 Falling back to empty data - layout will be generated without records")
+            state["fetched_data"] = {}
         
         return state
     
@@ -124,6 +131,12 @@ class WorkflowExecutor:
         normalized_query = state.get("normalized_query", "")
         analysis = state.get("analysis", {})
         data = state.get("fetched_data", {})
+        
+        # Ensure data is a dict (handle edge case where it might be a list)
+        if not isinstance(data, dict):
+            print(f"[WorkflowExecutor] Warning: fetched_data is {type(data)}, converting to dict")
+            data = {}
+        
         # If no layouts retrieved from RAG, use default layout builder
         if not layouts:
             print("[WorkflowExecutor] No RAG matches found, using default layout builder")
@@ -158,7 +171,14 @@ class WorkflowExecutor:
                 }
             )
             
+            # Ensure result is a dict
+            if not isinstance(result, dict):
+                raise TypeError(f"select_and_fill_layout returned {type(result).__name__} instead of dict")
+            
             selected_layout = result.get("selected_layout")
+            if not selected_layout:
+                raise ValueError("No selected_layout in result")
+            
             confidence = result.get("confidence", 0.0)
             reasoning = result.get("reasoning", "")
             is_adapted = result.get("is_adapted", False)
@@ -174,19 +194,41 @@ class WorkflowExecutor:
                 "adaptations": adaptations,
                 "llm_powered": llm_powered
             }
-        except Exception:
+        except Exception as e:
+            error_msg = str(e)
+            print(f"[WorkflowExecutor] LLM selection failed: {error_msg}")
+            
+            # Check if it's an API key issue
+            if "api" in error_msg.lower() or "auth" in error_msg.lower() or "key" in error_msg.lower():
+                print("[WorkflowExecutor] ⚠️  OPENAI_API_KEY may not be set or is invalid")
+                print("[WorkflowExecutor] 💡 To fix:")
+                print("[WorkflowExecutor]    1. Get API key from: https://platform.openai.com/api-keys")
+                print("[WorkflowExecutor]    2. Set environment variable: $env:OPENAI_API_KEY = 'sk-...'")
+                print("[WorkflowExecutor]    3. Optional: Set model with $env:OPENAI_MODEL = 'gpt-5-mini'")
+                print("[WorkflowExecutor]    4. Restart debug session")
+            
+            # Ensure data and analysis are dicts for fallback
+            safe_data = data if isinstance(data, dict) else {}
+            safe_analysis = analysis if isinstance(analysis, dict) else {}
+            
+            # If data is empty or None, provide better context
+            if not safe_data or safe_data == {}:
+                print(f"[WorkflowExecutor] ⚠️  No data available for query: '{query}'")
+                print(f"[WorkflowExecutor] 💡 Fallback layout will use query-based object detection")
+            
             fallback_layout = self.fallback_builder.build_fallback_layout(
-                query, data or {}, analysis
+                query, safe_data, safe_analysis
             )
             state["selected_layout"] = fallback_layout
             state["adapted_layout"] = fallback_layout
             state["layout_ranking"] = {
                 "confidence": 0.5,
-                "reasoning": "Error in LLM selection",
+                "reasoning": f"Error in LLM selection: {error_msg}",
                 "is_adapted": False,
                 "use_fallback": True,
                 "llm_powered": False,
-                "adaptations": []
+                "adaptations": [],
+                "error": error_msg
             }
         
         return state
@@ -197,6 +239,14 @@ class WorkflowExecutor:
         query = state.get("normalized_query", "")
         analysis = state.get("analysis", {})
         data = state.get("fetched_data")
+        
+        # Ensure analysis is a dict
+        if not isinstance(analysis, dict):
+            analysis = {}
+        
+        # Ensure data is safe for output
+        if not isinstance(data, dict):
+            data = {}
         
         if not layout:
             state["output_score"] = None

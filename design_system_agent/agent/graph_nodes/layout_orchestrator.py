@@ -64,9 +64,18 @@ class LLMLayoutSelectorFiller:
             analysis=analysis
         )
         
-        selected_layout = selection_result["selected_layout"]
-        confidence = selection_result["confidence"]
-        reasoning = selection_result["reasoning"]
+        # Ensure selection_result is a dict
+        if not isinstance(selection_result, dict):
+            print(f"[LLMLayoutSelectorFiller] Error: selection_result is not a dict (type: {type(selection_result).__name__})")
+            raise ValueError(f"Layout selection failed: expected dict, got {type(selection_result).__name__}")
+        
+        selected_layout = selection_result.get("selected_layout")
+        if not selected_layout:
+            print("[LLMLayoutSelectorFiller] Error: No selected_layout in result")
+            raise ValueError("Layout selection failed: no selected_layout returned")
+        
+        confidence = selection_result.get("confidence", 0.0)
+        reasoning = selection_result.get("reasoning", "")
         is_adapted = selection_result.get("is_adapted", False)
         adaptations = selection_result.get("adaptations", [])
         

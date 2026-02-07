@@ -2,7 +2,8 @@
 Graph Agent - Main Orchestrator
 Single Responsibility: Coordinate the layout generation workflow
 """
-from design_system_agent.agent.models import AgentState
+from typing import AsyncGenerator
+from design_system_agent.agent.models import AgentState, AgentEvent
 from design_system_agent.agent.graph_nodes.node_executor import WorkflowExecutor
 from design_system_agent.agent.layout_graph_builder import GraphBuilder
 

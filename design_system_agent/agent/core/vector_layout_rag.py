@@ -40,6 +40,18 @@ class VectorLayoutRAGEngine:
         print("[VectorLayoutRAGEngine] Loading reranker model...")
         self.reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')  # Lightweight reranker
         
+        # View type to component mapping (PRIMARY matching)
+        self.view_type_components = {
+            "card": ["Card", "Metric", "Dashlet"],
+            "list": ["List", "ListCard"],
+            "table": ["Table"],
+            "summary": ["Metric", "Card", "Heading"],
+            "detail": ["Table", "List", "ListCard"],
+            "aggregate": ["Metric", "Dashlet", "Card"],
+            "chart": ["Dashlet"],
+            "metric": ["Metric", "Card"]
+        }
+        
         # FAISS index and metadata
         self.index = None
         self.layouts_metadata = []
@@ -153,6 +165,51 @@ class VectorLayoutRAGEngine:
         
         return doc_text
     
+    def _detect_view_type(self, query: str) -> Optional[str]:
+        """Detect required view type from query"""
+        query_lower = query.lower()
+        
+        # Primary view type keywords
+        view_keywords = {
+            "card": ["card view", "card", "cards", "dashboard", "overview"],
+            "list": ["list view", "list", "listing", "items"],
+            "table": ["table view", "table", "grid", "tabular"],
+            "summary": ["summary", "summarize", "overview", "total", "count", "sum"],
+            "aggregate": ["aggregate", "group by", "grouped", "by branch", "by status"],
+            "chart": ["chart", "graph", "visualization", "plot"],
+            "metric": ["metrics", "kpi", "performance"]
+        }
+        
+        # Check for matches
+        for view_type, keywords in view_keywords.items():
+            if any(keyword in query_lower for keyword in keywords):
+                return view_type
+        
+        return None
+    
+    def _check_component_match(self, layout_data: Dict, required_components: List[str]) -> tuple[bool, List[str]]:
+        """Check if layout contains required components for view type"""
+        layout_components = set()
+        
+        # Extract all component types from layout
+        for row in layout_data.get("rows", []):
+            for component in row.get("pattern_info", []):
+                comp_type = component.get("type", "")
+                if comp_type:
+                    layout_components.add(comp_type)
+        
+        # Check which required components are present
+        missing_components = []
+        has_any_match = False
+        
+        for req_comp in required_components:
+            if req_comp in layout_components:
+                has_any_match = True
+            else:
+                missing_components.append(req_comp)
+        
+        return has_any_match, missing_components
+    
     def search(
         self,
         query: str | List[str],
@@ -175,6 +232,15 @@ class VectorLayoutRAGEngine:
         # Handle both single query and list of queries
         queries = [query] if isinstance(query, str) else query
         primary_queries = queries[:3]  # Use top 3 query variations
+        primary_query = primary_queries[0]
+        
+        # Detect required view type (PRIMARY FILTER)
+        required_view_type = self._detect_view_type(primary_query)
+        required_components = self.view_type_components.get(required_view_type, []) if required_view_type else []
+        
+        if required_view_type:
+            print(f"[VectorLayoutRAGEngine] Detected view type: '{required_view_type}' (requires: {', '.join(required_components)})")
+        
         print(f"[VectorLayoutRAGEngine] Searching with {len(primary_queries)} query variation(s)")
         
         # Search with each query variation and collect unique results
@@ -204,6 +270,23 @@ class VectorLayoutRAGEngine:
                 # Track best score for each unique layout
                 if idx not in all_candidates or similarity_score > all_candidates[idx]['vector_score']:
                     metadata = self.layouts_metadata[idx]
+                    
+                    # PRIMARY CHECK: Does layout have required components?
+                    has_required_components = True
+                    missing_components = []
+                    component_match_boost = 0.0
+                    
+                    if required_components:
+                        has_match, missing = self._check_component_match(metadata["layout"], required_components)
+                        has_required_components = has_match
+                        missing_components = missing
+                        
+                        # Boost score if layout has required components
+                        if has_match:
+                            # Calculate how many required components are present
+                            present_count = len(required_components) - len(missing)
+                            component_match_boost = 0.3 * (present_count / len(required_components))
+                    
                     all_candidates[idx] = {
                         "query": metadata["query"],
                         "object_type": metadata["object_type"],
@@ -212,15 +295,24 @@ class VectorLayoutRAGEngine:
                         "layout": metadata["layout"],
                         "metadata_info": metadata["metadata"],
                         "vector_score": similarity_score,
-                        "matched_query": q  # Track which variation matched
+                        "matched_query": q,
+                        "has_required_components": has_required_components,
+                        "missing_components": missing_components,
+                        "component_match_boost": component_match_boost,
+                        "required_view_type": required_view_type
                     }
         
-        # Convert to list and sort by score
+        # Convert to list and sort by PRIMARY score (view type match + vector score)
         candidate_layouts = sorted(
             all_candidates.values(),
-            key=lambda x: x['vector_score'],
+            key=lambda x: x['vector_score'] + x.get('component_match_boost', 0),
             reverse=True
         )[:top_k]
+        
+        # Log component matching results
+        if required_view_type:
+            with_components = sum(1 for c in candidate_layouts if c.get('has_required_components', False))
+            print(f"[VectorLayoutRAGEngine] {with_components}/{len(candidate_layouts)} candidates have required {required_view_type} components")
         
         if not candidate_layouts:
             print("[VectorLayoutRAGEngine] No results found")
@@ -234,12 +326,25 @@ class VectorLayoutRAGEngine:
         else:
             candidate_layouts = candidate_layouts[:final_k]
         
-        # Log results
+        # Log results with component match info
         print(f"[VectorLayoutRAGEngine] Returning {len(candidate_layouts)} results:")
         for i, result in enumerate(candidate_layouts, 1):
-            score_type = "rerank_score" if "rerank_score" in result else "vector_score"
+            score_type = "final_score" if "final_score" in result else "vector_score"
             pattern = result['patterns_used'][0] if result.get('patterns_used') else 'unknown'
-            print(f"  {i}. {pattern:20} ({score_type}: {result.get(score_type, 0):.3f}) - {result['query']}")
+            
+            # Component match indicator
+            match_indicator = ""
+            if result.get('required_view_type'):
+                if result.get('has_required_components'):
+                    missing = result.get('missing_components', [])
+                    if missing:
+                        match_indicator = f" [PARTIAL: missing {', '.join(missing)}]"
+                    else:
+                        match_indicator = " [✓ FULL MATCH]"
+                else:
+                    match_indicator = " [✗ NO MATCH]"
+            
+            print(f"  {i}. {pattern:20} ({score_type}: {result.get(score_type, 0):.3f}){match_indicator} - {result['query']}")
         
         return candidate_layouts
     
@@ -274,11 +379,20 @@ class VectorLayoutRAGEngine:
         # Add rerank scores to candidates
         for i, candidate in enumerate(candidates):
             candidate['rerank_score'] = float(rerank_scores[i])
-            # Combine vector and rerank scores (weighted)
+            
+            # Combine scores with PRIMARY component match boost
+            component_boost = candidate.get('component_match_boost', 0)
+            
+            # Final score: 30% vector + 50% rerank + 20% component match
             candidate['final_score'] = (
-                0.4 * candidate['vector_score'] + 
-                0.6 * candidate['rerank_score']
+                0.3 * candidate['vector_score'] + 
+                0.5 * candidate['rerank_score'] +
+                0.2 * component_boost
             )
+            
+            # Extra boost if has ALL required components
+            if candidate.get('has_required_components') and not candidate.get('missing_components'):
+                candidate['final_score'] += 0.1  # Bonus for perfect match
         
         # Sort by rerank score
         reranked = sorted(candidates, key=lambda x: x['rerank_score'], reverse=True)

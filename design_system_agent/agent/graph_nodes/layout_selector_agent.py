@@ -2,13 +2,14 @@
 Layout Selector Agent
 Specialized agent for selecting the best layout from candidates using LLM
 """
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from pydantic import BaseModel, Field
 import json
 
 from design_system_agent.agent.core.llm_factory import LLMFactory
 from design_system_agent.core.component_types import ACTIVE_COMPONENTS, COMPONENT_CATEGORIES
 from design_system_agent.agent.tools.design_system_tools import get_design_system_tools
+from design_system_agent.agent.tools.langchain_design_tools import get_langchain_design_tools
 
 
 class LayoutSelectionResult(BaseModel):
@@ -18,8 +19,8 @@ class LayoutSelectionResult(BaseModel):
     reasoning: str = Field(description="Why this layout was selected/adapted/created")
     is_adapted: bool = Field(default=False, description="Whether layout was modified")
     created_from_scratch: bool = Field(default=False, description="Whether layout was created from scratch")
-    adaptations: list = Field(default_factory=list, description="List of adaptations/creations made")
-    custom_layout: dict = Field(default_factory=dict, description="Custom layout structure if created from scratch")
+    adaptations: List[str] = Field(default_factory=list, description="List of adaptations/creations made")
+    custom_layout: Dict[str, Any] = Field(default_factory=dict, description="Custom layout structure if created from scratch")
 
 
 class LayoutSelectorAgent:
@@ -28,58 +29,62 @@ class LayoutSelectorAgent:
     Uses LLM to analyze query intent and match with available layouts.
     """
     
-    def __init__(self):
-        self.llm = LLMFactory.open_ai()
-        self.design_tools = get_design_system_tools()
-    
-    def _validate_design_tokens(self, layout: dict) -> dict:
+    def __init__(self, use_tools: bool = True):
         """
-        Validate and fix colors/icons in layout to ensure they exist in design system
+        Initialize Layout Selector Agent with structured output LLM.
+        Uses Pydantic LayoutSelectionResult model for guaranteed structured responses.
         
         Args:
-            layout: Layout structure with rows and components
-            
-        Returns:
-            Validated layout with fixed/default colors and icons
+            use_tools: If True, bind design system tools for dynamic queries (recommended)
+                      Automatically falls back to False if OpenAI API key not available
         """
-        valid_colors = set(self.design_tools.list_available_colors().get("primary", {}).keys())
-        valid_colors.update(self.design_tools.get_semantic_colors().keys())
-        valid_colors.update(["neutral-white", "neutral-primary", "neutral-secondary", "neutral-disabled"])
+        self.use_tools = use_tools
         
-        valid_icons = set(self.design_tools.get_all_icons())
+        if use_tools:
+            try:
+                # Create LLM with design system tools bound (for information gathering)
+                base_llm = LLMFactory.open_ai(max_tokens=3000)
+                
+                # Check if bind_tools is supported (not supported by mock LLM)
+                if hasattr(base_llm, 'bind_tools'):
+                    self.llm_with_tools = base_llm.bind_tools(get_langchain_design_tools())
+                    
+                    # Create structured output LLM for final selection decision
+                    self.llm_structured = LLMFactory.open_ai_structured_llm(
+                        structured_output=LayoutSelectionResult,
+                        max_tokens=3000
+                    )
+                    print(f"[LayoutSelectorAgent] ✓ Initialized with bind_tools (12 design tools available)")
+                else:
+                    # Mock LLM doesn't support bind_tools, fall back to legacy
+                    print(f"[LayoutSelectorAgent] WARNING: bind_tools not supported by LLM, falling back to legacy mode")
+                    self.use_tools = False
+                    self.llm_with_tools = None
+                    self.llm_structured = LLMFactory.open_ai_structured_llm(
+                        structured_output=LayoutSelectionResult,
+                        max_tokens=3000
+                    )
+                    print(f"[LayoutSelectorAgent] ✓ Initialized with structured output (legacy mode)")
+            except (NotImplementedError, AttributeError) as e:
+                # bind_tools not implemented, fall back to legacy
+                print(f"[LayoutSelectorAgent] WARNING: bind_tools failed ({type(e).__name__}), falling back to legacy mode")
+                self.use_tools = False
+                self.llm_with_tools = None
+                self.llm_structured = LLMFactory.open_ai_structured_llm(
+                    structured_output=LayoutSelectionResult,
+                    max_tokens=3000
+                )
+                print(f"[LayoutSelectorAgent] ✓ Initialized with structured output (legacy mode)")
+        else:
+            # Legacy mode: single LLM with structured output, info in prompt
+            self.llm_with_tools = None
+            self.llm_structured = LLMFactory.open_ai_structured_llm(
+                structured_output=LayoutSelectionResult,
+                max_tokens=3000
+            )
+            print(f"[LayoutSelectorAgent] ✓ Initialized with structured output (legacy mode)")
         
-        fixes = []
-        
-        def validate_component(comp):
-            """Recursively validate component colors and icons"""
-            if not isinstance(comp, dict):
-                return
-            
-            # Check props for colors
-            props = comp.get("props", {})
-            if "color" in props and props["color"] not in valid_colors:
-                old_color = props["color"]
-                props["color"] = "blue-60"  # Default fallback
-                fixes.append(f"Fixed invalid color '{old_color}' → 'blue-60'")
-            
-            # Check value for icons
-            value = comp.get("value", {})
-            if "icon" in value and value["icon"] and value["icon"] not in valid_icons:
-                old_icon = value["icon"]
-                value["icon"] = ""  # Remove invalid icon
-                fixes.append(f"Removed invalid icon '{old_icon}'")
-        
-        # Validate all components in layout
-        for row in layout.get("rows", []):
-            for comp in row.get("pattern_info", []):
-                validate_component(comp)
-        
-        if fixes:
-            print(f"[LayoutSelectorAgent] Fixed {len(fixes)} design token issues:")
-            for fix in fixes[:5]:  # Show first 5
-                print(f"  - {fix}")
-        
-        return layout
+        print(f"[LayoutSelectorAgent] Structured output model: {LayoutSelectionResult.__name__}")
     
     def select_best_layout(
         self,
@@ -109,32 +114,40 @@ class LayoutSelectorAgent:
                 - adaptations: List of changes made
         """
         if not candidate_layouts:
-            # No candidates, create from scratch
-            print("[LayoutSelectorAgent] No candidate layouts provided, will create from scratch")
+            print("[LayoutSelectorAgent] ERROR: No candidate layouts provided!")
+            raise ValueError("LayoutSelectorAgent requires at least one candidate layout")
         
         # Build selection prompt
         prompt = self._build_prompt(
             query, normalized_query, candidate_layouts, data_summary, analysis
         )
         
-        # LLM evaluates and selects/creates
-        fallback_id = candidate_layouts[0].get("id", "custom_layout") if candidate_layouts else "custom_layout"
+        # LLM evaluates and selects best match
+        fallback_id = candidate_layouts[0].get("id")
         selection = self._invoke_llm(prompt, fallback_id)
         
-        # Handle custom layout creation
-        if selection.created_from_scratch and selection.custom_layout:
-            # Use the custom layout structure and validate design tokens
-            selected = self._validate_design_tokens(selection.custom_layout)
-            print(f"[LayoutSelectorAgent] Created custom layout from scratch")
+        # Get the selected layout from candidates (MUST select one)
+        selected = next(
+            (l for l in candidate_layouts if l.get("id") == selection.selected_layout_id),
+            candidate_layouts[0]  # Always fall back to first candidate
+        )
+        
+        # Debug: Check what we got
+        if not isinstance(selected, dict):
+            print(f"[LayoutSelectorAgent] ERROR: selected is not a dict, type: {type(selected).__name__}")
+            selected = {}
+        elif not selected:
+            print(f"[LayoutSelectorAgent] WARNING: selected layout is empty dict")
         else:
-            # Get the selected layout from candidates
-            selected = next(
-                (l for l in candidate_layouts if l.get("id") == selection.selected_layout_id),
-                candidate_layouts[0] if candidate_layouts else {}
-            )
-            # Validate if adapted
-            if selection.is_adapted and selected:
-                selected = self._validate_design_tokens(selected)
+            print(f"[LayoutSelectorAgent] Selected layout keys: {list(selected.keys())}")
+        
+        # Final safety check: ensure selected is a valid dict with rows
+        if not isinstance(selected, dict):
+            print(f"[LayoutSelectorAgent] ERROR: Final selected is {type(selected).__name__}, using empty structure")
+            selected = {"rows": []}
+        elif "rows" not in selected and "layout" not in selected:
+            print(f"[LayoutSelectorAgent] WARNING: Selected layout missing 'rows' key, wrapping it")
+            selected = {"rows": [selected] if selected else []}
         
         return {
             "selected_layout": selected,
@@ -191,26 +204,56 @@ class LayoutSelectorAgent:
             category: components for category, components in COMPONENT_CATEGORIES.items()
         }
         
-        # Get design system tools for colors and icons (compressed format)
-        design_tools = get_design_system_tools()
-        
-        # Compressed color reference (instead of full 110-color JSON)
-        color_summary = {
-            "primary_colors": ["red", "blue", "green", "orange", "yellow", "purple", "pink", "cyan", "teal", "indigo", "gray"],
-            "shades": "10, 20, 30, 40, 50, 60, 70, 80, 90, 100",
-            "format": "color-shade (e.g., blue-60, red-40)",
-            "semantic": ["success", "success-light", "error", "error-light", "warning", "warning-light", "info", "info-light"],
-            "neutral": ["neutral-white", "neutral-primary", "neutral-secondary", "neutral-disabled"]
-        }
-        
-        # Compressed icon reference (instead of full 90-icon list)
-        icon_summary = {
-            "total": len(design_tools.get_all_icons()),
-            "categories": ["user", "action", "navigation", "data", "finance", "status", "communication", "file", "time", "business", "settings", "media", "location", "other"],
-            "common_examples": ["user", "trending-up", "trending-down", "check-circle", "alert-circle", "star", "calendar", "dollar-sign", "mail", "phone", "settings", "search", "edit", "trash", "download", "upload", "chart", "globe", "home", "menu"]
-        }
-        
-        prompt = f"""CRM Layout Architect: SELECT, ADAPT, or CREATE layout matching user query.
+        # Choose prompt based on whether tools are available
+        if self.use_tools:
+            # SHORTER PROMPT: Tools available for querying colors/icons/patterns dynamically
+            prompt = f"""CRM Layout Architect: SELECT, ADAPT, or CREATE layout matching user query.
+
+QUERY: {query}
+NORMALIZED: {normalized_query}
+ANALYSIS: {json.dumps(analysis, indent=2) if analysis else "N/A"}
+DATA: {data_summary}
+
+CANDIDATES (Top 3):
+{json.dumps(layouts_info, indent=2)}
+
+COMPONENTS (19 types):
+{json.dumps(components_by_category, indent=2)}
+
+DESIGN SYSTEM TOOLS:
+You have access to tools for querying design resources (use them as needed):
+- search_icons(query) - Find icons by keyword (e.g search_icons("trending") → ["trending-up", "trending-down"])
+- get_icons_by_category(category) - Get icons in category (finance, user, action, status, etc.)
+- get_color_shades(color) - Get shades for a color name (e.g get_color_shades("blue") → ["blue-10", ..., "blue-100"])
+- get_semantic_colors() - Get status colors (returns: success, error, warning, info with variants)
+- get_all_colors() - Get all color families and shades (use sparingly, returns 110+ colors)
+- get_component_schema(type) - Get component prop/value structure details
+
+Use these tools when you need specific colors or icons. For common needs, you can use standard colors (blue-60, red-40, success, error) and common icons (user, trending-up, calendar, dollar-sign) directly.
+
+COMPONENT STRUCTURE:
+{{"type": "ComponentType", "props": {{"size": "md", "color": "blue-60"}}, "value": {{"text": "content", "icon": "user"}}}}
+
+DECISION LOGIC:"""
+        else:
+            # LEGACY: Full info in prompt (no tools)
+            design_tools = get_design_system_tools()
+            
+            color_summary = {
+                "primary_colors": ["red", "blue", "green", "orange", "yellow", "purple", "pink", "cyan", "teal", "indigo", "gray"],
+                "shades": "10, 20, 30, 40, 50, 60, 70, 80, 90, 100",
+                "format": "color-shade (e.g., blue-60, red-40)",
+                "semantic": ["success", "success-light", "error", "error-light", "warning", "warning-light", "info", "info-light"],
+                "neutral": ["neutral-white", "neutral-primary", "neutral-secondary", "neutral-disabled"]
+            }
+            
+            icon_summary = {
+                "total": len(design_tools.get_all_icons()),
+                "categories": ["user", "action", "navigation", "data", "finance", "status", "communication", "file", "time", "business", "settings", "media", "location", "other"],
+                "common_examples": ["user", "trending-up", "trending-down", "check-circle", "alert-circle", "star", "calendar", "dollar-sign", "mail", "phone", "settings", "search", "edit", "trash", "download", "upload", "chart", "globe", "home", "menu"]
+            }
+            
+            prompt = f"""CRM Layout Architect: SELECT, ADAPT, or CREATE layout matching user query.
 
 QUERY: {query}
 NORMALIZED: {normalized_query}
@@ -233,7 +276,7 @@ Neutral: {', '.join(color_summary['neutral'])}
 ICONS ({icon_summary['total']} total):
 Categories: {', '.join(icon_summary['categories'])}
 Examples: {', '.join(icon_summary['common_examples'])}
-Note: Use descriptive icon names matching the action/object (e.g., "calendar" for dates, "dollar-sign" for money, "trending-up" for growth)
+Note: Use descriptive icon names matching the action/object
 
 COMPONENT STRUCTURE (REQUIRED):
 {{"type": "ComponentType", "props": {{"size": "md", "color": "blue-60"}}, "value": {{"text": "content", "icon": "user"}}}}
@@ -243,23 +286,43 @@ CONSTRAINTS:
 - Props = config (size, variant, level, color from palette)
 - Value = data (text, labels, items, icon from list)
 - Colors: Use format "color-shade" (e.g., blue-60, red-40) or semantic (success, error, warning, info)
-  Examples: ✓ "blue-60", "success", "error-light" | ✗ "dark-blue", "custom-red"
-- Icons: Use descriptive names matching action/object (check examples above)
-  Examples: ✓ "user", "trending-up", "calendar" | ✗ "custom-icon", "my-icon"
+- Icons: Use descriptive names matching action/object
 - Components: ONLY from 19 types above
-- Invalid colors/icons will be auto-fixed or removed during validation
 
-DECISION LOGIC:
-1. Analyze: Check candidates' rows/components vs query
-2. Match %: Does any candidate fit >60%?
-3. Strategy:
-   - >90% match → OPTION A: Use as-is (is_adapted=false, created_from_scratch=false, confidence>0.9)
-   - >60% match → OPTION B: Adapt (is_adapted=true, created_from_scratch=false, list changes)
-   - <60% OR no candidates → OPTION C: Create (selected_layout_id="custom_layout", created_from_scratch=true, provide custom_layout structure)
+DECISION LOGIC:"""
+        
+        # Common decision rules for both modes
+        prompt += """
+1. **Analyze Query Pattern** (from ANALYSIS):
+   - pattern_type: LIST_SIMPLE, LIST_ADVANCED, AGGREGATE, FULL_COMPLEX, ADVANCED_AGGREGATE_RELATED, etc.
+   - complexity_level: basic, medium, advanced
+   - view_type: table (lists), list (multi-object), card (aggregations/metrics)
+   - aggregation_type: sum, count, average, min, max, grouped
+   - group_by_field: branch, manager, status, etc.
+
+2. **Match Required Components:**
+   - LIST_SIMPLE/LIST_ADVANCED → Table + Heading + Badge
+   - MULTI_OBJECT → ListCard + Avatar + Badge
+   - AGGREGATE/ADVANCED_AGGREGATE_RELATED → Card + Metric + Heading (+ optional Dashlet for visualization)
+   - FULL_COMPLEX (multi-condition) → Card + Metric + Table + Badge
+
+3. **Match % Evaluation:**
+   - >90% match → Use as-is
+   - 70-90% match → Adapt by ADDING components
+   - <70% match → Select closest match and ADD missing components
+
+4. **Strategy (ALWAYS SELECT A CANDIDATE):**
+   - CRITICAL: You MUST select one of the provided candidate layouts
+   - created_from_scratch = false (ALWAYS)
+   - custom_layout = {} (ALWAYS EMPTY)
+   
+   - >90% match → OPTION A: Use as-is (is_adapted=false, confidence>0.9, selected_layout_id from candidates)
+   - 70-90% match → OPTION B: Adapt by ADDING (is_adapted=true, list added components in adaptations)
+   - <70% match → OPTION C: Select best + ADD heavily (is_adapted=true, extensive additions in adaptations)
 
 RULES:
-✓ CAN: Add/remove components from 19 types, reorganize, combine layouts, create new when <60% match
-✗ CANNOT: Use unlisted components, add without data, send empty components, break type/props/value structure
+✓ CAN: ADD components to selected layout, reorganize rows, extend with additional patterns
+✗ CANNOT: Remove components from selected layout, create from scratch, use unlisted components, send empty adaptations list
 DATA: Complex query + limited data = simpler layout; Rich data = detailed layout; Skip components without data
 CREATE: Build rows → pattern_info arrays → components with type/props/value → map data to value fields
 
@@ -273,36 +336,46 @@ Complex: ListCard (avatar+title+meta), BirthdayCard, Insights (AI), Alert (notif
 
 EXAMPLES:
 
-EX1 (Use): Query="show open opportunities" | Layout has Table+Badge+Link → {{"selected_layout_id": "crm_123", "is_adapted": false, "confidence": 0.95, "reasoning": "Perfect match", "adaptations": []}}
+EX1 (Simple List): Query="show all leads" | pattern_type=LIST_SIMPLE → {{"selected_layout_id": "crm_123", "is_adapted": false, "confidence": 0.95, "reasoning": "Perfect match - Table layout", "adaptations": []}}
 
-EX2 (Adapt): Query="opportunity details with metrics" | Layout1=Card+Text, Layout2=Metric+Insights → {{"selected_layout_id": "crm_123", "is_adapted": true, "confidence": 0.88, "reasoning": "Added metrics", "adaptations": ["Added Metric to Row 2", "Added Insights to Row 3"]}}
+EX2 (Adapt for Advanced List): Query="top 10 leads sorted by created_date" | pattern_type=LIST_ADVANCED | Layout=Table+Badge → {{"selected_layout_id": "crm_234", "is_adapted": true, "confidence": 0.90, "reasoning": "Added sorting indicator", "adaptations": ["Added Chip for sorting indicator"]}}
 
-EX3 (Simplify): Query="full analysis with metrics/charts" | Data=only name/email/phone → {{"selected_layout_id": "crm_456", "is_adapted": true, "confidence": 0.75, "reasoning": "Limited data—removed Metric/Insights", "adaptations": ["Removed Metric (no data)", "Kept Card+Text"]}}
-
-EX4 (Create): Query="lead scorecard with ranking" | No match <50% | Data=leads[name,score,priority,status] → {{
-  "selected_layout_id": "custom_layout",
-  "created_from_scratch": true,
+EX3 (Adapt for Aggregation): Query="sum of loan amount for customers grouped by branch" | pattern_type=ADVANCED_AGGREGATE_RELATED | aggregation_type=sum | group_by_field=branch | Best=crm_789 (has Table) → {{
+  "selected_layout_id": "crm_789",
+  "created_from_scratch": false,
+  "is_adapted": true,
   "confidence": 0.85,
-  "reasoning": "No suitable layout—created scorecard",
-  "adaptations": ["Row 1: Heading", "Row 2: Metrics (avg/high/low)", "Row 3: Table sorted by priority"],
-  "custom_layout": {{
-    "rows": [
-      {{"pattern_type": "header", "pattern_info": [{{"type": "Heading", "props": {{"level": 1}}, "value": {{"text": "Lead Qualification Scorecard", "icon": "target"}}}}]}},
-      {{"pattern_type": "metrics", "pattern_info": [{{"type": "Metric", "props": {{"size": "md", "color": "brand"}}, "value": {{"label": "Average Score", "value": "7.5", "icon": "trending-up"}}}}, {{"type": "Metric", "props": {{"size": "md", "color": "success"}}, "value": {{"label": "High Priority", "value": "12", "icon": "star"}}}}]}},
-      {{"pattern_type": "data_table", "pattern_info": [{{"type": "Table", "props": {{"striped": true}}, "value": {{"headers": ["Name", "Score", "Priority", "Status", "Assignee"], "rows": [["Data here"]]}}}}]}}
-    ]
-  }}
+  "reasoning": "Selected table layout, adding Metric cards for branch aggregation and Dashlet for visualization",
+  "adaptations": ["Added Row 1: Heading with aggregation title", "Added Row 2: Metric cards for branch totals", "Added Row 3: Dashlet bar chart", "Kept existing table for detail view"]
 }}
 
-OUTPUT JSON:
+EX4 (Adapt for Complex Multi-Object): Query="customers with balance > 100000 and loan > 50000" | pattern_type=FULL_COMPLEX | objects=[customer,account,loan] | has_conditions=true | Best=crm_456 (customer table) → {{
+  "selected_layout_id": "crm_456",
+  "created_from_scratch": false,
+  "is_adapted": true,
+  "confidence": 0.82,
+  "reasoning": "Selected customer table layout, adding summary metrics and condition badges",
+  "adaptations": ["Added Row 1: Heading + Badge showing filter conditions", "Added Row 2: Summary metrics (count, avg balance, total loan)", "Kept Row 3: Existing customer table with balance/loan columns"]
+}}
+
+EX5 (Adapt for Branch-wise Count): Query="branch wise count of leads where loan status is approved" | pattern_type=FULL_COMPLEX | aggregation_type=count | group_by_field=branch | Best=crm_234 (lead list) → {{
+  "selected_layout_id": "crm_234",
+  "created_from_scratch": false,
+  "is_adapted": true,
+  "confidence": 0.80,
+  "reasoning": "Selected lead list layout, adding grouped metrics and chart for branch-wise count",
+  "adaptations": ["Added Row 1: Heading + Chip filter (Loan: Approved)", "Added Row 2: Metric cards per branch (North: 45, South: 38, East: 52)", "Added Row 3: Pie chart for distribution", "Kept original lead table for drill-down"]
+}}
+
+OUTPUT JSON (MUST SELECT FROM CANDIDATES):
 {{
-  "selected_layout_id": "from candidates OR 'custom_layout'",
+  "selected_layout_id": "MUST be ID from provided candidates (e.g., crm_123, crm_234)",
   "is_adapted": bool,
-  "created_from_scratch": bool,
+  "created_from_scratch": false,  // ALWAYS false
   "confidence": 0-1,
-  "reasoning": "why this decision",
-  "adaptations": ["list changes"],
-  "custom_layout": {{"rows": [{{"pattern_type": "...", "pattern_info": [...]}}]}}  // REQUIRED if created_from_scratch=true
+  "reasoning": "why you selected this candidate + what you're adding",
+  "adaptations": ["list of components/rows ADDED to selected layout"],
+  "custom_layout": {{}}  // ALWAYS empty
 }}
 
 Analyze and decide:
@@ -312,57 +385,58 @@ Analyze and decide:
     def _invoke_llm(
         self, prompt: str, fallback_layout_id: str
     ) -> LayoutSelectionResult:
-        """Invoke LLM to select layout"""
+        """
+        Invoke LLM to select layout using structured output with Pydantic model.
+        
+        Args:
+            prompt: The prompt string for layout selection
+            fallback_layout_id: Fallback layout ID if LLM fails
+            
+        Returns:
+            LayoutSelectionResult: Structured Pydantic model with selection result
+        """
         
         try:
-            response = self.llm.invoke(prompt)
-            response_text = response.content if hasattr(response, 'content') else str(response)
+            print(f"[LayoutSelectorAgent] Invoking LLM with prompt length: {len(prompt)} chars")
+            print(f"[LayoutSelectorAgent] Using structured output with model: {LayoutSelectionResult.__name__}")
             
-            # Parse JSON response
-            result_dict = json.loads(response_text)
+            # Invoke LLM with structured output (returns LayoutSelectionResult directly)
+            result = self.llm_structured.invoke(prompt)
             
-            return LayoutSelectionResult(**result_dict)
+            # Verify result is correct type (real API returns LayoutSelectionResult, mock may differ)
+            if isinstance(result, LayoutSelectionResult):
+                print(f"[LayoutSelectorAgent] ✓ Successfully received structured output")
+                print(f"[LayoutSelectorAgent] ✓ Selected: {result.selected_layout_id}, Confidence: {result.confidence}")
+                print(f"[LayoutSelectorAgent] ✓ Created from scratch: {result.created_from_scratch}, Adapted: {result.is_adapted}")
+                return result
+            else:
+                # Mock LLM or unexpected response - use fallback
+                print(f"[LayoutSelectorAgent] WARNING: Expected LayoutSelectionResult, got {type(result).__name__}")
+                print(f"[LayoutSelectorAgent] Using fallback layout due to unexpected response type")
+                raise TypeError(f"LLM returned {type(result).__name__} instead of LayoutSelectionResult")
+            
             
         except Exception as e:
-            print(f"[LayoutSelectorAgent] LLM invocation failed: {e}")
-            # Default to first layout or create minimal fallback
-            if fallback_layout_id == "custom_layout":
-                # No candidates, create minimal fallback
-                return LayoutSelectionResult(
-                    selected_layout_id="custom_layout",
-                    confidence=0.5,
-                    reasoning="LLM invocation failed, created minimal fallback layout",
-                    created_from_scratch=True,
-                    custom_layout={
-                        "rows": [
-                            {
-                                "pattern_type": "header",
-                                "pattern_info": [
-                                    {
-                                        "type": "Heading",
-                                        "props": {"level": 1},
-                                        "value": {"text": "Results", "icon": ""}
-                                    }
-                                ]
-                            },
-                            {
-                                "pattern_type": "content",
-                                "pattern_info": [
-                                    {
-                                        "type": "Text",
-                                        "props": {},
-                                        "value": {"text": "No suitable layout found. Please refine your query."}
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                )
-            else:
-                # Use first layout from candidates
-                return LayoutSelectionResult(
-                    selected_layout_id=fallback_layout_id,
-                    confidence=0.7,
-                    reasoning="LLM invocation failed, selected first layout as default"
-                )
+            error_type = type(e).__name__
+            error_msg = str(e)
+            print(f"[LayoutSelectorAgent] LLM invocation failed ({error_type}): {error_msg}")
+            
+            # Check for common issues
+            if "rate_limit" in error_msg.lower():
+                print("[LayoutSelectorAgent] ⚠️  Rate limit exceeded - wait and retry")
+            elif "quota" in error_msg.lower():
+                print("[LayoutSelectorAgent] ⚠️  API quota exceeded - check billing")
+            elif "token" in error_msg.lower() or "length" in error_msg.lower():
+                print(f"[LayoutSelectorAgent] ⚠️  Token limit issue - prompt: {len(prompt)} chars")
+            elif "api_key" in error_msg.lower() or "auth" in error_msg.lower():
+                print("[LayoutSelectorAgent] ⚠️  API key authentication failed")
+            
+            # Default to first candidate layout
+            return LayoutSelectionResult(
+                selected_layout_id=fallback_layout_id,
+                confidence=0.5,
+                reasoning="LLM invocation failed, selected first candidate layout as fallback",
+                created_from_scratch=False,
+                is_adapted=False
+            )
 

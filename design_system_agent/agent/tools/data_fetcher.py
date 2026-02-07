@@ -106,29 +106,42 @@ class DataFetcherTool:
         Returns:
             Single or multi-object data
         """
-        # Detect objects from query
+        # Detect objects from query, analysis, and rag_query
         detected_objects = self._detect_objects_from_query(query, analysis, rag_query)
         
         # Get layout type
-        layout_type = "detail"
-        if rag_query and "layout_type" in rag_query:
+        layout_type = "list"  # Default to list
+        
+        # Check analysis first for layout type
+        if analysis:
+            if "layout_type" in analysis:
+                layout_type = analysis["layout_type"]
+            elif "intent" in analysis:
+                intent = analysis["intent"].lower()
+                if "detail" in intent or "show one" in intent:
+                    layout_type = "detail"
+        
+        # Check rag_query as fallback
+        if layout_type == "list" and rag_query and "layout_type" in rag_query:
             layout_type = rag_query["layout_type"]
-        elif analysis and "intent" in analysis:
-            intent = analysis["intent"].lower()
-            if "list" in intent:
-                layout_type = "list"
+        
+        print(f"[DataFetcher] Detected objects: {detected_objects}, layout_type: {layout_type}")
         
         # Fetch data
         if len(detected_objects) == 1:
             # Single object
-            return self.fetch_data(detected_objects[0], layout_type) or {}
+            data = self.fetch_data(detected_objects[0], layout_type)
+            if data:
+                return data
+            print(f"[DataFetcher] No data found for {detected_objects[0]}_{layout_type}, trying fallback")
+            return {}
         elif len(detected_objects) > 1:
             # Multi-object
             return self.fetch_multi_entity_data(detected_objects, layout_type)
         else:
-            # No objects detected, use default
-            obj_type = rag_query.get("object_type", "lead") if rag_query else "lead"
-            return self.fetch_data(obj_type, layout_type) or {}
+            # No objects detected - should not happen with new fallback
+            print(f"[DataFetcher] ⚠️  No objects detected, this should not happen!")
+            return {}
     
     def _detect_objects_from_query(
         self,
@@ -136,30 +149,37 @@ class DataFetcherTool:
         analysis: Optional[Dict],
         rag_query: Optional[Dict]
     ) -> List[str]:
-        """Detect which objects are mentioned in query"""
+        """Detect which objects are mentioned - relies on LLM analysis"""
         objects = []
-        query_lower = query.lower()
         
-        # Check for object keywords
-        object_keywords = {
-            "account": ["account", "accounts", "company", "companies", "organization"],
-            "case": ["case", "cases", "ticket", "tickets", "issue", "issues"],
-            "lead": ["lead", "leads", "prospect", "prospects"],
-            "task": ["task", "tasks", "todo", "activity", "activities"],
-            "contact": ["contact", "contacts", "person", "people"],
-            "opportunity": ["opportunity", "opportunities", "deal", "deals"]
-        }
+        # Priority 1: Use analysis.objects if available (from LLM)
+        if analysis and "objects" in analysis and analysis["objects"]:
+            objects = analysis["objects"]
+            # Filter out "unknown" or "data"
+            objects = [obj for obj in objects if obj not in ["unknown", "data"]]
+            if objects:
+                print(f"[DataFetcher] Using objects from LLM analysis: {objects}")
+                return objects[:3]  # Limit to 3
         
-        for obj_type, keywords in object_keywords.items():
-            if any(keyword in query_lower for keyword in keywords):
-                objects.append(obj_type)
+        # Priority 2: Use analysis.object_type if available (from LLM)
+        if analysis and "object_type" in analysis:
+            obj_type = analysis["object_type"]
+            if obj_type and obj_type not in ["unknown", "data"]:
+                print(f"[DataFetcher] Using object_type from LLM analysis: {obj_type}")
+                return [obj_type]
         
-        # If no objects found, use rag_query object_type
-        if not objects and rag_query and "object_type" in rag_query:
-            objects.append(rag_query["object_type"])
+        # Priority 3: Use rag_query object_type
+        if rag_query and "object_type" in rag_query:
+            obj_type = rag_query["object_type"]
+            if obj_type and obj_type not in ["unknown", "data"]:
+                print(f"[DataFetcher] Using object_type from rag_query: {obj_type}")
+                return [obj_type]
         
-        # Limit to 3 objects max
-        return objects[:3] if objects else []
+        # No valid objects detected - LLM analysis required
+        print(f"[DataFetcher] ⚠️  Could not detect objects - LLM analysis required")
+        print(f"[DataFetcher] 💡 Make sure OPENAI_API_KEY is set for query analysis")
+        return []
+        return []
     
     def get_available_data(self) -> Dict:
         """Get list of available data examples"""

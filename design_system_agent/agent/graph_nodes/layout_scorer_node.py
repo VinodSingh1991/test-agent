@@ -4,7 +4,7 @@ Layout Scorer and Adapter - Ranks and adapts retrieved layouts for the user quer
 from typing import Dict, Any, List
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import JsonOutputParser, StrOutputParser
+from langchain_core.output_parsers import StrOutputParser
 from design_system_agent.agent.core.llm_factory import LLMFactory
 
 
@@ -28,7 +28,7 @@ class LayoutScorer:
     """Scores and ranks retrieved layouts based on query context"""
     
     def __init__(self):
-        self.llm = LLMFactory.open_ai()
+        self.llm = LLMFactory.open_ai_structured_llm(structured_output=LayoutRanking)
     
     def score_layouts(
         self,
@@ -57,9 +57,7 @@ class LayoutScorer:
             )
         
         try:
-            # Use LLM to re-rank based on query context
-            parser = JsonOutputParser(pydantic_object=LayoutRanking)
-            
+            # Use LLM with structured output to re-rank based on query context
             prompt = ChatPromptTemplate.from_messages([
                 ("system", """You are an expert at evaluating CRM layout quality.
 
@@ -85,15 +83,13 @@ Best: {{
     "reasoning": "opportunity_list best matches 'show all opportunities' intent with list view"
 }}
 
-Now rank these layouts:
-
-{format_instructions}"""),
+Now rank these layouts:"""),
                 ("user", "Query: {query}\\nAnalysis: {analysis}\\nLayouts: {layouts}")
             ])
             
-            chain = prompt | self.llm | parser
+            chain = prompt | self.llm
             
-            result = chain.invoke({
+            ranking = chain.invoke({
                 "query": query,
                 "analysis": str(analysis),
                 "layouts": str([{
@@ -102,11 +98,9 @@ Now rank these layouts:
                     "object_type": l.get("object_type"),
                     "layout_type": l.get("layout_type"),
                     "retrieval_score": l.get("retrieval_score", 0.0)
-                } for l in retrieved_layouts]),
-                "format_instructions": parser.get_format_instructions()
+                } for l in retrieved_layouts])
             })
             
-            ranking = LayoutRanking(**result)
             print(f"[LayoutScorer] Best layout: {ranking.best_layout_id}")
             print(f"[LayoutScorer] Reasoning: {ranking.reasoning}")
             
@@ -205,7 +199,7 @@ class OutputScorer:
     """Scores the final output layout quality"""
     
     def __init__(self):
-        self.llm = LLMFactory.open_ai()
+        self.llm = LLMFactory.open_ai_structured_llm(structured_output=LayoutScore)
     
     def score_output(
         self,
@@ -227,8 +221,6 @@ class OutputScorer:
         print(f"[OutputScorer] Scoring final output")
         
         try:
-            parser = JsonOutputParser(pydantic_object=LayoutScore)
-            
             prompt = ChatPromptTemplate.from_messages([
                 ("system", """Score the layout quality based on:
 
@@ -237,22 +229,18 @@ class OutputScorer:
 3. **UX Score** (0-1): Is it user-friendly and intuitive?
 4. **Overall Score** (0-1): Average of above
 
-Provide constructive feedback.
-
-{format_instructions}"""),
+Provide constructive feedback."""),
                 ("user", "Query: {query}\\nPattern: {pattern}\\nComponents: {components}")
             ])
             
-            chain = prompt | self.llm | parser
+            chain = prompt | self.llm
             
-            result = chain.invoke({
+            score = chain.invoke({
                 "query": query,
                 "pattern": layout.get("pattern", "unknown"),
-                "components": str(layout.get("components", [])),
-                "format_instructions": parser.get_format_instructions()
+                "components": str(layout.get("components", []))
             })
             
-            score = LayoutScore(**result)
             print(f"[OutputScorer] Overall score: {score.overall_score:.2f}")
             print(f"[OutputScorer] Feedback: {score.feedback[:100]}...")
             
