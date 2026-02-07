@@ -3,10 +3,10 @@ Alert Builder
 
 Builder for creating alert/banner components.
 Single Responsibility: Build alert messages with variants and actions.
+Outputs TypeScript-compatible ComponentAlertProps.
 """
 
 from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class AlertBuilder:
@@ -19,115 +19,113 @@ class AlertBuilder:
         Args:
             message: Alert message
         """
-        self._message = message
-        self._title: Optional[str] = None
-        self._variant = "info"
-        self._dismissible = False
-        self._icon: Optional[str] = None
-        self._action_label: Optional[str] = None
-        self._id: Optional[str] = None
+        self._type = "Alert"
+        self._text = message
+        self._icon = ""
+        self._props = {}
+        self._events = {}
+        self._classes = []
     
     def with_title(self, title: str) -> 'AlertBuilder':
-        """
-        Add title to alert
-        
-        Args:
-            title: Alert title
-        """
-        self._title = title
+        """Add title to alert"""
+        self._props["title"] = title
+        return self
+    
+    def alert_type(self, alert_type: str) -> 'AlertBuilder':
+        """Set alert type: info, success, warning, error"""
+        self._props["alertType"] = alert_type
         return self
     
     def info(self) -> 'AlertBuilder':
-        """Set alert variant to info"""
-        self._variant = "info"
-        return self
+        """Set alert type to info"""
+        return self.alert_type("info")
     
     def success(self) -> 'AlertBuilder':
-        """Set alert variant to success"""
-        self._variant = "success"
-        return self
+        """Set alert type to success"""
+        return self.alert_type("success")
     
     def warning(self) -> 'AlertBuilder':
-        """Set alert variant to warning"""
-        self._variant = "warning"
-        return self
+        """Set alert type to warning"""
+        return self.alert_type("warning")
+    
+    def error(self) -> 'AlertBuilder':
+        """Set alert type to error"""
+        return self.alert_type("error")
     
     def danger(self) -> 'AlertBuilder':
-        """Set alert variant to danger"""
-        self._variant = "danger"
+        """Set alert type to error (alias for danger)"""
+        return self.error()
+    
+    def variant(self, variant: str) -> 'AlertBuilder':
+        """Set variant: subtle, solid, left-accent"""
+        self._props["variant"] = variant
+        return self
+    
+    def subtle(self) -> 'AlertBuilder':
+        return self.variant("subtle")
+    
+    def solid(self) -> 'AlertBuilder':
+        return self.variant("solid")
+    
+    def left_accent(self) -> 'AlertBuilder':
+        return self.variant("left-accent")
+    
+    def closeable(self, closeable: bool = True) -> 'AlertBuilder':
+        """Make alert closeable/dismissible"""
+        self._props["closeable"] = closeable
         return self
     
     def dismissible(self) -> 'AlertBuilder':
-        """Make alert dismissible"""
-        self._dismissible = True
-        return self
+        """Make alert dismissible (alias for closeable)"""
+        return self.closeable(True)
     
     def with_icon(self, icon: str) -> 'AlertBuilder':
-        """
-        Add icon to alert
-        
-        Args:
-            icon: Icon class name or emoji
-        """
-        self._icon = icon
+        """Add icon to alert"""
+        self._props["icon"] = icon
         return self
     
-    def with_action(self, label: str) -> 'AlertBuilder':
-        """
-        Add action button
-        
-        Args:
-            label: Action button label
-        """
-        self._action_label = label
+    def with_action(self, label: str, onClick: Optional[str] = None) -> 'AlertBuilder':
+        """Add action button"""
+        action = {"label": label}
+        if onClick:
+            action["onClick"] = onClick
+        self._props["action"] = action
         return self
     
     def with_id(self, id: str) -> 'AlertBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
-        """
-        Build the alert component
-        
-        Returns:
-            Component instance
-        """
-        classes = [
-            "bd-alert",
-            f"bd-alert-{self._variant}",
-            "bd-p-16",
-            "bd-rounded"
-        ]
-        
-        if self._dismissible:
-            classes.append("bd-alert-dismissible")
-        
-        # Use value structure with icon and text
-        # Combine title and message for text field
-        text_content = self._message
-        if self._title:
-            text_content = f"{self._title}: {self._message}"
-        
-        value = {
-            "icon": self._icon if self._icon else "",
-            "text": text_content
+    def with_classes(self, *classes: str) -> 'AlertBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def with_icon(self, icon: str) -> 'AlertBuilder':
+        """Set icon"""
+        self._icon = icon
+        return self
+    
+    def build(self) -> Dict[str, Any]:
+        """Build the alert component"""
+        result = {
+            "type": self._type,
+            "props": self._props.copy(),
+            "value": {
+                "icon": self._icon,
+                "text": self._text
+            }
         }
         
-        return Component(
-            type="Alert",
-            classes=classes,
-            props={"role": "alert"},
-            value=value,
-            id=self._id
-        )
+        if self._classes:
+            result["props"]["className"] = " ".join(self._classes)
+        
+        if self._events:
+            result["events"] = self._events.copy()
+        
+        return result
     
     def to_dict(self) -> Dict[str, Any]:
-        """
-        Build and convert to dictionary
-        
-        Returns:
-            Dictionary representation
-        """
-        return self.build().to_dict()
+        """Build and convert to dictionary"""
+        return self.build()

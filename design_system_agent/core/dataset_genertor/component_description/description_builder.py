@@ -3,10 +3,10 @@ Description Builder
 
 Builder for creating description/paragraph components with fluent API.
 Single Responsibility: Build paragraph/description text components.
+Outputs TypeScript-compatible ComponentDescriptionProps.
 """
 
 from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class DescriptionBuilder:
@@ -19,58 +19,73 @@ class DescriptionBuilder:
         Args:
             text: Description text content
         """
+        self._type = "Text"
         self._text = text
+        self._icon = ""
+        self._props = {}
+        self._events = {}
         self._classes = []
-        self._id: Optional[str] = None
+    
+    def size(self, size: str) -> 'DescriptionBuilder':
+        """Set size: xs, sm, md, lg"""
+        self._props["size"] = size
+        return self
+    
+    def weight(self, weight: str) -> 'DescriptionBuilder':
+        """Set weight: normal, medium, semibold"""
+        self._props["weight"] = weight
+        return self
+    
+    def color(self, color: str) -> 'DescriptionBuilder':
+        """Set text color"""
+        self._props["color"] = color
+        return self
+    
+    def align(self, align: str) -> 'DescriptionBuilder':
+        """Set alignment: left, center, right"""
+        self._props["align"] = align
+        return self
+    
+    def max_lines(self, lines: int) -> 'DescriptionBuilder':
+        """Set max lines for clamping"""
+        self._props["maxLines"] = lines
+        return self
     
     def muted(self) -> 'DescriptionBuilder':
         """Make text muted/gray"""
-        if "bd-text-gray-600" not in self._classes:
-            self._classes.append("bd-text-gray-600")
+        self._props["color"] = "gray"
         return self
     
     def small(self) -> 'DescriptionBuilder':
         """Make text small"""
-        if "bd-fs-sm" not in self._classes:
-            self._classes.append("bd-fs-sm")
+        self._props["size"] = "sm"
         return self
     
     def large(self) -> 'DescriptionBuilder':
         """Make text large"""
-        if "bd-fs-lg" not in self._classes:
-            self._classes.append("bd-fs-lg")
+        self._props["size"] = "lg"
         return self
     
     def bold(self) -> 'DescriptionBuilder':
         """Make text bold"""
-        if "bd-fw-bold" not in self._classes:
-            self._classes.append("bd-fw-bold")
+        self._props["weight"] = "semibold"
         return self
     
-    def italic(self) -> 'DescriptionBuilder':
+    def italic(self, italic: bool = True) -> 'DescriptionBuilder':
         """Make text italic"""
-        if "bd-italic" not in self._classes:
-            self._classes.append("bd-italic")
-        return self
-    
-    def with_margin(self) -> 'DescriptionBuilder':
-        """Add bottom margin"""
-        if "bd-mb-16" not in self._classes:
-            self._classes.append("bd-mb-16")
+        self._props["italic"] = italic
         return self
     
     def center(self) -> 'DescriptionBuilder':
         """Center align text"""
-        if "bd-text-center" not in self._classes:
-            self._classes.append("bd-text-center")
+        self._props["align"] = "center"
         return self
     
     def with_classes(self, *classes: str) -> 'DescriptionBuilder':
         """
         Add custom CSS classes
         
-        Args:
-            *classes: CSS class names
+        Args:\n            *classes: CSS class names
         """
         self._classes.extend(classes)
         return self
@@ -82,33 +97,32 @@ class DescriptionBuilder:
         Args:
             desc_id: Description identifier
         """
-        self._id = desc_id
+        self._props["id"] = desc_id
         return self
     
-    def build(self) -> Component:
+    def build(self) -> Dict[str, Any]:
         """
         Build and return the Description component
         
         Returns:
-            Component instance
+            Dictionary representation
         """
-        # Default classes for description
-        default_classes = ["bd-text-gray-600"] if not self._classes else []
-        classes = default_classes + self._classes
-        
-        # Use value structure with icon and text
-        value = {
-            "icon": "",
-            "text": self._text
+        result = {
+            "type": self._type,
+            "props": self._props.copy(),
+            "value": {
+                "icon": self._icon,
+                "text": self._text
+            }
         }
         
-        return Component(
-            type="Description",
-            classes=classes,
-            props={},
-            value=value,
-            id=self._id
-        )
+        if self._classes:
+            result["props"]["className"] = " ".join(self._classes)
+        
+        if self._events:
+            result["events"] = self._events.copy()
+        
+        return result
     
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -117,4 +131,4 @@ class DescriptionBuilder:
         Returns:
             Dictionary representation
         """
-        return self.build().to_dict()
+        return self.build()

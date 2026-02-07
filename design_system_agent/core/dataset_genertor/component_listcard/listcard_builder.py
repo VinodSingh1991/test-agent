@@ -3,10 +3,10 @@ List Card Builder
 
 Builder for creating card components with list items.
 Single Responsibility: Build cards containing lists of items (contacts, tasks, etc).
+Outputs TypeScript-compatible ComponentListCardProps.
 """
 
 from typing import Dict, Any, Optional, List
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class ListCardBuilder:
@@ -19,180 +19,148 @@ class ListCardBuilder:
         Args:
             title: Card title
         """
+        self._type = "ListCard"
         self._title = title
-        self._items: List[Dict[str, Any]] = []
-        self._avatar_items = False
-        self._action_label: Optional[str] = None
-        self._icon: Optional[str] = None
-        self._id: Optional[str] = None
+        self._title_icon = ""
+        self._items = []
+        self._description = ""
+        self._additional_info = ""
+        self._props = {
+            "variant": "elevated",
+            "hoverable": False
+        }
+        self._events = {}
+        self._classes = []
     
-    def add_item(self, primary: str, secondary: Optional[str] = None, 
-                 avatar: Optional[str] = None, badge: Optional[str] = None) -> 'ListCardBuilder':
+    def items(self, items: List[Dict[str, Any]]) -> 'ListCardBuilder':
+        """
+        Set list items
+        Each item: {id, title, subtitle?, avatar?, badge?, icon?}
+        """
+        self._items = items
+        return self
+    
+    def add_item(self, title: str, subtitle: Optional[str] = None, 
+                 avatar: Optional[str] = None, badge: Optional[str] = None,
+                 icon: Optional[str] = None) -> 'ListCardBuilder':
         """
         Add list item
         
         Args:
-            primary: Primary text
-            secondary: Secondary text (subtitle)
+            title: Item title/primary text
+            subtitle: Item subtitle/secondary text
             avatar: Avatar (initials or image URL)
             badge: Badge text
+            icon: Icon name
         """
-        self._items.append({
-            "primary": primary,
-            "secondary": secondary,
-            "avatar": avatar,
-            "badge": badge
-        })
+        item = {
+            "id": f"item-{len(self._props['items'])}",
+            "title": title
+        }
+        if subtitle:
+            item["subtitle"] = subtitle
         if avatar:
-            self._avatar_items = True
+            item["avatar"] = avatar
+        if badge:
+            item["badge"] = badge
+        if icon:
+            item["icon"] = icon
+        
+        self._items.append(item)
         return self
     
-    def with_action(self, label: str) -> 'ListCardBuilder':
+    def description(self, description: str) -> 'ListCardBuilder':
+        """Set card description"""
+        self._description = description
+        return self
+    
+    def action(self, label: str, on_click: Optional[str] = None) -> 'ListCardBuilder':
         """
         Add action button
         
         Args:
             label: Action label
+            on_click: onClick callback identifier
         """
-        self._action_label = label
+        if on_click:
+            self._events["onAction"] = on_click
+        self._additional_info = label
+        return self
+    
+    def with_action(self, label: str) -> 'ListCardBuilder':
+        """Add action button (alias)"""
+        return self.action(label)
+    
+    def icon(self, icon: str) -> 'ListCardBuilder':
+        """Set title icon"""
+        self._title_icon = icon
         return self
     
     def with_icon(self, icon: str) -> 'ListCardBuilder':
-        """
-        Add icon to title
-        
-        Args:
-            icon: Icon class name
-        """
-        self._icon = icon
+        """Set title icon (alias)"""
+        return self.icon(icon)
+    
+    def variant(self, variant: str) -> 'ListCardBuilder':
+        """Set variant: elevated, outlined, filled"""
+        self._props["variant"] = variant
+        return self
+    
+    def hoverable(self, hoverable: bool = True) -> 'ListCardBuilder':
+        """Enable hover effect"""
+        self._props["hoverable"] = hoverable
+        return self
+    
+    def max_items(self, max: int) -> 'ListCardBuilder':
+        """Set maximum items to display"""
+        self._props["maxItems"] = max
         return self
     
     def with_id(self, id: str) -> 'ListCardBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
+    def with_classes(self, *classes: str) -> 'ListCardBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def additional_info(self, info: str) -> 'ListCardBuilder':
+        """Set additional info"""
+        self._additional_info = info
+        return self
+    
+    def on_item_click(self, handler: str) -> 'ListCardBuilder':
+        """Set item click event handler"""
+        self._events["onItemClick"] = handler
+        return self
+    
+    def build(self) -> Dict[str, Any]:
         """
         Build the list card component
         
         Returns:
-            Component instance
+            Dictionary representation
         """
-        classes = [
-            "bd-list-card",
-            "bd-card"
-        ]
+        props = self._props.copy()
+        if self._classes:
+            props["className"] = " ".join(self._classes)
         
-        children = []
+        result = {
+            "type": self._type,
+            "props": props,
+            "value": {
+                "title": self._title,
+                "items": self._items,
+                "description": self._description,
+                "additionalInfo": self._additional_info
+            }
+        }
         
-        # Header
-        header_children = []
+        if self._events:
+            result["events"] = self._events.copy()
         
-        # Title
-        title_children = []
-        if self._icon:
-            title_children.append({
-                "type": "i",
-                "classes": [self._icon, "bd-mr-8"]
-            })
-        title_children.append(self._title)
-        
-        header_children.append({
-            "type": "h3",
-            "classes": ["bd-card-title", "bd-fs-lg", "bd-fw-semibold"],
-            "children": title_children
-        })
-        
-        if self._action_label:
-            header_children.append({
-                "type": "button",
-                "classes": ["bd-btn", "bd-btn-sm", "bd-btn-primary"],
-                "children": self._action_label
-            })
-        
-        children.append({
-            "type": "div",
-            "classes": ["bd-card-header", "bd-p-16", "bd-flex", "bd-justify-between", "bd-items-center"],
-            "children": header_children
-        })
-        
-        # List items
-        list_items = []
-        for item in self._items:
-            item_children = []
-            
-            # Avatar (if present)
-            if item.get("avatar"):
-                avatar_content = item["avatar"]
-                is_image = avatar_content.startswith("http") or avatar_content.endswith((".jpg", ".png", ".svg"))
-                
-                if is_image:
-                    item_children.append({
-                        "type": "img",
-                        "classes": ["bd-avatar", "bd-avatar-sm", "bd-avatar-circle"],
-                        "props": {"src": avatar_content, "alt": item["primary"]}
-                    })
-                else:
-                    item_children.append({
-                        "type": "div",
-                        "classes": ["bd-avatar", "bd-avatar-sm", "bd-avatar-circle", "bd-avatar-primary"],
-                        "children": {
-                            "type": "span",
-                            "classes": ["bd-avatar-initials"],
-                            "children": avatar_content[:2].upper()
-                        }
-                    })
-            
-            # Text content
-            text_children = [
-                {
-                    "type": "div",
-                    "classes": ["bd-list-item-primary", "bd-fw-medium"],
-                    "children": item["primary"]
-                }
-            ]
-            
-            if item.get("secondary"):
-                text_children.append({
-                    "type": "div",
-                    "classes": ["bd-list-item-secondary", "bd-text-sm", "bd-text-muted"],
-                    "children": item["secondary"]
-                })
-            
-            item_children.append({
-                "type": "div",
-                "classes": ["bd-list-item-text", "bd-flex-1"],
-                "children": text_children
-            })
-            
-            # Badge (if present)
-            if item.get("badge"):
-                item_children.append({
-                    "type": "span",
-                    "classes": ["bd-badge", "bd-badge-primary", "bd-badge-sm"],
-                    "children": item["badge"]
-                })
-            
-            list_items.append({
-                "type": "div",
-                "classes": ["bd-list-item", "bd-p-12", "bd-flex", "bd-items-center", "bd-gap-12", "bd-border-b"],
-                "children": item_children
-            })
-        
-        children.append({
-            "type": "div",
-            "classes": ["bd-card-body", "bd-p-0"],
-            "children": list_items
-        })
-        
-        return Component(
-            type="ListCard",
-            classes=classes,
-            props={},
-            children=children,
-            id=self._id
-        )
+        return result
     
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -201,4 +169,4 @@ class ListCardBuilder:
         Returns:
             Dictionary representation
         """
-        return self.build().to_dict()
+        return self.build()

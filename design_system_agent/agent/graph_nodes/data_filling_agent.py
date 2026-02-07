@@ -30,20 +30,20 @@ class DataFillingAgent:
         Returns:
             Complete layout object with all fields:
                 - id: Layout ID
-                - pattern: Layout pattern
-                - layout: Complete Tabs→Sections→Rows→Cols structure
-                - components: Component type list
+                - object_type: Object type (lead, case, etc.)
+                - layout_type: Layout pattern type
+                - layout: Simplified structure with rows -> pattern_info components
                 - score: Layout score
                 - query: Original query from dataset
                 - metadata: Additional metadata
         """
         
         # Return the complete layout structure as-is from dataset
-        # The layout already has the correct structure with Tabs→Sections→Rows→Cols
+        # The layout already has the correct structure with rows -> pattern_info
         
         return {
             "id": selected_layout.get("id"),
-            "layout": selected_layout.get("layout"),  # Complete hierarchical structure
+            "layout": selected_layout.get("layout"),  # Simplified rows/pattern structure
             "score": selected_layout.get(
                 "score", 
                 selected_layout.get("final_score", selected_layout.get("rerank_score", 0.95))

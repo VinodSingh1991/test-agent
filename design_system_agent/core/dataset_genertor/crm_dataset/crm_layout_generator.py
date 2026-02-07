@@ -21,6 +21,7 @@ from design_system_agent.core.dataset_genertor.component_text.text_builder impor
 from design_system_agent.core.dataset_genertor.component_link.link_builder import LinkBuilder
 from design_system_agent.core.dataset_genertor.component_label.label_builder import LabelBuilder
 from design_system_agent.core.dataset_genertor.component_button.button_builder import ButtonBuilder
+
 from design_system_agent.core.dataset_genertor.component_avatar.avatar_builder import AvatarBuilder
 from design_system_agent.core.dataset_genertor.component_badge.badge_builder import BadgeBuilder
 from design_system_agent.core.dataset_genertor.component_list.list_builder import ListBuilder
@@ -61,7 +62,17 @@ from design_system_agent.core.dataset_genertor.crm_dataset.crm_queries import (
 
 
 class CRMLayoutGenerator:
-    """Generates CRM-specific layouts using pattern-based component combinations"""
+    """Generates CRM-specific layouts using pattern-based component combinations
+    
+    Pattern Categories:
+    - Detail Patterns: basic_detail, detail_card, summarize
+    - List Patterns: list, list_summary, contact_list_card
+    - Dashboard Patterns: metrics_dashboard, analytics, dashlet
+    - Card Patterns: grid_card
+    - Timeline Patterns: timeline, activity_feed, hierarchy
+    - Special Patterns: insights, alerts, celebrations, related
+    - View Patterns: table_view, list_view, card_view
+    """
     
     def __init__(self):
         # Save to design_system_agent/dataset/ folder
@@ -73,6 +84,45 @@ class CRMLayoutGenerator:
         self.sample_companies = ["Acme Corp", "Tech Solutions", "Global Industries", "StartUp Inc", "Enterprise Ltd"]
         self.sample_statuses = ["Active", "Pending", "Closed", "Qualified", "New", "Working"]
         self.sample_priorities = ["High", "Medium", "Low"]
+        
+        # Pattern registry - maps pattern names to generator methods
+        self.pattern_registry = {
+            # Detail patterns
+            "basic_detail": self.generate_basic_detail_layout,
+            "detail_card": self.generate_detail_card_layout,
+            "summarize": self.generate_summarize_layout,
+            
+            # List patterns
+            "list": self.generate_list_layout,
+            "list_summary": self.generate_list_summary_layout,
+            "contact_list_card": self.generate_contact_list_card_layout,
+            
+            # Dashboard patterns  
+            "metrics_dashboard": self.generate_metrics_dashboard_layout,
+            "analytics": self.generate_analytics_layout,
+            "dashlet": self.generate_dashlet_layout,
+            
+            # Card patterns
+            "grid_card": self.generate_grid_card_layout,
+            
+            # Timeline patterns
+            "timeline": self.generate_timeline_layout,
+            "activity_feed": self.generate_activity_feed_layout,
+            "hierarchy": self.generate_hierarchy_layout,
+            
+            # Special patterns
+            "insights": self.generate_insights_layout,
+            "alerts": self.generate_alerts_layout,
+            "celebrations": self.generate_celebrations_layout,
+            "related": self.generate_related_layout,
+        }
+        
+        # View type registry - maps view types to view generator methods
+        self.view_registry = {
+            "table": self.generate_table_view_layout,
+            "list": self.generate_list_view_layout,
+            "card": self.generate_card_view_layout,
+        }
     
     def get_sample_data(self, object_type: str, idx: int) -> Dict[str, Any]:
         """Generate sample CRM data for an object"""
@@ -89,7 +139,10 @@ class CRMLayoutGenerator:
             "phone": f"+1-555-{random.randint(100, 999)}-{random.randint(1000, 9999)}",
         }
     
-    # ============ PATTERN-SPECIFIC LAYOUT GENERATORS ============
+    # ╔══════════════════════════════════════════════════════════════╗
+    # ║                    DETAIL PATTERNS                            ║
+    # ║  Patterns for detailed record views and summaries            ║
+    # ╚══════════════════════════════════════════════════════════════╝
     
     def generate_basic_detail_layout(self, object_type: str, data: Dict, idx: int) -> LayoutBuilder:
         """Generate basic_detail pattern - Comprehensive record detail view (10 components)"""
@@ -180,6 +233,11 @@ class CRMLayoutGenerator:
         
         return layout
     
+    # ╔══════════════════════════════════════════════════════════════╗
+    # ║                  DASHBOARD PATTERNS                          ║
+    # ║  Patterns for metrics, analytics, and dashboards             ║
+    # ╚══════════════════════════════════════════════════════════════╝
+    
     def generate_metrics_dashboard_layout(self, object_type: str, data: Dict, idx: int) -> LayoutBuilder:
         """Generate metrics_dashboard pattern - KPI dashboard (8 components)"""
         # Components: Heading, Metric, Dashlet, Card, Badge, Divider, Button, Table
@@ -187,9 +245,9 @@ class CRMLayoutGenerator:
         heading = HeadingBuilder(f"{object_type} Performance Dashboard", 1).build()
         
         # Metrics
-        revenue_metric = MetricBuilder(data['revenue'], "Total Revenue").with_change("+12%", "up").build()
-        count_metric = MetricBuilder("1,234", f"Total {object_type}s").with_change("+5%", "up").build()
-        rate_metric = MetricBuilder("42%", "Win Rate").with_change("0%", "neutral").build()
+        revenue_metric = MetricBuilder("Total Revenue", data['revenue']).trend(12.0, "up", True).build()
+        count_metric = MetricBuilder(f"Total {object_type}s", "1,234").trend(5.0, "up", True).build()
+        rate_metric = MetricBuilder("Win Rate", "42%").trend(0.0, "neutral").build()
         
         # Dashlets
         dashlet1 = DashletBuilder(f"Top {object_type}s").add_content("5 high-value records").with_action("View All").build()
@@ -197,8 +255,7 @@ class CRMLayoutGenerator:
         
         # Card with grouped metrics
         card = CardBuilder("Team Performance").elevated() \
-            .add_body_content("Team A: $500K") \
-            .add_body_content("Team B: $350K") \
+            .content(["Team A: $500K", "Team B: $350K"]) \
             .build()
         
         # Trend badges
@@ -270,6 +327,11 @@ class CRMLayoutGenerator:
         
         return layout
     
+    # ╔══════════════════════════════════════════════════════════════╗
+    # ║                    LIST PATTERNS                             ║
+    # ║  Patterns for lists, tables, and contact displays            ║
+    # ╚══════════════════════════════════════════════════════════════╝
+    
     def generate_contact_list_card_layout(self, object_type: str, data: Dict, idx: int) -> LayoutBuilder:
         """Generate contact_list_card pattern - People/stakeholders (9 components)"""
         # Components: Heading, ListCard, Avatar, Badge, Text, Link, Chip, Button, Divider
@@ -336,6 +398,11 @@ class CRMLayoutGenerator:
         layout.add_tab(tab)
         
         return layout
+    
+    # ╔══════════════════════════════════════════════════════════════╗
+    # ║                   SPECIAL PATTERNS                           ║
+    # ║  Patterns for insights, alerts, celebrations, and related    ║
+    # ╚══════════════════════════════════════════════════════════════╝
     
     def generate_insights_layout(self, object_type: str, data: Dict, idx: int) -> LayoutBuilder:
         """Generate insights pattern - AI suggestions (8 components)"""
@@ -475,9 +542,9 @@ class CRMLayoutGenerator:
         heading = h2_heading(f"{object_type} Overview")
         
         # Summary metrics
-        total_metric = MetricBuilder("1,234", f"Total {object_type}s").with_change("+15%", "up").build()
-        active_metric = MetricBuilder("856", "Active").with_change("+8%", "up").build()
-        closed_metric = MetricBuilder("378", "Closed").with_change("-3%", "down").build()
+        total_metric = MetricBuilder(f"Total {object_type}s", "1,234").trend(15.0, "up", True).build()
+        active_metric = MetricBuilder("Active", "856").trend(8.0, "up", True).build()
+        closed_metric = MetricBuilder("Closed", "378").trend(3.0, "down", False).build()
         
         divider = horizontal_divider()
         
@@ -531,6 +598,11 @@ class CRMLayoutGenerator:
         
         return layout
     
+    # ╔══════════════════════════════════════════════════════════════╗
+    # ║                     CARD PATTERNS                            ║
+    # ║  Patterns for card-based grid layouts                        ║
+    # ╚══════════════════════════════════════════════════════════════╝
+    
     def generate_grid_card_layout(self, object_type: str, data: Dict, idx: int) -> LayoutBuilder:
         """Generate grid_card pattern - Multiple cards in grid (8 components)"""
         # Components: Heading, Card, Image, Badge, Text, Button, Chip, Avatar
@@ -539,24 +611,21 @@ class CRMLayoutGenerator:
         
         # Grid of cards
         card1 = CardBuilder(f"{object_type} Alpha").elevated() \
-            .with_header("High Priority") \
-            .add_body_content(f"Owner: {self.sample_names[0]}") \
-            .add_body_content("Status: Active") \
-            .with_footer("View Details") \
+            .description("High Priority") \
+            .content([f"Owner: {self.sample_names[0]}", "Status: Active"]) \
+            .footer("View Details") \
             .build()
         
         card2 = CardBuilder(f"{object_type} Beta").elevated() \
-            .with_header("Medium Priority") \
-            .add_body_content(f"Owner: {self.sample_names[1]}") \
-            .add_body_content("Status: Pending") \
-            .with_footer("View Details") \
+            .description("Medium Priority") \
+            .content([f"Owner: {self.sample_names[1]}", "Status: Pending"]) \
+            .footer("View Details") \
             .build()
         
         card3 = CardBuilder(f"{object_type} Gamma").elevated() \
-            .with_header("Low Priority") \
-            .add_body_content(f"Owner: {self.sample_names[2]}") \
-            .add_body_content("Status: Closed") \
-            .with_footer("View Details") \
+            .description("Low Priority") \
+            .content([f"Owner: {self.sample_names[2]}", "Status: Closed"]) \
+            .footer("View Details") \
             .build()
         
         # Filter controls
@@ -595,6 +664,11 @@ class CRMLayoutGenerator:
         layout.add_tab(tab)
         
         return layout
+    
+    # ╔══════════════════════════════════════════════════════════════╗
+    # ║                  TIMELINE PATTERNS                           ║
+    # ║  Patterns for timelines, activities, and hierarchies         ║
+    # ╚══════════════════════════════════════════════════════════════╝
     
     def generate_timeline_layout(self, object_type: str, data: Dict, idx: int) -> LayoutBuilder:
         """Generate timeline pattern - Chronological activity (8 components)"""
@@ -744,8 +818,8 @@ class CRMLayoutGenerator:
         heading = h1_heading(f"{object_type} Analytics")
         
         # KPI metrics
-        metric1 = MetricBuilder(data['revenue'], "Total Revenue").with_change("+18%", "up").build()
-        metric2 = MetricBuilder(f"{data['confidence']}%", "Success Rate").with_change("+5%", "up").build()
+        metric1 = MetricBuilder("Total Revenue", data['revenue']).trend(18.0, "up", True).build()
+        metric2 = MetricBuilder("Success Rate", f"{data['confidence']}%").trend(5.0, "up", True).build()
         
         # Dashlets
         dashlet1 = DashletBuilder("Top Performers").add_content("5 active records").with_action("View").build()
@@ -1019,8 +1093,8 @@ class CRMLayoutGenerator:
         
         # Occasion cards
         card = CardBuilder("Work Anniversary").elevated() \
-            .add_body_content(f"{self.sample_names[1]} - 5 years") \
-            .with_footer("Send Wishes") \
+            .content(f"{self.sample_names[1]} - 5 years") \
+            .footer("Send Wishes") \
             .build()
         
         occasion_badge = success_badge("Birthday")
@@ -1079,7 +1153,7 @@ class CRMLayoutGenerator:
             .build()
         
         # Metric widget
-        metric = MetricBuilder("1,234", f"{object_type}s").with_change("+12%", "up").build()
+        metric = MetricBuilder(f"{object_type}s", "1,234").trend(12.0, "up", True).build()
         
         status_badge = success_badge(data['status'])
         avatar = AvatarBuilder(data['avatar']).small().build()
@@ -1180,11 +1254,9 @@ class CRMLayoutGenerator:
         
         # Main detail card
         card = CardBuilder(f"{object_type}: {data['name']}").elevated() \
-            .with_header(f"Priority: {data['priority']}") \
-            .add_body_content(f"Owner: {data['owner']}") \
-            .add_body_content(f"Status: {data['status']}") \
-            .add_body_content(f"Created: {data['created']}") \
-            .with_footer("Edit | Delete") \
+            .description(f"Priority: {data['priority']}") \
+            .content([f"Owner: {data['owner']}", f"Status: {data['status']}", f"Created: {data['created']}"]) \
+            .footer("Edit | Delete") \
             .build()
         
         heading = h2_heading(f"{object_type} Details")
@@ -1254,8 +1326,6 @@ class CRMLayoutGenerator:
     
     def generate_generic_pattern_layout(self, pattern: str, object_type: str, data: Dict, idx: int) -> LayoutBuilder:
         """Generic pattern layout generator for patterns without specific implementation"""
-        components = PATTERN_COMPONENTS.get(pattern, ["Heading", "Description", "Button"])
-        
         heading = HeadingBuilder(f"{object_type} - {pattern.replace('_', ' ').title()}", 2).build()
         desc = DescriptionBuilder(f"This is a {pattern} view for {object_type}").build()
         button = ButtonBuilder("Action").primary().build()
@@ -1498,14 +1568,13 @@ class CRMLayoutGenerator:
         heading = h1_heading(query)
         
         # Metrics (required for card view)
-        metric1 = MetricBuilder(data['revenue'], "Total Value").with_change("+12%", "up").build()
-        metric2 = MetricBuilder(f"{data['confidence']}%", "Confidence").with_change("+5%", "up").build()
+        metric1 = MetricBuilder("Total Value", data['revenue']).trend(12.0, "up", True).build()
+        metric2 = MetricBuilder("Confidence", f"{data['confidence']}%").trend(5.0, "up", True).build()
         
         # Cards
         card1 = CardBuilder("Summary Card").elevated() \
-            .add_body_content(f"Status: {data['status']}") \
-            .add_body_content(f"Owner: {data['owner']}") \
-            .with_footer("View Details") \
+            .content([f"Status: {data['status']}", f"Owner: {data['owner']}"]) \
+            .footer("View Details") \
             .build()
         
         # Advanced components
@@ -1516,8 +1585,7 @@ class CRMLayoutGenerator:
                 .build()
             
             card2 = CardBuilder("Insights").elevated() \
-                .add_body_content("Growth trending upward") \
-                .add_body_content("Performance exceeds target") \
+                .content(["Growth trending upward", "Performance exceeds target"]) \
                 .build()
         
         status_badge = success_badge(data['status'])
@@ -1575,13 +1643,7 @@ class CRMLayoutGenerator:
         
         print(f"Generated {len(queries)} queries from new query system")
         
-        # View type to generator mapping
-        view_type_generators = {
-            "table": self.generate_table_view_layout,
-            "list": self.generate_list_view_layout,
-            "card": self.generate_card_view_layout,
-        }
-        
+        # Use view registry for cleaner code
         for idx, query in enumerate(queries, 1):
             # Get metadata for this query (includes view type, components, etc.)
             metadata = get_query_metadata(query)
@@ -1599,7 +1661,7 @@ class CRMLayoutGenerator:
             
             # Get the appropriate generator for this view type
             view_type = metadata['view_type']
-            generator = view_type_generators.get(view_type, self.generate_table_view_layout)
+            generator = self.view_registry.get(view_type, self.generate_table_view_layout)
             
             # Generate layout
             layout = generator(query, metadata, data, object_type, idx)

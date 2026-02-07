@@ -3,91 +3,137 @@ Link Builder
 
 Builder for creating hyperlink components.
 Single Responsibility: Build clickable links with variants.
+Outputs TypeScript-compatible ComponentLinkProps.
 """
 
 from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class LinkBuilder:
     """Builder for Link components with fluent interface"""
     
     def __init__(self, text: str, href: str = "#"):
-        """Initialize LinkBuilder"""
-        self._text = text
-        self._href = href
-        self._variant = "default"
-        self._underline = True
-        self._external = False
-        self._icon: Optional[str] = None
-        self._id: Optional[str] = None
+        """
+        Initialize LinkBuilder
+        
+        Args:
+            text: Link text content
+            href: Link URL
+        """
+        self._props = {
+            "type": "Link",
+            "href": href,
+            "text": text,
+            "external": False,
+            "variant": "default",
+            "color": "brand",
+            "size": "md",
+            "disabled": False
+        }
+        self._classes = []
+    
+    def href(self, url: str) -> 'LinkBuilder':
+        """Set link URL"""
+        self._props["href"] = url
+        return self
+    
+    def variant(self, variant: str) -> 'LinkBuilder':
+        """Set variant: default, button"""
+        self._props["variant"] = variant
+        return self
+    
+    def as_button(self) -> 'LinkBuilder':
+        """Style link as button"""
+        return self.variant("button")
+    
+    def color(self, color: str) -> 'LinkBuilder':
+        """Set color: brand, muted, inherit"""
+        self._props["color"] = color
+        return self
     
     def primary(self) -> 'LinkBuilder':
-        """Set link color to primary"""
-        self._variant = "primary"
-        return self
-    
-    def secondary(self) -> 'LinkBuilder':
-        """Set link color to secondary"""
-        self._variant = "secondary"
-        return self
+        """Set color to brand (alias)"""
+        return self.color("brand")
     
     def muted(self) -> 'LinkBuilder':
-        """Set link color to muted"""
-        self._variant = "muted"
+        return self.color("muted")
+    
+    def inherit_color(self) -> 'LinkBuilder':
+        """Inherit color from parent"""
+        return self.color("inherit")
+    
+    def size(self, size: str) -> 'LinkBuilder':
+        """Set size: sm, md, lg"""
+        self._props["size"] = size
         return self
     
-    def no_underline(self) -> 'LinkBuilder':
-        """Remove underline"""
-        self._underline = False
-        return self
+    def small(self) -> 'LinkBuilder':
+        return self.size("sm")
     
-    def external(self) -> 'LinkBuilder':
+    def medium(self) -> 'LinkBuilder':
+        return self.size("md")
+    
+    def large(self) -> 'LinkBuilder':
+        return self.size("lg")
+    
+    def external(self, is_external: bool = True) -> 'LinkBuilder':
         """Mark as external link"""
-        self._external = True
+        self._props["external"] = is_external
+        if is_external:
+            self._props["target"] = "_blank"
+            self._props["rel"] = "noopener noreferrer"
+        return self
+    
+    def target(self, target: str) -> 'LinkBuilder':
+        """Set target: _blank, _self, _parent, _top"""
+        self._props["target"] = target
+        return self
+    
+    def rel(self, rel: str) -> 'LinkBuilder':
+        """Set rel attribute"""
+        self._props["rel"] = rel
+        return self
+    
+    def disabled(self, disabled: bool = True) -> 'LinkBuilder':
+        """Set disabled state"""
+        self._props["disabled"] = disabled
+        return self
+    
+    def left_icon(self, icon: str) -> 'LinkBuilder':
+        """Set left icon"""
+        self._props["leftIcon"] = icon
+        return self
+    
+    def right_icon(self, icon: str) -> 'LinkBuilder':
+        """Set right icon"""
+        self._props["rightIcon"] = icon
         return self
     
     def with_icon(self, icon: str) -> 'LinkBuilder':
-        """Add icon to link"""
-        self._icon = icon
+        """Add icon to link (left side)"""
+        return self.left_icon(icon)
+    
+    def no_underline(self) -> 'LinkBuilder':
+        """Remove underline (using className)"""
+        self._classes.append("no-underline")
         return self
     
     def with_id(self, id: str) -> 'LinkBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
+    def with_classes(self, *classes: str) -> 'LinkBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def build(self) -> Dict[str, Any]:
         """Build the link component"""
-        classes = ["bd-link", f"bd-link-{self._variant}"]
-        
-        if not self._underline:
-            classes.append("bd-no-underline")
-        
-        props = {"href": self._href}
-        
-        if self._external:
-            props["target"] = "_blank"
-            props["rel"] = "noopener noreferrer"
-        
-        # Use value structure with icon and text
-        icon_value = self._icon if self._icon else ""
-        if self._external and not self._icon:
-            icon_value = "external-link"
-        
-        value = {
-            "icon": icon_value,
-            "text": self._text
-        }
-        
-        return Component(
-            type="Link",
-            classes=classes,
-            props=props,
-            value=value,
-            id=self._id
-        )
+        if self._classes:
+            self._props["className"] = " ".join(self._classes)
+        return self._props.copy()
     
     def to_dict(self) -> Dict[str, Any]:
         """Build and convert to dictionary"""
-        return self.build().to_dict()
+        return self.build()

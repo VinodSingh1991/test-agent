@@ -3,131 +3,123 @@ Badge Builder
 
 Builder for creating badge/tag components with fluent API.
 Single Responsibility: Build badge components for status, labels, counts.
+Outputs TypeScript-compatible ComponentBadgeProps.
 """
 
 from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class BadgeBuilder:
     """Builder for Badge components with fluent interface"""
     
-    def __init__(self, text: str):
+    def __init__(self, label: str):
         """
         Initialize BadgeBuilder
-        
-        Args:
-            text: Badge text content
+        \n        Args:
+            label: Badge text content
         """
-        self._text = text
-        self._variant = "default"
-        self._size = "md"
-        self._pill = False
-        self._icon: Optional[str] = None
-        self._id: Optional[str] = None
+        self._type = "Badge"
+        self._text = label
+        self._icon = ""
+        self._props = {}
+        self._events = {}
+        self._classes = []
     
-    def primary(self) -> 'BadgeBuilder':
-        """Set badge variant to primary"""
-        self._variant = "primary"
+    def variant(self, variant: str) -> 'BadgeBuilder':
+        """Set variant: solid, outline, soft"""
+        self._props["variant"] = variant
         return self
     
-    def secondary(self) -> 'BadgeBuilder':
-        """Set badge variant to secondary"""
-        self._variant = "secondary"
+    def color(self, color: str) -> 'BadgeBuilder':
+        """Set color: brand, success, error, warning, info, gray, neutral"""
+        self._props["color"] = color
+        return self
+    
+    def size(self, size: str) -> 'BadgeBuilder':
+        """Set size: sm, md, lg"""
+        self._props["size"] = size
+        return self
+    
+    def rounded(self, rounded: bool = True) -> 'BadgeBuilder':
+        """Make badge rounded (pill shape)"""
+        self._props["rounded"] = rounded
+        return self
+    
+    def dot(self, dot: bool = True) -> 'BadgeBuilder':
+        """Show dot indicator"""
+        self._props["dot"] = dot
+        return self
+    
+    def pulse(self, pulse: bool = True) -> 'BadgeBuilder':
+        """Enable pulse animation"""
+        self._props["pulse"] = pulse
         return self
     
     def success(self) -> 'BadgeBuilder':
-        """Set badge variant to success"""
-        self._variant = "success"
-        return self
+        return self.color("success")
     
-    def warning(self) -> 'BadgeBuilder':
-        """Set badge variant to warning"""
-        self._variant = "warning"
-        return self
+    def error(self) -> 'BadgeBuilder':
+        return self.color("error")
     
     def danger(self) -> 'BadgeBuilder':
-        """Set badge variant to danger"""
-        self._variant = "danger"
-        return self
+        return self.color("error")
+    
+    def warning(self) -> 'BadgeBuilder':
+        return self.color("warning")
     
     def info(self) -> 'BadgeBuilder':
-        """Set badge variant to info"""
-        self._variant = "info"
-        return self
+        return self.color("info")
     
-    def small(self) -> 'BadgeBuilder':
-        """Set badge size to small"""
-        self._size = "sm"
-        return self
-    
-    def medium(self) -> 'BadgeBuilder':
-        """Set badge size to medium"""
-        self._size = "md"
-        return self
-    
-    def large(self) -> 'BadgeBuilder':
-        """Set badge size to large"""
-        self._size = "lg"
-        return self
+    def primary(self) -> 'BadgeBuilder':
+        return self.color("brand")
     
     def pill_shape(self) -> 'BadgeBuilder':
-        """Make badge pill-shaped (fully rounded)"""
-        self._pill = True
-        return self
+        """Make badge pill-shaped (alias for rounded)"""
+        return self.rounded(True)
     
-    def with_icon(self, icon: str) -> 'BadgeBuilder':
-        """
-        Add icon to badge
-        
-        Args:
-            icon: Icon class name
-        """
-        self._icon = icon
-        return self
+    def small(self) -> 'BadgeBuilder':
+        return self.size("sm")
+    
+    def medium(self) -> 'BadgeBuilder':
+        return self.size("md")
+    
+    def large(self) -> 'BadgeBuilder':
+        return self.size("lg")
     
     def with_id(self, id: str) -> 'BadgeBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
-        """
-        Build the badge component
-        
-        Returns:
-            Component instance
-        """
-        classes = [
-            "bd-badge",
-            f"bd-badge-{self._variant}",
-        ]
-        
-        if self._size != "md":
-            classes.append(f"bd-badge-{self._size}")
-        
-        if self._pill:
-            classes.append("bd-badge-pill")
-        
-        # Use value structure with icon and text
-        value = {
-            "icon": self._icon if self._icon else "",
-            "text": self._text
+    def with_classes(self, *classes: str) -> 'BadgeBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def with_icon(self, icon: str) -> 'BadgeBuilder':
+        """Set icon"""
+        self._icon = icon
+        return self
+    
+    def build(self) -> Dict[str, Any]:
+        """Build the badge component"""
+        result = {
+            "type": self._type,
+            "props": self._props.copy(),
+            "value": {
+                "icon": self._icon,
+                "text": self._text
+            }
         }
         
-        return Component(
-            type="Badge",
-            classes=classes,
-            props={},
-            value=value,
-            id=self._id
-        )
+        if self._classes:
+            result["props"]["className"] = " ".join(self._classes)
+        
+        if self._events:
+            result["events"] = self._events.copy()
+        
+        return result
     
     def to_dict(self) -> Dict[str, Any]:
-        """
-        Build and convert to dictionary
-        
-        Returns:
-            Dictionary representation
-        """
-        return self.build().to_dict()
+        """Build and convert to dictionary"""
+        return self.build()

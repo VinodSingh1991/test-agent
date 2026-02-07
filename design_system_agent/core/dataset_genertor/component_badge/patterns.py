@@ -1,11 +1,11 @@
 """
 Badge pattern factory functions for common use cases
 """
+from typing import Dict, Any
 from .badge_builder import BadgeBuilder
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
-def success_badge(text: str, pill: bool = False) -> Component:
+def success_badge(text: str, pill: bool = False) -> Dict[str, Any]:
     """Success status badge"""
     builder = BadgeBuilder(text).success()
     if pill:
@@ -13,7 +13,7 @@ def success_badge(text: str, pill: bool = False) -> Component:
     return builder.build()
 
 
-def warning_badge(text: str, pill: bool = False) -> Component:
+def warning_badge(text: str, pill: bool = False) -> Dict[str, Any]:
     """Warning status badge"""
     builder = BadgeBuilder(text).warning()
     if pill:
@@ -21,7 +21,7 @@ def warning_badge(text: str, pill: bool = False) -> Component:
     return builder.build()
 
 
-def danger_badge(text: str, pill: bool = False) -> Component:
+def danger_badge(text: str, pill: bool = False) -> Dict[str, Any]:
     """Danger/error status badge"""
     builder = BadgeBuilder(text).danger()
     if pill:
@@ -29,7 +29,7 @@ def danger_badge(text: str, pill: bool = False) -> Component:
     return builder.build()
 
 
-def info_badge(text: str, pill: bool = False) -> Component:
+def info_badge(text: str, pill: bool = False) -> Dict[str, Any]:
     """Info status badge"""
     builder = BadgeBuilder(text).info()
     if pill:
@@ -37,7 +37,7 @@ def info_badge(text: str, pill: bool = False) -> Component:
     return builder.build()
 
 
-def primary_badge(text: str, pill: bool = False) -> Component:
+def primary_badge(text: str, pill: bool = False) -> Dict[str, Any]:
     """Primary status badge"""
     builder = BadgeBuilder(text).primary()
     if pill:
@@ -45,7 +45,7 @@ def primary_badge(text: str, pill: bool = False) -> Component:
     return builder.build()
 
 
-def secondary_badge(text: str, pill: bool = False) -> Component:
+def secondary_badge(text: str, pill: bool = False) -> Dict[str, Any]:
     """Secondary status badge"""
     builder = BadgeBuilder(text).secondary()
     if pill:

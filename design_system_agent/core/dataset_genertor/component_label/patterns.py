@@ -2,10 +2,10 @@
 Label pattern factory functions for common use cases
 """
 from .label_builder import LabelBuilder
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
+from typing import Dict, Any
 
 
-def form_label(text: str, required: bool = False) -> Component:
+def form_label(text: str, required: bool = False) -> Dict[str, Any]:
     """Form field label"""
     builder = LabelBuilder(text)
     if required:
@@ -13,6 +13,6 @@ def form_label(text: str, required: bool = False) -> Component:
     return builder.build()
 
 
-def bold_label(text: str) -> Component:
+def bold_label(text: str) -> Dict[str, Any]:
     """Bold label for emphasis"""
     return LabelBuilder(text).bold().build()

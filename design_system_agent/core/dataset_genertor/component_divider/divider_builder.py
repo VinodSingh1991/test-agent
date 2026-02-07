@@ -3,10 +3,10 @@ Divider Builder
 
 Builder for creating divider/separator components.
 Single Responsibility: Build horizontal/vertical dividers.
+Outputs TypeScript-compatible ComponentDividerProps.
 """
 
 from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class DividerBuilder:
@@ -14,82 +14,99 @@ class DividerBuilder:
     
     def __init__(self):
         """Initialize DividerBuilder"""
-        self._orientation = "horizontal"
-        self._variant = "solid"
-        self._spacing = "md"
-        self._label: Optional[str] = None
-        self._id: Optional[str] = None
+        self._props = {
+            "type": "Divider",
+            "orientation": "horizontal",
+            "variant": "solid",
+            "spacing": "md"
+        }
+        self._classes = []
     
     def horizontal(self) -> 'DividerBuilder':
         """Set divider to horizontal"""
-        self._orientation = "horizontal"
+        self._props["orientation"] = "horizontal"
         return self
     
     def vertical(self) -> 'DividerBuilder':
         """Set divider to vertical"""
-        self._orientation = "vertical"
+        self._props["orientation"] = "vertical"
+        return self
+    
+    def variant(self, variant: str) -> 'DividerBuilder':
+        """Set variant: solid, dashed, dotted"""
+        self._props["variant"] = variant
         return self
     
     def dashed(self) -> 'DividerBuilder':
         """Set divider style to dashed"""
-        self._variant = "dashed"
+        self._props["variant"] = "dashed"
         return self
     
     def dotted(self) -> 'DividerBuilder':
         """Set divider style to dotted"""
-        self._variant = "dotted"
+        self._props["variant"] = "dotted"
+        return self
+    
+    def label(self, label: str) -> 'DividerBuilder':
+        """Add label to divider"""
+        self._props["label"] = label
         return self
     
     def with_label(self, label: str) -> 'DividerBuilder':
-        """Add label to divider"""
-        self._label = label
+        """Add label to divider (alias)"""
+        return self.label(label)
+    
+    def label_position(self, position: str) -> 'DividerBuilder':
+        """Set label position: left, center, right"""
+        self._props["labelPosition"] = position
+        return self
+    
+    def spacing(self, spacing: str) -> 'DividerBuilder':
+        """Set spacing: none, xs, sm, md, lg, xl"""
+        self._props["spacing"] = spacing
         return self
     
     def small_spacing(self) -> 'DividerBuilder':
         """Set small spacing"""
-        self._spacing = "sm"
+        self._props["spacing"] = "sm"
+        return self
+    
+    def medium_spacing(self) -> 'DividerBuilder':
+        """Set medium spacing"""
+        self._props["spacing"] = "md"
         return self
     
     def large_spacing(self) -> 'DividerBuilder':
         """Set large spacing"""
-        self._spacing = "lg"
+        self._props["spacing"] = "lg"
+        return self
+    
+    def color(self, color: str) -> 'DividerBuilder':
+        """Set color"""
+        self._props["color"] = color
+        return self
+    
+    def thickness(self, thickness: str) -> 'DividerBuilder':
+        """Set thickness: thin, normal, thick"""
+        self._props["thickness"] = thickness
         return self
     
     def with_id(self, id: str) -> 'DividerBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
+    def with_classes(self, *classes: str) -> 'DividerBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def build(self) -> Dict[str, Any]:
         """Build the divider component"""
-        classes = [
-            "bd-divider",
-            f"bd-divider-{self._orientation}",
-            f"bd-divider-{self._variant}",
-            f"bd-my-{self._spacing}" if self._orientation == "horizontal" else f"bd-mx-{self._spacing}"
-        ]
-        
-        if self._label:
-            return Component(
-                type="Divider",
-                classes=["bd-divider-wrapper", f"bd-my-{self._spacing}"],
-                props={"label": self._label, "orientation": self._orientation},
-                children=[
-                    {"type": "hr", "classes": classes[:2] + [self._variant]},
-                    {"type": "span", "classes": ["bd-divider-label", "bd-px-8"], "children": self._label},
-                    {"type": "hr", "classes": classes[:2] + [self._variant]}
-                ],
-                id=self._id
-            )
-        
-        return Component(
-            type="Divider",
-            classes=classes,
-            props={"orientation": self._orientation},
-            children=None,
-            id=self._id
-        )
+        if self._classes:
+            self._props["className"] = " ".join(self._classes)
+        return self._props.copy()
     
     def to_dict(self) -> Dict[str, Any]:
         """Build and convert to dictionary"""
-        return self.build().to_dict()
+        return self.build()

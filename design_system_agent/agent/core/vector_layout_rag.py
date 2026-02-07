@@ -62,8 +62,8 @@ class VectorLayoutRAGEngine:
         
         # Find the layouts file
         possible_paths = [
-            Path(__file__).parent.parent.parent / "dataset" / "crm_layouts.json",
-            Path("design_system_agent/dataset/crm_layouts.json"),
+            Path(__file__).parent.parent.parent / "dataset" / "crm_query_dataset.json",
+            Path("dataset/crm_query_dataset.json"),
         ]
         
         layouts_path = None
@@ -89,20 +89,19 @@ class VectorLayoutRAGEngine:
         # Prepare data for indexing
         documents = []
         
-        for layout in layouts:
+        for entry in layouts:
             # Create rich document text for embedding
-            doc_text = self._create_document_text(layout)
+            doc_text = self._create_document_text(entry)
             documents.append(doc_text)
             
             # Store metadata
             self.layouts_metadata.append({
-                "id": layout["id"],
-                "pattern": layout["pattern"],
-                "entity": layout["entity"],
-                "view_type": layout["view_type"],
-                "query": layout["query"],
-                "components": layout["components"],
-                "layout": layout.get("layout", [])
+                "query": entry["query"],
+                "object_type": entry["object_type"],
+                "layout_type": entry["layout_type"],
+                "patterns_used": entry["patterns_used"],
+                "layout": entry["layout"],
+                "metadata": entry["metadata"]
             })
         
         # Generate embeddings
@@ -125,28 +124,38 @@ class VectorLayoutRAGEngine:
         
         print(f"[VectorLayoutRAGEngine] [OK] Indexed {len(documents)} layouts in FAISS")
     
-    def _create_document_text(self, layout: Dict[str, Any]) -> str:
+    def _create_document_text(self, entry: Dict[str, Any]) -> str:
         """
         Create rich document text for embedding
-        Combines query, pattern, entity, and components for better semantic matching
+        Combines query, object type, layout type, and patterns for better semantic matching
         """
-        components_str = ", ".join(layout.get("components", []))
+        patterns_str = ", ".join(entry.get("patterns_used", []))
+        
+        # Extract component types from layout
+        components = []
+        for row in entry["layout"].get("rows", []):
+            for component in row.get("pattern_info", []):
+                comp_type = component.get("type", "")
+                if comp_type and comp_type not in components:
+                    components.append(comp_type)
+        
+        components_str = ", ".join(components)
         
         doc_text = f"""
-        Query: {layout['query']}
-        Pattern: {layout['pattern'].replace('_', ' ')}
-        Entity: {layout['entity']}
-        View Type: {layout['view_type']}
+        Query: {entry['query']}
+        Object Type: {entry['object_type']}
+        Layout Type: {entry['layout_type'].replace('_', ' ')}
+        Patterns: {patterns_str}
         Components: {components_str}
+        Rows: {entry['metadata'].get('num_rows', 0)}
+        Total Components: {entry['metadata'].get('num_components', 0)}
         """.strip()
         
         return doc_text
     
     def search(
         self,
-        query: str,
-        entity: Optional[str] = None,
-        view_type: Optional[str] = None,
+        query: str | List[str],
         top_k: int = 10,
         rerank: bool = True,
         final_k: int = 3
@@ -155,9 +164,7 @@ class VectorLayoutRAGEngine:
         Search for relevant layouts with optional reranking
         
         Args:
-            query: Natural language search query
-            entity: Optional entity filter (e.g., "lead", "opportunity")
-            view_type: Optional view type filter (e.g., "list", "dashboard")
+            query: Natural language search query or list of query variations
             top_k: Number of initial results from vector search
             rerank: Whether to apply reranking
             final_k: Number of final results after reranking
@@ -165,57 +172,65 @@ class VectorLayoutRAGEngine:
         Returns:
             List of top matching layouts with scores
         """
-        print(f"[VectorLayoutRAGEngine] Searching: '{query}' (no entity/view filters)")
+        # Handle both single query and list of queries
+        queries = [query] if isinstance(query, str) else query
+        primary_queries = queries[:3]  # Use top 3 query variations
+        print(f"[VectorLayoutRAGEngine] Searching with {len(primary_queries)} query variation(s)")
         
-        # Generate query embedding
-        query_embedding = self.embedding_model.encode(
-            [query],
-            convert_to_numpy=True,
-            normalize_embeddings=True
-        )
+        # Search with each query variation and collect unique results
+        all_candidates = {}  # Use dict to track unique layouts by index
         
-        # Search in FAISS (get more results for filtering)
-        search_k = min(top_k * 5, len(self.layouts_metadata))  # Get 5x for filtering
-        distances, indices = self.index.search(query_embedding.astype('float32'), search_k)
+        for i, q in enumerate(primary_queries, 1):
+            print(f"  Query {i}: '{q}'")
+            
+            # Generate query embedding
+            query_embedding = self.embedding_model.encode(
+                [q],
+                convert_to_numpy=True,
+                normalize_embeddings=True
+            )
+            
+            # Search in FAISS (get more results for filtering)
+            search_k = min(top_k * 2, len(self.layouts_metadata))  # Get 2x for each query
+            distances, indices = self.index.search(query_embedding.astype('float32'), search_k)
+            
+            # Collect results from this query
+            for idx, distance in zip(indices[0], distances[0]):
+                if idx == -1:  # FAISS returns -1 for empty results
+                    continue
+                
+                similarity_score = float(distance)
+                
+                # Track best score for each unique layout
+                if idx not in all_candidates or similarity_score > all_candidates[idx]['vector_score']:
+                    metadata = self.layouts_metadata[idx]
+                    all_candidates[idx] = {
+                        "query": metadata["query"],
+                        "object_type": metadata["object_type"],
+                        "layout_type": metadata["layout_type"],
+                        "patterns_used": metadata["patterns_used"],
+                        "layout": metadata["layout"],
+                        "metadata_info": metadata["metadata"],
+                        "vector_score": similarity_score,
+                        "matched_query": q  # Track which variation matched
+                    }
         
-        # Filter and collect results (entity/view_type filtering disabled for broader results)
-        candidate_layouts = []
-        for i, (idx, distance) in enumerate(zip(indices[0], distances[0])):
-            if idx == -1:  # FAISS returns -1 for empty results
-                continue
-            
-            metadata = self.layouts_metadata[idx]
-            
-            # Skip entity and view_type filtering - use pure semantic similarity
-            # This allows better matching based on query meaning rather than strict filters
-            
-            # FAISS inner product gives cosine similarity (since vectors are normalized)
-            similarity_score = float(distance)
-            
-            candidate_layouts.append({
-                "id": metadata["id"],
-                "query": metadata["query"],
-                "pattern": metadata["pattern"],
-                "entity": metadata["entity"],
-                "view_type": metadata["view_type"],
-                "components": metadata["components"],
-                "layout": metadata["layout"],
-                "vector_score": similarity_score
-            })
-            
-            # Stop if we have enough candidates
-            if len(candidate_layouts) >= top_k:
-                break
+        # Convert to list and sort by score
+        candidate_layouts = sorted(
+            all_candidates.values(),
+            key=lambda x: x['vector_score'],
+            reverse=True
+        )[:top_k]
         
         if not candidate_layouts:
             print("[VectorLayoutRAGEngine] No results found")
             return []
         
-        print(f"[VectorLayoutRAGEngine] Vector search found {len(candidate_layouts)} candidates")
+        print(f"[VectorLayoutRAGEngine] Vector search found {len(candidate_layouts)} unique candidates")
         
         # Apply reranking if requested
         if rerank and len(candidate_layouts) > 0:
-            candidate_layouts = self._rerank_results(query, candidate_layouts, final_k)
+            candidate_layouts = self._rerank_results(primary_queries[0], candidate_layouts, final_k)
         else:
             candidate_layouts = candidate_layouts[:final_k]
         
@@ -223,7 +238,8 @@ class VectorLayoutRAGEngine:
         print(f"[VectorLayoutRAGEngine] Returning {len(candidate_layouts)} results:")
         for i, result in enumerate(candidate_layouts, 1):
             score_type = "rerank_score" if "rerank_score" in result else "vector_score"
-            print(f"  {i}. {result['pattern']:20} ({score_type}: {result.get(score_type, 0):.3f}) - {result['query']}")
+            pattern = result['patterns_used'][0] if result.get('patterns_used') else 'unknown'
+            print(f"  {i}. {pattern:20} ({score_type}: {result.get(score_type, 0):.3f}) - {result['query']}")
         
         return candidate_layouts
     
@@ -297,32 +313,32 @@ if __name__ == "__main__":
         {
             "name": "Test 1: Semantic search - synonyms",
             "query": "lead performance metrics",
-            "entity": "lead",
-            "view_type": None
+            "object_type": "lead",
+            "layout_type": None
         },
         {
             "name": "Test 2: Aggregation query",
             "query": "total revenue sum",
-            "entity": "opportunity",
-            "view_type": None
+            "object_type": "opportunity",
+            "layout_type": None
         },
         {
             "name": "Test 3: WHERE clause query",
             "query": "filter by status and priority",
-            "entity": "lead",
-            "view_type": None
+            "object_type": "lead",
+            "layout_type": None
         },
         {
             "name": "Test 4: Natural language",
             "query": "show me insights and recommendations",
-            "entity": "account",
-            "view_type": None
+            "object_type": "account",
+            "layout_type": None
         },
         {
             "name": "Test 5: Pipeline analytics",
             "query": "sales funnel conversion rates",
-            "entity": "opportunity",
-            "view_type": None
+            "object_type": "opportunity",
+            "layout_type": None
         }
     ]
     
@@ -334,8 +350,6 @@ if __name__ == "__main__":
         
         results = engine.search(
             query=test['query'],
-            entity=test['entity'],
-            view_type=test['view_type'],
             top_k=10,
             rerank=True,
             final_k=3
@@ -344,14 +358,15 @@ if __name__ == "__main__":
         if results:
             print(f"\n[TOP RESULTS] {len(results)} results:")
             for i, r in enumerate(results, 1):
-                print(f"\n{i}. Pattern: {r['pattern']}")
-                print(f"   Entity: {r['entity']}")
+                pattern = r['patterns_used'][0] if r.get('patterns_used') else 'unknown'
+                print(f"\n{i}. Pattern: {pattern}")
+                print(f"   Object Type: {r.get('object_type', 'N/A')}")
+                print(f"   Layout Type: {r.get('layout_type', 'N/A')}")
                 print(f"   Query: {r['query']}")
                 print(f"   Vector Score: {r['vector_score']:.3f}")
                 if 'rerank_score' in r:
                     print(f"   Rerank Score: {r['rerank_score']:.3f}")
                     print(f"   Final Score: {r['final_score']:.3f}")
-                print(f"   Components: {', '.join(r['components'][:5])}...")
         else:
             print("\n❌ No results found")
     

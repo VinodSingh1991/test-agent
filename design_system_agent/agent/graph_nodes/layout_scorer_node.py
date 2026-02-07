@@ -68,7 +68,7 @@ Given retrieved layouts and user query, rank them and select the best one.
 **Scoring Criteria**:
 1. Component Match: Does it have the required components?
 2. Pattern Fit: Does the pattern match the user's intent?
-3. Entity Match: Is it for the right entity type?
+3. Object Type Match: Is it for the right object type?
 4. Complexity: Is it appropriate for the task?
 
 **Examples**:
@@ -99,8 +99,8 @@ Now rank these layouts:
                 "layouts": str([{
                     "id": l.get("id"),
                     "pattern": l.get("pattern"),
-                    "entity": l.get("entity"),
-                    "view_type": l.get("view_type"),
+                    "object_type": l.get("object_type"),
+                    "layout_type": l.get("layout_type"),
                     "retrieval_score": l.get("retrieval_score", 0.0)
                 } for l in retrieved_layouts]),
                 "format_instructions": parser.get_format_instructions()
@@ -282,8 +282,8 @@ if __name__ == "__main__":
     output_scorer = OutputScorer()
     
     test_layouts = [
-        {"id": "crm_1", "pattern": "opportunity_list", "entity": "opportunity", "view_type": "list", "retrieval_score": 0.92, "components": ["Heading", "List"]},
-        {"id": "crm_2", "pattern": "opportunity_detail", "entity": "opportunity", "view_type": "detail", "retrieval_score": 0.85, "components": ["Heading", "Description"]},
+        {"id": "crm_1", "pattern": "opportunity_list", "object_type": "opportunity", "layout_type": "list", "retrieval_score": 0.92, "components": ["Heading", "List"]},
+        {"id": "crm_2", "pattern": "opportunity_detail", "object_type": "opportunity", "layout_type": "detail", "retrieval_score": 0.85, "components": ["Heading", "Description"]},
     ]
     
     test_query = "show my open opportunities"

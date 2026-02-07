@@ -37,28 +37,28 @@ class DataFetcherTool:
     
     def fetch_data(
         self,
-        entity_type: str,
-        view_type: str = "detail",
+        object_type: str,
+        layout_type: str = "detail",
         record_id: Optional[str] = None
     ) -> Optional[Dict]:
         """
-        Fetch data for a specific entity and view type.
+        Fetch data for a specific object and layout type.
         
         Args:
-            entity_type: Entity type (lead, opportunity, account, contact, case, task)
-            view_type: View type (detail, list, dashboard)
+            object_type: Object type (lead, opportunity, account, contact, case, task)
+            layout_type: Layout type (detail, list, dashboard)
             record_id: Optional specific record ID
             
         Returns:
             Data dictionary or None if not found
         """
-        # Build lookup key
-        key = f"{entity_type}_{view_type}_example"
+        # Build lookup key - map to old format for compatibility
+        key = f"{object_type}_{layout_type}_example"
         
         data = self.sample_data.get(key)
         
         if data:
-            print(f"[DataFetcher] Fetched data for {entity_type} {view_type}")
+            print(f"[DataFetcher] Fetched data for {object_type} {layout_type}")
             return data
         else:
             print(f"[DataFetcher] No data found for {key}")
@@ -66,27 +66,27 @@ class DataFetcherTool:
     
     def fetch_multi_entity_data(
         self,
-        entities: List[str],
-        view_type: str = "detail"
+        objects: List[str],
+        layout_type: str = "detail"
     ) -> Dict:
         """
-        Fetch data for multiple entities.
+        Fetch data for multiple objects.
         
         Args:
-            entities: List of entity types to fetch
-            view_type: View type for each entity
+            objects: List of object types to fetch
+            layout_type: Layout type for each object
             
         Returns:
-            Dictionary with entity data keyed by entity name
+            Dictionary with object data keyed by object name
         """
-        multi_data = {"_entities": entities}
+        multi_data = {"_objects": objects}
         
-        for entity in entities:
-            entity_data = self.fetch_data(entity, view_type)
-            if entity_data:
-                multi_data[entity] = entity_data
+        for obj in objects:
+            obj_data = self.fetch_data(obj, layout_type)
+            if obj_data:
+                multi_data[obj] = obj_data
         
-        print(f"[DataFetcher] Fetched multi-entity data for: {', '.join(entities)}")
+        print(f"[DataFetcher] Fetched multi-object data for: {', '.join(objects)}")
         return multi_data
     
     def detect_and_fetch(
@@ -96,52 +96,52 @@ class DataFetcherTool:
         rag_query: Optional[Dict] = None
     ) -> Dict:
         """
-        Detect required entities from query/analysis and fetch data.
+        Detect required objects from query/analysis and fetch data.
         
         Args:
             query: User query
             analysis: Query analysis result
-            rag_query: RAG query with entity info
+            rag_query: RAG query with object info
             
         Returns:
-            Single or multi-entity data
+            Single or multi-object data
         """
-        # Detect entities from query
-        detected_entities = self._detect_entities_from_query(query, analysis, rag_query)
+        # Detect objects from query
+        detected_objects = self._detect_objects_from_query(query, analysis, rag_query)
         
-        # Get view type
-        view_type = "detail"
-        if rag_query and "view_type" in rag_query:
-            view_type = rag_query["view_type"]
+        # Get layout type
+        layout_type = "detail"
+        if rag_query and "layout_type" in rag_query:
+            layout_type = rag_query["layout_type"]
         elif analysis and "intent" in analysis:
             intent = analysis["intent"].lower()
             if "list" in intent:
-                view_type = "list"
+                layout_type = "list"
         
         # Fetch data
-        if len(detected_entities) == 1:
-            # Single entity
-            return self.fetch_data(detected_entities[0], view_type) or {}
-        elif len(detected_entities) > 1:
-            # Multi-entity
-            return self.fetch_multi_entity_data(detected_entities, view_type)
+        if len(detected_objects) == 1:
+            # Single object
+            return self.fetch_data(detected_objects[0], layout_type) or {}
+        elif len(detected_objects) > 1:
+            # Multi-object
+            return self.fetch_multi_entity_data(detected_objects, layout_type)
         else:
-            # No entities detected, use default
-            entity = rag_query.get("entity", "lead") if rag_query else "lead"
-            return self.fetch_data(entity, view_type) or {}
+            # No objects detected, use default
+            obj_type = rag_query.get("object_type", "lead") if rag_query else "lead"
+            return self.fetch_data(obj_type, layout_type) or {}
     
-    def _detect_entities_from_query(
+    def _detect_objects_from_query(
         self,
         query: str,
         analysis: Optional[Dict],
         rag_query: Optional[Dict]
     ) -> List[str]:
-        """Detect which entities are mentioned in query"""
-        entities = []
+        """Detect which objects are mentioned in query"""
+        objects = []
         query_lower = query.lower()
         
-        # Check for entity keywords
-        entity_keywords = {
+        # Check for object keywords
+        object_keywords = {
             "account": ["account", "accounts", "company", "companies", "organization"],
             "case": ["case", "cases", "ticket", "tickets", "issue", "issues"],
             "lead": ["lead", "leads", "prospect", "prospects"],
@@ -150,16 +150,16 @@ class DataFetcherTool:
             "opportunity": ["opportunity", "opportunities", "deal", "deals"]
         }
         
-        for entity, keywords in entity_keywords.items():
+        for obj_type, keywords in object_keywords.items():
             if any(keyword in query_lower for keyword in keywords):
-                entities.append(entity)
+                objects.append(obj_type)
         
-        # If no entities found, use rag_query entity
-        if not entities and rag_query and "entity" in rag_query:
-            entities.append(rag_query["entity"])
+        # If no objects found, use rag_query object_type
+        if not objects and rag_query and "object_type" in rag_query:
+            objects.append(rag_query["object_type"])
         
-        # Limit to 3 entities max
-        return entities[:3] if entities else []
+        # Limit to 3 objects max
+        return objects[:3] if objects else []
     
     def get_available_data(self) -> Dict:
         """Get list of available data examples"""

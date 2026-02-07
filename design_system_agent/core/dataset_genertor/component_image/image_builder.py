@@ -3,10 +3,10 @@ Image Builder
 
 Builder for creating image components.
 Single Responsibility: Build images with variants and aspect ratios.
+Outputs TypeScript-compatible ComponentImageProps.
 """
 
-from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
+from typing import Dict, Any, Optional, Union
 
 
 class ImageBuilder:
@@ -14,78 +14,83 @@ class ImageBuilder:
     
     def __init__(self, src: str, alt: str = ""):
         """Initialize ImageBuilder"""
-        self._src = src
-        self._alt = alt
-        self._width: Optional[str] = None
-        self._height: Optional[str] = None
-        self._rounded = False
-        self._circle = False
-        self._thumbnail = False
-        self._fluid = False
-        self._id: Optional[str] = None
+        self._props = {
+            "type": "Image",
+            "src": src,
+            "alt": alt
+        }
+        self._classes = []
     
-    def with_size(self, width: str, height: Optional[str] = None) -> 'ImageBuilder':
-        """Set image size"""
-        self._width = width
-        self._height = height or width
+    def width(self, width: Union[str, int]) -> 'ImageBuilder':
+        """Set width"""
+        self._props["width"] = width
         return self
     
-    def rounded(self) -> 'ImageBuilder':
-        """Add rounded corners"""
-        self._rounded = True
+    def height(self, height: Union[str, int]) -> 'ImageBuilder':
+        """Set height"""
+        self._props["height"] = height
+        return self
+    
+    def with_size(self, width: Union[str, int], height: Optional[Union[str, int]] = None) -> 'ImageBuilder':
+        """Set image size"""
+        self._props["width"] = width
+        self._props["height"] = height or width
+        return self
+    
+    def aspect_ratio(self, ratio: str) -> 'ImageBuilder':
+        """Set aspect ratio: square, video, portrait, landscape"""
+        self._props["aspectRatio"] = ratio
+        return self
+    
+    def object_fit(self, fit: str) -> 'ImageBuilder':
+        """Set object fit: cover, contain, fill, none"""
+        self._props["objectFit"] = fit
+        return self
+    
+    def rounded(self, rounded: Union[bool, str] = True) -> 'ImageBuilder':
+        """Add rounded corners. Can be bool or string (sm, md, lg, full)"""
+        if isinstance(rounded, bool):
+            self._props["rounded"] = "md" if rounded else None
+        else:
+            self._props["rounded"] = rounded
         return self
     
     def circle(self) -> 'ImageBuilder':
         """Make image circular"""
-        self._circle = True
+        self._props["rounded"] = "full"
         return self
     
-    def thumbnail(self) -> 'ImageBuilder':
+    def loading(self, loading: str) -> 'ImageBuilder':
+        """Set loading: lazy, eager"""
+        self._props["loading"] = loading
+        return self
+    
+    def thumbnail(self, thumbnail: bool = True) -> 'ImageBuilder':
         """Add thumbnail border"""
-        self._thumbnail = True
+        self._props["thumbnail"] = thumbnail
         return self
     
-    def fluid(self) -> 'ImageBuilder':
+    def fluid(self, fluid: bool = True) -> 'ImageBuilder':
         """Make image responsive (100% width)"""
-        self._fluid = True
+        self._props["fluid"] = fluid
         return self
     
     def with_id(self, id: str) -> 'ImageBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
+    def with_classes(self, *classes: str) -> 'ImageBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def build(self) -> Dict[str, Any]:
         """Build the image component"""
-        classes = ["bd-image"]
-        
-        if self._rounded:
-            classes.append("bd-rounded")
-        if self._circle:
-            classes.append("bd-rounded-full")
-        if self._thumbnail:
-            classes.append("bd-thumbnail")
-        if self._fluid:
-            classes.append("bd-w-full")
-        
-        props = {
-            "src": self._src,
-            "alt": self._alt
-        }
-        
-        if self._width:
-            props["width"] = self._width
-        if self._height:
-            props["height"] = self._height
-        
-        return Component(
-            type="Image",
-            classes=classes,
-            props=props,
-            children=None,
-            id=self._id
-        )
+        if self._classes:
+            self._props["className"] = " ".join(self._classes) 
+        return self._props.copy()
     
     def to_dict(self) -> Dict[str, Any]:
         """Build and convert to dictionary"""
-        return self.build().to_dict()
+        return self.build()

@@ -52,17 +52,17 @@ class OutputValidatorAgent:
         layout_structure = layout.get("layout", {})
         if not layout_structure:
             issues.append("Layout structure is empty")
-        elif "Tabs" in layout_structure:
-            # Validate Tabs→Sections→Rows→Cols hierarchy
-            tabs = layout_structure.get("Tabs", [])
-            if not tabs:
-                warnings.append("Layout has Tabs structure but no tabs defined")
+        elif "rows" in layout_structure:
+            # Validate new rows → pattern_info structure
+            rows = layout_structure.get("rows", [])
+            if not rows:
+                warnings.append("Layout has rows structure but no rows defined")
             else:
-                for tab_idx, tab in enumerate(tabs):
-                    if "TabName" not in tab:
-                        warnings.append(f"Tab {tab_idx} missing TabName")
-                    if "Sections" not in tab or not tab.get("Sections"):
-                        warnings.append(f"Tab {tab_idx} has no sections")
+                for row_idx, row in enumerate(rows):
+                    if "pattern_type" not in row:
+                        warnings.append(f"Row {row_idx} missing pattern_type")
+                    if "pattern_info" not in row or not row.get("pattern_info"):
+                        warnings.append(f"Row {row_idx} has no pattern_info components")
         
         # Calculate validation score
         validation_score = self._calculate_score(layout, issues, warnings)
@@ -77,7 +77,7 @@ class OutputValidatorAgent:
             warnings=warnings,
             metadata={
                 "layout_id": layout.get("id"),
-                "has_tabs_structure": "Tabs" in layout_structure
+                "has_rows_structure": "rows" in layout_structure
             }
         )
     
@@ -94,8 +94,8 @@ class OutputValidatorAgent:
         # Deduct for warnings
         base_score -= len(warnings) * 0.1
         
-        # Bonus for complete Tabs structure
-        if "Tabs" in layout.get("layout", {}):
+        # Bonus for complete rows structure
+        if "rows" in layout.get("layout", {}):
             base_score += 0.1
         
         # Clamp between 0 and 1

@@ -55,13 +55,16 @@ class GraphAgent:
         """Extract result from final state - returns complete layout with all metadata"""
         outcome = final_state.get("outcome", {})
         layout_obj = outcome.get("layout", {})
+        rag_query = final_state.get("rag_query", {})
         
-        # Extract only essential fields: id, query, layout, score
+        # Extract only essential fields: id, query, layout, score, object_type, layout_type
         return {
             "id": layout_obj.get("id"),
             "query": final_state["query"],
-            "layout": layout_obj.get("layout", {}),  # The Tabs/Sections structure
-            "score": outcome.get("score", layout_obj.get("score", 0.0))
+            "layout": layout_obj.get("layout", {}),  # The rows/pattern_info structure
+            "score": outcome.get("score", layout_obj.get("score", 0.0)),
+            "object_type": rag_query.get("object_type", "unknown"),
+            "layout_type": rag_query.get("layout_type", "list")
         }
     
     def invoke(self, query: str, json_output: bool = False) -> dict:

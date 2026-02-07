@@ -3,10 +3,10 @@ Label Builder
 
 Builder for creating form label components.
 Single Responsibility: Build labels for form fields.
+Outputs TypeScript-compatible ComponentLabelProps.
 """
 
 from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class LabelBuilder:
@@ -14,67 +14,74 @@ class LabelBuilder:
     
     def __init__(self, text: str, for_id: Optional[str] = None):
         """Initialize LabelBuilder"""
-        self._text = text
-        self._for_id = for_id
-        self._required = False
-        self._hint: Optional[str] = None
-        self._size = "md"
-        self._id: Optional[str] = None
+        self._props = {
+            "type": "Label",
+            "text": text
+        }
+        if for_id:
+            self._props["for"] = for_id
+        self._classes = []
     
-    def required(self) -> 'LabelBuilder':
+    def required(self, required: bool = True) -> 'LabelBuilder':
         """Mark field as required"""
-        self._required = True
+        self._props["required"] = required
+        return self
+    
+    def hint(self, hint: str) -> 'LabelBuilder':
+        """Add hint text"""
+        self._props["hint"] = hint
         return self
     
     def with_hint(self, hint: str) -> 'LabelBuilder':
-        """Add hint text"""
-        self._hint = hint
+        """Add hint text (alias)"""
+        return self.hint(hint)
+    
+    def size(self, size: str) -> 'LabelBuilder':
+        """Set size: xs, sm, md, lg"""
+        self._props["size"] = size
+        return self
+    
+    def weight(self, weight: str) -> 'LabelBuilder':
+        """Set weight: normal, medium, semibold, bold"""
+        self._props["weight"] = weight
+        return self
+    
+    def color(self, color: str) -> 'LabelBuilder':
+        """Set text color"""
+        self._props["color"] = color
         return self
     
     def small(self) -> 'LabelBuilder':
         """Set label size to small"""
-        self._size = "sm"
+        self._props["size"] = "sm"
         return self
     
     def large(self) -> 'LabelBuilder':
         """Set label size to large"""
-        self._size = "lg"
+        self._props["size"] = "lg"
+        return self
+    
+    def disabled(self, disabled: bool = True) -> 'LabelBuilder':
+        """Mark as disabled"""
+        self._props["disabled"] = disabled
         return self
     
     def with_id(self, id: str) -> 'LabelBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
+    def with_classes(self, *classes: str) -> 'LabelBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def build(self) -> Dict[str, Any]:
         """Build the label component"""
-        classes = ["bd-label", f"bd-text-{self._size}", "bd-fw-medium"]
-        
-        props = {}
-        if self._for_id:
-            props["for"] = self._for_id
-        
-        # Use value structure with icon and text
-        # Combine label text with required indicator and hint
-        text_content = self._text
-        if self._required:
-            text_content = f"{self._text} *"
-        if self._hint:
-            text_content = f"{text_content} ({self._hint})"
-        
-        value = {
-            "icon": "",
-            "text": text_content
-        }
-        
-        return Component(
-            type="Label",
-            classes=classes,
-            props=props,
-            value=value,
-            id=self._id
-        )
+        if self._classes:
+            self._props["className"] = " ".join(self._classes)
+        return self._props.copy()
     
     def to_dict(self) -> Dict[str, Any]:
         """Build and convert to dictionary"""
-        return self.build().to_dict()
+        return self.build()

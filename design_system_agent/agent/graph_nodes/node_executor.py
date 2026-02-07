@@ -6,10 +6,10 @@ from design_system_agent.agent.models import AgentState
 from design_system_agent.agent.tools.data_fetcher import DataFetcherTool
 from design_system_agent.agent.core.vector_layout_rag import VectorLayoutRAGEngine
 from design_system_agent.agent.graph_nodes.query_analyzer_node import QueryAnalyzer
-from design_system_agent.agent.graph_nodes.query_reformulator_node import QueryReformulator
 from design_system_agent.agent.graph_nodes.layout_scorer_node import OutputScorer
 from design_system_agent.agent.graph_nodes.layout_orchestrator import LLMLayoutSelectorFiller
 from design_system_agent.agent.graph_nodes.fallback_layout_builder import FallbackLayoutBuilder
+from design_system_agent.agent.graph_nodes.default_layout import DefaultLayoutBuilder
 
 
 class WorkflowExecutor:
@@ -22,11 +22,11 @@ class WorkflowExecutor:
         """Initialize with all required components"""
         self.layout_rag = VectorLayoutRAGEngine()
         self.query_analyzer = QueryAnalyzer()
-        self.query_reformulator = QueryReformulator()
         self.output_scorer = OutputScorer()
         self.data_fetcher = DataFetcherTool()
         self.llm_selector_filler = LLMLayoutSelectorFiller()
         self.fallback_builder = FallbackLayoutBuilder()
+        self.default_builder = DefaultLayoutBuilder()
     
     # ====================
     # WORKFLOW NODES
@@ -47,66 +47,56 @@ class WorkflowExecutor:
         state["normalized_query"] = query
         return state
     
-    def analyze_query(self, state: AgentState) -> AgentState:
-        """Analyze query intent"""
+    def analyze_and_reformulate(self, state: AgentState) -> AgentState:
+        """Single LLM call for query analysis: normalize, extract intent, generate variations, detect object/layout"""
         normalized_query = state.get("normalized_query", "")
         
         try:
+            # Single LLM call does everything: normalize + intent + variations + object_type + layout_type
             analysis = self.query_analyzer.invoke(normalized_query)
             state["analysis"] = analysis.dict()
-        except Exception:
-            state["analysis"] = {
-                "intent": "unknown",
-                "components_needed": [],
-                "data_type": "static",
-                "action_required": "display",
-                "complexity": "simple",
-                "confidence": 0.5
-            }
-        
-        return state
-    
-    def reformulate_query(self, state: AgentState) -> AgentState:
-        """Reformulate for RAG"""
-        analysis = state.get("analysis", {})
-        normalized_query = state.get("normalized_query", "")
-        
-        analysis_with_query = {**analysis, "_normalized_query": normalized_query}
-        
-        try:
-            rag_query = self.query_reformulator.invoke(analysis_with_query)
-            state["rag_query"] = rag_query.dict()
-        except Exception:
-            query_lower = normalized_query.lower()
-            entity = "lead"
-            for ent_search in ["case", "opportunity", "account", "contact", "lead", "task"]:
-                if ent_search in query_lower or (ent_search + "s") in query_lower:
-                    entity = ent_search
-                    break
             
-            view_type = "list" if ("list" in query_lower or "my" in query_lower) else "detail"
-            
+            # Build RAG query from analysis (no additional LLM call needed)
             state["rag_query"] = {
-                "search_query": f"{entity} {view_type} layout",
-                "entity": entity,
-                "view_type": view_type,
-                "filters": {},
-                "confidence": 0.5
+                "search_query": analysis.generated_queries[0] if analysis.generated_queries else analysis.normalized_query,
+                "search_queries": analysis.generated_queries,
+                "confidence": analysis.confidence
             }
+            
+        except Exception as e:
+            print(f"[WorkflowExecutor] LLM analysis failed: {e}")
+            raise RuntimeError(
+                f"Failed to analyze query. LLM service unavailable or query analysis failed: {str(e)}"
+            )
         
         return state
     
     def retrieve_layouts(self, state: AgentState) -> AgentState:
-        """Retrieve top 10 layouts, rerank to top 3 (for LLM evaluation)"""
+        """Retrieve top 20 layouts using original query + LLM-generated variations, rerank to top 3"""
         rag_query = state.get("rag_query", {})
         
         try:
+            # Use LLM-generated query variations for better retrieval
+            search_queries = rag_query.get("search_queries", [])
+            original_query = rag_query.get("search_query", "")
+            
+            # Combine original query with variations
+            all_queries = [original_query] + [q for q in search_queries if q != original_query]
+            
             layouts = self.layout_rag.search(
-                query=rag_query.get("search_query", ""),
-                top_k=10,
+                query=all_queries if all_queries else [original_query],
+                top_k=20,
                 rerank=True,
                 final_k=3
             )
+
+            if not layouts:
+                layouts = [DefaultLayoutBuilder().build_default_layout(
+                    query=original_query,
+                    data=None,
+                    analysis=None
+                )]
+
             state["retrieved_layouts"] = layouts
         except Exception:
             state["retrieved_layouts"] = []
@@ -134,6 +124,26 @@ class WorkflowExecutor:
         normalized_query = state.get("normalized_query", "")
         analysis = state.get("analysis", {})
         data = state.get("fetched_data", {})
+        # If no layouts retrieved from RAG, use default layout builder
+        if not layouts:
+            print("[WorkflowExecutor] No RAG matches found, using default layout builder")
+            default_layout = self.default_builder.build_default_layout(
+                query=query,
+                data=data,
+                analysis=analysis
+            )
+            state["selected_layout"] = default_layout
+            state["adapted_layout"] = default_layout
+            state["layout_ranking"] = {
+                "confidence": 0.7,
+                "reasoning": "No RAG matches found - using default layout with heading, description, list, and badge",
+                "is_adapted": False,
+                "use_default": True,
+                "llm_powered": False,
+                "adaptations": []
+            }
+            return state
+        
         
         try:
             result = self.llm_selector_filler.select_and_fill_layout(
@@ -151,7 +161,7 @@ class WorkflowExecutor:
             selected_layout = result.get("selected_layout")
             confidence = result.get("confidence", 0.0)
             reasoning = result.get("reasoning", "")
-            reformed = result.get("reformed", False)
+            is_adapted = result.get("is_adapted", False)
             adaptations = result.get("adaptations", [])
             llm_powered = result.get("llm_powered", True)
             
@@ -160,7 +170,7 @@ class WorkflowExecutor:
             state["layout_ranking"] = {
                 "confidence": confidence,
                 "reasoning": reasoning,
-                "reformed": reformed,
+                "is_adapted": is_adapted,
                 "adaptations": adaptations,
                 "llm_powered": llm_powered
             }
@@ -173,8 +183,10 @@ class WorkflowExecutor:
             state["layout_ranking"] = {
                 "confidence": 0.5,
                 "reasoning": "Error in LLM selection",
+                "is_adapted": False,
                 "use_fallback": True,
-                "llm_powered": False
+                "llm_powered": False,
+                "adaptations": []
             }
         
         return state

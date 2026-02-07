@@ -1,21 +1,21 @@
 """
 Link pattern factory functions for common use cases
 """
-from typing import Optional
+from typing import Optional, Dict, Any
 from .link_builder import LinkBuilder
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
-def standard_link(text: str, url: str = "#") -> Component:
+
+def standard_link(text: str, url: str = "#") -> Dict[str, Any]:
     """Standard hyperlink"""
     return LinkBuilder(text, url).build()
 
 
-def external_link(text: str, url: str) -> Component:
+def external_link(text: str, url: str) -> Dict[str, Any]:
     """External link (opens in new tab)"""
     return LinkBuilder(text, url).external().build()
 
 
-def primary_link(text: str, url: str = "#") -> Component:
+def primary_link(text: str, url: str = "#") -> Dict[str, Any]:
     """Primary colored link"""
     return LinkBuilder(text, url).primary().build()

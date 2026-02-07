@@ -3,10 +3,10 @@ Card Builder
 
 Builder for creating card components with header, body, footer.
 Single Responsibility: Build card containers with sections.
+Outputs TypeScript-compatible ComponentCardProps.
 """
 
 from typing import Dict, Any, Optional, List, Union
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class CardBuilder:
@@ -19,147 +19,119 @@ class CardBuilder:
         Args:
             title: Optional card title
         """
+        self._type = "Card"
+        self._title = title or ""
+        self._description = ""
+        self._content = ""
+        self._footer = ""
+        self._additional_info = ""
+        self._props = {
+            "variant": "elevated",
+            "hoverable": False,
+            "clickable": False
+        }
+        self._events = {}
+        self._classes = []
+    
+    def title(self, title: str) -> 'CardBuilder':
+        """Set card title"""
         self._title = title
-        self._header: Optional[Union[str, Dict, Component]] = None
-        self._body: List[Union[str, Dict, Component]] = []
-        self._footer: Optional[Union[str, Dict, Component]] = None
-        self._variant = "default"
-        self._elevated = False
-        self._bordered = True
-        self._id: Optional[str] = None
-    
-    def with_header(self, content: Union[str, Dict, Component]) -> 'CardBuilder':
-        """
-        Add header to card
-        
-        Args:
-            content: Header content
-        """
-        self._header = content
         return self
     
-    def add_body_content(self, *content: Union[str, Dict, Component]) -> 'CardBuilder':
-        """
-        Add content to card body
-        
-        Args:
-            content: Body content items
-        """
-        self._body.extend(content)
+    def description(self, description: str) -> 'CardBuilder':
+        """Set card description"""
+        self._description = description
         return self
     
-    def with_footer(self, content: Union[str, Dict, Component]) -> 'CardBuilder':
-        """
-        Add footer to card
-        
-        Args:
-            content: Footer content
-        """
-        self._footer = content
+    def content(self, content: Union[str, List[Dict[str, Any]]]) -> 'CardBuilder':
+        """Set card content"""
+        self._content = content
         return self
     
-    def primary(self) -> 'CardBuilder':
-        """Set card variant to primary"""
-        self._variant = "primary"
+    def footer(self, footer: Union[str, List[Dict[str, Any]]]) -> 'CardBuilder':
+        """Set card footer"""
+        self._footer = footer
+        return self
+    
+    def image(self, image: str, position: str = "top") -> 'CardBuilder':
+        """Set card image with position: top, left, right, background"""
+        self._props["image"] = image
+        self._props["imagePosition"] = position
+        return self
+    
+    def variant(self, variant: str) -> 'CardBuilder':
+        """Set variant: elevated, outlined, filled"""
+        self._props["variant"] = variant
         return self
     
     def elevated(self) -> 'CardBuilder':
-        """Add elevation shadow to card"""
-        self._elevated = True
+        """Set variant to elevated"""
+        self._props["variant"] = "elevated"
         return self
     
-    def no_border(self) -> 'CardBuilder':
-        """Remove card border"""
-        self._bordered = False
+    def outlined(self) -> 'CardBuilder':
+        """Set variant to outlined"""
+        self._props["variant"] = "outlined"
+        return self
+    
+    def hoverable(self, hoverable: bool = True) -> 'CardBuilder':
+        """Enable hover effect"""
+        self._props["hoverable"] = hoverable
+        return self
+    
+    def clickable(self, clickable: bool = True) -> 'CardBuilder':
+        """Make card clickable"""
+        self._props["clickable"] = clickable
+        return self
+    
+    def padding(self, padding: Union[int, str]) -> 'CardBuilder':
+        """Set padding"""
+        self._props["padding"] = padding
         return self
     
     def with_id(self, id: str) -> 'CardBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
-        """
-        Build the card component
+    def with_classes(self, *classes: str) -> 'CardBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def additional_info(self, info: str) -> 'CardBuilder':
+        """Set additional info"""
+        self._additional_info = info
+        return self
+    
+    def on_click(self, handler: str) -> 'CardBuilder':
+        """Set click event handler"""
+        self._events["onClick"] = handler
+        return self
+    
+    def build(self) -> Dict[str, Any]:
+        """Build the card component"""
+        props = self._props.copy()
+        if self._classes:
+            props["className"] = " ".join(self._classes)
         
-        Returns:
-            Component instance
-        """
-        classes = ["bd-card"]
+        result = {
+            "type": self._type,
+            "props": props,
+            "value": {
+                "title": self._title,
+                "description": self._description,
+                "content": self._content,
+                "footer": self._footer,
+                "additionalInfo": self._additional_info
+            }
+        }
         
-        if self._variant != "default":
-            classes.append(f"bd-card-{self._variant}")
+        if self._events:
+            result["events"] = self._events.copy()
         
-        if self._elevated:
-            classes.append("bd-shadow-lg")
-        
-        if not self._bordered:
-            classes.append("bd-border-none")
-        
-        children = []
-        
-        # Add header
-        if self._header or self._title:
-            header_content = self._header if self._header else self._title
-            if isinstance(header_content, Component):
-                header_content = header_content.to_dict()
-            elif isinstance(header_content, str):
-                header_content = {
-                    "type": "h3",
-                    "classes": ["bd-card-title", "bd-fs-xl", "bd-fw-semibold"],
-                    "children": header_content
-                }
-            
-            children.append({
-                "type": "div",
-                "classes": ["bd-card-header", "bd-p-16", "bd-border-b"],
-                "children": header_content
-            })
-        
-        # Add body
-        if self._body:
-            body_children = []
-            for item in self._body:
-                if isinstance(item, Component):
-                    body_children.append(item.to_dict())
-                elif isinstance(item, dict):
-                    body_children.append(item)
-                else:
-                    body_children.append({"type": "p", "children": str(item)})
-            
-            children.append({
-                "type": "div",
-                "classes": ["bd-card-body", "bd-p-16"],
-                "children": body_children
-            })
-        
-        # Add footer
-        if self._footer:
-            footer_content = self._footer
-            if isinstance(footer_content, Component):
-                footer_content = footer_content.to_dict()
-            elif isinstance(footer_content, str):
-                footer_content = {"type": "p", "classes": ["bd-text-muted"], "children": footer_content}
-            
-            children.append({
-                "type": "div",
-                "classes": ["bd-card-footer", "bd-p-16", "bd-border-t"],
-                "children": footer_content
-            })
-        
-        return Component(
-            type="Card",
-            classes=classes,
-            props={},
-            children=children,
-            id=self._id
-        )
+        return result
     
     def to_dict(self) -> Dict[str, Any]:
-        """
-        Build and convert to dictionary
-        
-        Returns:
-            Dictionary representation
-        """
-        return self.build().to_dict()
+        """Build and convert to dictionary"""
+        return self.build()

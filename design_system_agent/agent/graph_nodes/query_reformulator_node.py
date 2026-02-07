@@ -1,7 +1,7 @@
 """
 Query Reformulator - Generates optimal RAG search queries
 """
-from typing import Dict, Any
+from typing import Dict, Any, List
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -9,8 +9,11 @@ from design_system_agent.agent.core.llm_factory import LLMFactory
 
 
 class RAGQuery(BaseModel):
-    """RAG search query model"""
-    search_query: str = Field(description="Optimized query for RAG retrieval")
+    """RAG search query model with multiple variations"""
+    search_query: str = Field(description="Primary optimized query for RAG retrieval")
+    search_queries: List[str] = Field(description="Multiple query variations with same intent for better recall")
+    object_type: str = Field(default="unknown", description="CRM object type (lead, account, contact, case, opportunity, etc.)")
+    layout_type: str = Field(default="list", description="Layout type (list, detail, form, dashboard, etc.)")
     filters: Dict[str, Any] = Field(default_factory=dict, description="Additional filters for retrieval")
     confidence: float = Field(description="Confidence in query reformulation (0.0 to 1.0)")
 
@@ -23,80 +26,67 @@ class QueryReformulator:
         self.parser = JsonOutputParser(pydantic_object=RAGQuery)
     
     def get_reformulation_prompt(self) -> ChatPromptTemplate:
-        """Get the prompt for query reformulation"""
+        """Get the prompt for extracting CRM object and layout type"""
         return ChatPromptTemplate.from_messages([
-            ("system", """You are an expert at reformulating CRM queries into optimal search queries for RAG retrieval.
+            ("system", """You are an expert at extracting CRM information from queries.
 
-Your task: Convert the analyzed query intention into an optimized search query that will find the best matching layout from a vector database.
+**Your Task:**
+Use the query variations to extract:
+1. object_type: lead, opportunity, account, contact, case, task, or dashboard
+2. layout_type: list, detail, form, or dashboard (infer from intent: GET→list/detail, POST→form, dashboard words→dashboard)
+3. Add 1-2 more query variations for better RAG retrieval
 
-**CRM Entities**: Lead, Opportunity, Account, Contact, Case, Task, Dashboard
-**View Types**: detail, list, form, dashboard, search
+**Layout Type Rules:**
+- GET intent + plural/multiple → list
+- GET intent + single/specific → detail  
+- POST intent → form
+- Contains "dashboard"/"metrics" → dashboard
 
-**Guidelines**:
-1. Focus on the layout pattern, not specific data
-2. Include entity type and view type
-3. Add relevant components (filter, table, metrics, etc.)
-4. Be concise but descriptive
+**Examples:**
 
-**Examples**:
-
-Input Analysis: {{
-    "intent": "show_opportunities",
-    "entity": "Opportunity",
-    "data_type": "dynamic",
-    "action_required": "display_list"
+Input: {{
+  "normalized_query": "Show me my leads",
+  "intent": "GET",
+  "generated_queries": ["show me my leads", "display my leads", "get all my leads"]
 }}
 Output: {{
-    "search_query": "opportunity list view with filters and table layout",
-    "entity": "opportunity",
-    "view_type": "list",
-    "filters": {{"pattern": "list"}},
-    "confidence": 0.95
+  "search_query": "show me my leads",
+  "search_queries": ["show me my leads", "display my leads", "get all my leads", "leads list view", "view my leads"],
+  "object_type": "lead",
+  "layout_type": "list",
+  "filters": {{"pattern": "list"}},
+  "confidence": 0.95
 }}
 
-Input Analysis: {{
-    "intent": "create_lead",
-    "entity": "Lead",
-    "data_type": "form",
-    "action_required": "create"
+Input: {{
+  "normalized_query": "Create new opportunity",
+  "intent": "POST",
+  "generated_queries": ["create new opportunity", "add new opportunity", "new opportunity form"]
 }}
 Output: {{
-    "search_query": "lead creation form with input fields and validation",
-    "entity": "lead",
-    "view_type": "form",
-    "filters": {{"pattern": "form"}},
-    "confidence": 0.92
+  "search_query": "create new opportunity",
+  "search_queries": ["create new opportunity", "add new opportunity", "new opportunity form", "opportunity creation form"],
+  "object_type": "opportunity",
+  "layout_type": "form",
+  "filters": {{"pattern": "form"}},
+  "confidence": 0.92
 }}
 
-Input Analysis: {{
-    "intent": "show_lead_details",
-    "entity": "Lead",
-    "data_type": "dynamic",
-    "action_required": "display_detail"
+Input: {{
+  "normalized_query": "View account details",
+  "intent": "GET",
+  "generated_queries": ["view account details", "show account information"]
 }}
 Output: {{
-    "search_query": "lead detail view with fields and related activities",
-    "entity": "lead",
-    "view_type": "detail",
-    "filters": {{"pattern": "detail"}},
-    "confidence": 0.98
+  "search_query": "view account details",
+  "search_queries": ["view account details", "show account information", "account detail view", "single account"],
+  "object_type": "account",
+  "layout_type": "detail",
+  "filters": {{"pattern": "detail"}},
+  "confidence": 0.93
 }}
 
-Input Analysis: {{
-    "intent": "sales_dashboard",
-    "entity": "Dashboard",
-    "data_type": "aggregate",
-    "action_required": "display_metrics"
-}}
-Output: {{
-    "search_query": "sales dashboard with metrics charts and performance data",
-    "entity": "dashboard",
-    "view_type": "dashboard",
-    "filters": {{"pattern": "dashboard"}},
-    "confidence": 0.90
-}}
-
-Now reformulate this analysis into an optimal RAG search query:
+Now extract CRM information:
 
 {format_instructions}"""),
             ("user", "{analysis}")
@@ -124,7 +114,8 @@ Now reformulate this analysis into an optimal RAG search query:
             })
             
             rag_query = RAGQuery(**result)
-            print(f"[QueryReformulator] Generated search query: '{rag_query.search_query}'")
+            print(f"[QueryReformulator] Generated search queries: {rag_query.search_queries}")
+            print(f"[QueryReformulator] Object: {rag_query.object_type}, Layout: {rag_query.layout_type}")
             
             return rag_query
             
@@ -134,28 +125,43 @@ Now reformulate this analysis into an optimal RAG search query:
             intent = analysis.get("intent", "unknown")
             components = analysis.get("components_needed", [])
             
-            # Simple pattern detection from intent
+            # Simple pattern detection from intent and query
             analysis_str = str(analysis).lower()
             normalized_query = analysis.get("_normalized_query", "").lower()
             search_text = f"{analysis_str} {normalized_query}"
             
-            # Detect pattern from query intent
-            pattern = "list"  # default
-            if "detail" in intent or "view" in intent or "show" in intent:
-                pattern = "detail"
-            elif "list" in intent or "show_all" in intent or "my" in query_lower:
-                pattern = "list"
-            elif "create" in intent or "new" in intent or "form" in intent:
-                pattern = "form"
-            elif "dashboard" in intent or "metrics" in intent:
-                pattern = "dashboard"
+            # Detect object type from query
+            object_type = "unknown"
+            for obj_search in ["lead", "opportunity", "account", "contact", "case", "task", "dashboard"]:
+                if obj_search in search_text or (obj_search + "s") in search_text:
+                    object_type = obj_search
+                    break
             
-            # Build search query focused on pattern and components
-            search_query = f"{pattern} layout with {' and '.join(components)}"
+            # Detect layout type from query intent
+            layout_type = "list"  # default
+            if "detail" in intent or "view" in intent:
+                layout_type = "detail"
+            elif "list" in intent or "show_all" in intent or "my" in search_text:
+                layout_type = "list"
+            elif "create" in intent or "new" in intent or "form" in intent:
+                layout_type = "form"
+            elif "dashboard" in intent or "metrics" in intent:
+                layout_type = "dashboard"
+            
+            # Build search query and variations
+            search_query = f"{object_type} {layout_type} layout with {' and '.join(components) if components else 'standard components'}"
+            search_queries = [
+                search_query,
+                f"show {object_type} {layout_type} view",
+                f"display {object_type} in {layout_type}"
+            ]
             
             return RAGQuery(
                 search_query=search_query,
-                filters={"pattern": pattern},
+                search_queries=search_queries,
+                object_type=object_type,
+                layout_type=layout_type,
+                filters={"pattern": layout_type},
                 confidence=0.7
             )
 

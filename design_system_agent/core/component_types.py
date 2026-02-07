@@ -32,6 +32,7 @@ class ComponentType:
     STACK = "Stack"              # Vertical/horizontal stacks, flex containers
     
     # Data Display Components
+    LIST = "List"                # Ordered/unordered lists (ul/ol)
     TABLE = "Table"              # Data tables with rows and columns
     METRIC = "Metric"            # KPI metrics, statistics
     DASHLET = "Dashlet"          # Dashboard widgets, mini charts
@@ -93,6 +94,7 @@ COMPONENT_CATEGORIES = {
         ComponentType.STACK,
     ],
     "data": [
+        ComponentType.LIST,
         ComponentType.TABLE,
         ComponentType.METRIC,
         ComponentType.DASHLET,
@@ -105,7 +107,6 @@ COMPONENT_CATEGORIES = {
     ],
 }
 
-# Active components used in CRM layouts (414 records)
 ACTIVE_COMPONENTS = [
     ComponentType.ALERT,
     ComponentType.AVATAR,
@@ -120,6 +121,8 @@ ACTIVE_COMPONENTS = [
     ComponentType.IMAGE,
     ComponentType.INSIGHTS,
     ComponentType.LABEL,
+    ComponentType.LINK,
+    ComponentType.LIST,
     ComponentType.LINK,
     ComponentType.LISTCARD,
     ComponentType.METRIC,

@@ -34,14 +34,8 @@ async def lifespan(app: FastAPI):
     # Check if summary dataset exists, generate if AUTO_GENERATE_DATASET is enabled
     auto_generate = os.getenv("AUTO_GENERATE_DATASET", "false").lower() == "true"
     if auto_generate:
-        logger.info("Auto-generating summary dataset on startup...")
-        try:
-            from design_system_agent.core.dataset_genertor.dataset_generator_controller import DataSetGeneratorController
-            controller = DataSetGeneratorController()
-            controller.generate_summary_dataset()
-            logger.info("✓ Summary dataset generated successfully")
-        except Exception as e:
-            logger.error("Failed to generate summary dataset: {}", str(e))
+        logger.info("Auto dataset generation is disabled. Run generate_dataset.py manually to create dataset.")
+        logger.info("Dataset path: dataset/crm_query_dataset.json")
     
     # Initialize services here (vector store, LLM client, etc.)
     yield

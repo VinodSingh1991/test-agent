@@ -3,176 +3,187 @@ Button Builder
 
 Builder for creating button components with fluent API.
 Single Responsibility: Build button components with common variants.
+Outputs TypeScript-compatible ComponentButtonProps.
 """
 
 from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class ButtonBuilder:
     """Builder for Button components with fluent interface"""
     
-    def __init__(self, text: str):
+    def __init__(self, label: str):
         """
         Initialize ButtonBuilder
         
         Args:
-            text: Button text content
+            label: Button text content
         """
-        self._text = text
-        self._variant = "primary"
-        self._size = "md"
-        self._type = "button"
-        self._disabled = False
-        self._full_width = False
-        self._icon: Optional[str] = None
-        self._on_click: Optional[str] = None
-        self._id: Optional[str] = None
+        self._type = "Button"
+        self._text = label
+        self._icon = ""
+        self._props = {
+            "type": "button",
+            "disabled": False
+        }
+        self._events = {}
+        self._classes = []
+    
+    def variant(self, variant: str) -> 'ButtonBuilder':
+        """Set variant: solid, outline, ghost, link"""
+        self._props["variant"] = variant
+        return self
+    
+    def solid(self) -> 'ButtonBuilder':
+        return self.variant("solid")
+    
+    def outline(self) -> 'ButtonBuilder':
+        return self.variant("outline")
+    
+    def ghost(self) -> 'ButtonBuilder':
+        return self.variant("ghost")
+    
+    def link(self) -> 'ButtonBuilder':
+        return self.variant("link")
+    
+    def color(self, color: str) -> 'ButtonBuilder':
+        """Set color: brand, success, error, warning, neutral"""
+        self._props["color"] = color
+        return self
     
     def primary(self) -> 'ButtonBuilder':
-        """Set button variant to primary"""
-        self._variant = "primary"
-        return self
-    
-    def secondary(self) -> 'ButtonBuilder':
-        """Set button variant to secondary"""
-        self._variant = "secondary"
-        return self
+        """Set color to brand (alias)"""
+        return self.color("brand")
     
     def success(self) -> 'ButtonBuilder':
-        """Set button variant to success"""
-        self._variant = "success"
-        return self
+        return self.color("success")
     
     def danger(self) -> 'ButtonBuilder':
-        """Set button variant to danger"""
-        self._variant = "danger"
-        return self
+        """Set color to error (alias for danger)"""
+        return self.color("error")
+    
+    def error(self) -> 'ButtonBuilder':
+        return self.color("error")
     
     def warning(self) -> 'ButtonBuilder':
-        """Set button variant to warning"""
-        self._variant = "warning"
+        return self.color("warning")
+    
+    def neutral(self) -> 'ButtonBuilder':
+        return self.color("neutral")
+    
+    def secondary(self) -> 'ButtonBuilder':
+        """Set to outline variant with neutral color"""
+        return self.outline().neutral()
+    
+    def size(self, size: str) -> 'ButtonBuilder':
+        """Set size: sm, md, lg, xl"""
+        self._props["size"] = size
         return self
     
     def small(self) -> 'ButtonBuilder':
-        """Set button size to small"""
-        self._size = "sm"
-        return self
+        return self.size("sm")
     
     def medium(self) -> 'ButtonBuilder':
-        """Set button size to medium"""
-        self._size = "md"
-        return self
+        return self.size("md")
     
     def large(self) -> 'ButtonBuilder':
-        """Set button size to lg"""
-        self._size = "lg"
+        return self.size("lg")
+    
+    def extra_large(self) -> 'ButtonBuilder':
+        return self.size("xl")
+    
+    def disabled(self, disabled: bool = True) -> 'ButtonBuilder':
+        """Set disabled state"""
+        self._props["disabled"] = disabled
+        return self
+    
+    def loading(self, loading: bool = True) -> 'ButtonBuilder':
+        """Set loading state"""
+        self._props["loading"] = loading
+        return self
+    
+    def full_width(self, full: bool = True) -> 'ButtonBuilder':
+        """Set full width"""
+        self._props["fullWidth"] = full
+        return self
+    
+    def left_icon(self, icon: str) -> 'ButtonBuilder':
+        """Set left icon"""
+        self._props["leftIcon"] = icon
+        return self
+    
+    def right_icon(self, icon: str) -> 'ButtonBuilder':
+        """Set right icon"""
+        self._props["rightIcon"] = icon
+        return self
+    
+    def with_icon(self, icon: str) -> 'ButtonBuilder':
+        """Add icon to button (left side)"""
+        return self.left_icon(icon)
+    
+    def icon_only(self, icon: str) -> 'ButtonBuilder':
+        """Make button icon-only"""
+        self._props["iconOnly"] = True
+        self._props["leftIcon"] = icon
+        return self
+    
+    def on_click(self, handler: str) -> 'ButtonBuilder':
+        """Add click event handler"""
+        self._props["onClick"] = handler
+        return self
+    
+    def button_type(self, btn_type: str) -> 'ButtonBuilder':
+        """Set button type: button, submit, reset"""
+        self._props["buttonType"] = btn_type
         return self
     
     def as_submit(self) -> 'ButtonBuilder':
         """Set button type to submit"""
-        self._type = "submit"
-        return self
+        return self.button_type("submit")
     
     def as_reset(self) -> 'ButtonBuilder':
         """Set button type to reset"""
-        self._type = "reset"
+        return self.button_type("reset")
+    
+    def with_id(self, id: str) -> 'ButtonBuilder':
+        """Set component ID"""
+        self._props["id"] = id
         return self
     
-    def disabled(self, disabled: bool = True) -> 'ButtonBuilder':
-        """
-        Set disabled state
-        
-        Args:
-            disabled: Whether button is disabled
-        """
-        self._disabled = disabled
-        return self
-    
-    def full_width(self, full: bool = True) -> 'ButtonBuilder':
-        """
-        Set full width
-        
-        Args:
-            full: Whether button should be full width
-        """
-        self._full_width = full
+    def with_classes(self, *classes: str) -> 'ButtonBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
         return self
     
     def with_icon(self, icon: str) -> 'ButtonBuilder':
-        """
-        Add icon to button
-        
-        Args:
-            icon: Icon name or class
-        """
+        """Set icon"""
         self._icon = icon
         return self
     
     def on_click(self, handler: str) -> 'ButtonBuilder':
-        """
-        Add click event handler
-        
-        Args:
-            handler: Click handler function name
-        """
-        self._on_click = handler
+        """Set onClick event handler"""
+        self._events["onClick"] = handler
         return self
     
-    def with_id(self, button_id: str) -> 'ButtonBuilder':
-        """
-        Set button ID
-        
-        Args:
-            button_id: Button identifier
-        """
-        self._id = button_id
-        return self
-    
-    def build(self) -> Component:
-        """
-        Build and return the Button component
-        
-        Returns:
-            Component instance
-        """
-        classes = ["bd-btn", f"bd-btn-{self._variant}"]
-        
-        if self._size != "md":
-            classes.append(f"bd-btn-{self._size}")
-        
-        if self._full_width:
-            classes.append("bd-w-full")
-        
-        props = {
+    def build(self) -> Dict[str, Any]:
+        """Build the button component"""
+        result = {
             "type": self._type,
-            "disabled": self._disabled
+            "props": self._props.copy(),
+            "value": {
+                "icon": self._icon,
+                "text": self._text
+            }
         }
         
-        events = {}
-        if self._on_click:
-            events["onClick"] = self._on_click
+        if self._classes:
+            result["props"]["className"] = " ".join(self._classes)
         
-        # Use value structure with icon and text
-        value = {
-            "icon": self._icon if self._icon else "",
-            "text": self._text
-        }
+        if self._events:
+            result["events"] = self._events.copy()
         
-        return Component(
-            type="Button",
-            classes=classes,
-            props=props,
-            value=value,
-            events=events if events else None,
-            id=self._id
-        )
+        return result
     
     def to_dict(self) -> Dict[str, Any]:
-        """
-        Build and convert to dictionary
-        
-        Returns:
-            Dictionary representation
-        """
-        return self.build().to_dict()
+        """Build and convert to dictionary"""
+        return self.build()

@@ -11,7 +11,7 @@ class FallbackLayoutBuilder:
     
     Responsibilities:
     - Create generic title + desc + list + badge layout
-    - Adapt to single or multi-entity data
+    - Adapt to single or multi-object data
     - Use design system components
     - Ensure usable UI even without perfect match
     """
@@ -33,35 +33,35 @@ class FallbackLayoutBuilder:
         Returns:
             Generic layout with standard components
         """
-        entities = self._detect_entities(data)
-        view_type = self._detect_view_type(analysis)
+        objects = self._detect_objects(data)
+        layout_type = self._detect_layout_type(analysis)
         
-        if len(entities) > 1:
-            return self._build_multi_entity_fallback(query, data, entities)
+        if len(objects) > 1:
+            return self._build_multi_object_fallback(query, data, objects)
         else:
-            return self._build_single_entity_fallback(query, data, entities[0], view_type)
+            return self._build_single_object_fallback(query, data, objects[0], layout_type)
     
-    def _detect_entities(self, data: Dict) -> List[str]:
-        """Detect entities in data"""
-        if "_entities" in data:
-            return data["_entities"]
+    def _detect_objects(self, data: Dict) -> List[str]:
+        """Detect objects in data"""
+        if "_objects" in data:
+            return data["_objects"]
         
-        entity_keys = ["account", "case", "lead", "task", "contact", "opportunity"]
-        entities = []
+        object_keys = ["account", "case", "lead", "task", "contact", "opportunity"]
+        objects = []
         
-        for key in entity_keys:
+        for key in object_keys:
             if key in data or f"{key}_data" in data:
-                entities.append(key)
+                objects.append(key)
         
-        if not entities and "_meta" in data:
-            entity_type = data["_meta"].get("entity_type")
-            if entity_type:
-                entities.append(entity_type)
+        if not objects and "_meta" in data:
+            object_type = data["_meta"].get("object_type")
+            if object_type:
+                objects.append(object_type)
         
-        return entities if entities else ["unknown"]
+        return objects if objects else ["unknown"]
     
-    def _detect_view_type(self, analysis: Optional[Dict]) -> str:
-        """Detect view type from analysis"""
+    def _detect_layout_type(self, analysis: Optional[Dict]) -> str:
+        """Detect layout type from analysis"""
         if not analysis:
             return "detail"
         
@@ -78,19 +78,19 @@ class FallbackLayoutBuilder:
         else:
             return "detail"
     
-    def _build_single_entity_fallback(
-        self, query: str, data: Dict, entity: str, view_type: str
+    def _build_single_object_fallback(
+        self, query: str, data: Dict, obj_type: str, layout_type: str
     ) -> Dict:
-        """Build fallback for single entity"""
+        """Build fallback for single object using new rows/pattern structure"""
         components = []
         
         # 1. Title/Heading
         components.append({
-            "type": "heading",
-            "props": {
-                "text": f"{entity.capitalize()} {view_type.capitalize()}",
-                "level": 1,
-                "className": "fallback-title"
+            "type": "Heading",
+            "props": {"level": 1},
+            "value": {
+                "icon": "",
+                "text": f"{obj_type.capitalize()} {layout_type.capitalize()}"
             }
         })
         
@@ -98,10 +98,11 @@ class FallbackLayoutBuilder:
         desc_text = self._extract_description(data)
         if desc_text:
             components.append({
-                "type": "description",
-                "props": {
-                    "text": desc_text,
-                    "className": "fallback-description"
+                "type": "Description",
+                "props": {},
+                "value": {
+                    "icon": "",
+                    "text": desc_text
                 }
             })
         
@@ -109,11 +110,11 @@ class FallbackLayoutBuilder:
         status = self._extract_status(data)
         if status:
             components.append({
-                "type": "badge",
-                "props": {
-                    "text": status,
-                    "variant": self._status_variant(status),
-                    "className": "fallback-badge"
+                "type": "Badge",
+                "props": {"variant": self._status_variant(status)},
+                "value": {
+                    "icon": "",
+                    "text": status
                 }
             })
         
@@ -121,95 +122,130 @@ class FallbackLayoutBuilder:
         list_items = self._extract_list_items(data)
         if list_items:
             components.append({
-                "type": "list",
+                "type": "List",
                 "props": {
+                    "ordered": False,
+                    "variant": "default",
+                    "spacing": "medium",
+                    "marker": "disc"
+                },
+                "value": {
                     "items": list_items,
-                    "className": "fallback-list"
+                    "additionalInfo": ""
                 }
             })
         
-        # 5. Action Buttons (generic)
-        components.extend(self._build_generic_actions(entity))
-        
+        # Return in new simplified format with rows/pattern_info
         return {
-            "id": f"fallback_{entity}_{view_type}",
-            "pattern": "fallback_generic",
-            "entity": entity,
-            "view_type": view_type,
-            "layout": "vertical_stack",
-            "components": components,
+            "id": f"fallback_{obj_type}_{layout_type}",
+            "query": query,
+            "object_type": obj_type,
+            "layout_type": layout_type,
+            "patterns_used": ["fallback"],
+            "layout": {
+                "query": query,
+                "object_type": obj_type,
+                "rows": [
+                    {
+                        "pattern_type": "fallback",
+                        "pattern_info": components
+                    }
+                ]
+            },
             "metadata": {
                 "source": "fallback",
-                "query": query,
-                "auto_generated": True
-            }
+                "auto_generated": True,
+                "num_rows": 1,
+                "num_components": len(components)
+            },
+            "score": 0.6
         }
     
-    def _build_multi_entity_fallback(
-        self, query: str, data: Dict, entities: List[str]
+    def _build_multi_object_fallback(
+        self, query: str, data: Dict, objects: List[str]
     ) -> Dict:
-        """Build fallback for multiple entities"""
-        components = []
+        """Build fallback for multiple objects using new rows/pattern structure"""
+        all_components = []
         
         # Overall title
-        components.append({
-            "type": "heading",
-            "props": {
-                "text": f"{' & '.join([e.capitalize() for e in entities])}",
-                "level": 1,
-                "className": "fallback-multi-title"
+        all_components.append({
+            "type": "Heading",
+            "props": {"level": 1},
+            "value": {
+                "icon": "",
+                "text": f"{' & '.join([o.capitalize() for o in objects])}"
             }
         })
         
-        # Section for each entity
-        for entity in entities:
-            entity_data = data.get(entity) or data.get(f"{entity}_data") or {}
+        # Section for each object
+        for obj_type in objects:
+            obj_data = data.get(obj_type) or data.get(f"{obj_type}_data") or {}
             
-            # Entity section header
-            components.append({
-                "type": "heading",
-                "props": {
-                    "text": entity.capitalize(),
-                    "level": 2,
-                    "className": f"fallback-section-{entity}"
+            # Object section header
+            all_components.append({
+                "type": "Heading",
+                "props": {"level": 2},
+                "value": {
+                    "icon": "",
+                    "text": obj_type.capitalize()
                 }
             })
             
             # Status badge
-            status = self._extract_status(entity_data)
+            status = self._extract_status(obj_data)
             if status:
-                components.append({
-                    "type": "badge",
-                    "props": {
-                        "text": status,
-                        "variant": self._status_variant(status)
+                all_components.append({
+                    "type": "Badge",
+                    "props": {"variant": self._status_variant(status)},
+                    "value": {
+                        "icon": "",
+                        "text": status
                     }
                 })
             
             # Field list
-            list_items = self._extract_list_items(entity_data)
+            list_items = self._extract_list_items(obj_data)
             if list_items:
-                components.append({
-                    "type": "list",
+                all_components.append({
+                    "type": "List",
                     "props": {
-                        "items": list_items[:5],  # Limit per entity
-                        "className": f"fallback-list-{entity}"
+                        "ordered": False,
+                        "variant": "default",
+                        "spacing": "medium",
+                        "marker": "disc"
+                    },
+                    "value": {
+                        "items": list_items[:5],  # Limit per object
+                        "additionalInfo": ""
                     }
                 })
         
+        # Return in new simplified format
         return {
-            "id": f"fallback_multi_{'_'.join(entities)}",
-            "pattern": "fallback_multi_entity",
-            "entity": entities[0],  # Primary entity
-            "view_type": "combined",
-            "layout": "vertical_stack",
-            "components": components,
+            "id": f"fallback_multi_{'_'.join(objects)}",
+            "query": query,
+            "object_type": objects[0],  # Primary object
+            "layout_type": "combined",
+            "patterns_used": ["fallback_multi"],
+            "layout": {
+                "query": query,
+                "object_type": objects[0],
+                "rows": [
+                    {
+                        "pattern_type": "fallback_multi",
+                        "pattern_info": all_components
+                    }
+                ]
+            },
             "metadata": {
                 "source": "fallback",
-                "query": query,
-                "entities": entities,
-                "auto_generated": True
-            }
+                "auto_generated": True,
+                "multi_object": True,
+                "objects": objects,
+                "num_rows": 1,
+                "num_components": len(all_components)
+            },
+            "score": 0.6
         }
     
     def _extract_description(self, data: Dict) -> Optional[str]:

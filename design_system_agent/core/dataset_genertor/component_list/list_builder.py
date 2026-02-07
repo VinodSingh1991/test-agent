@@ -3,10 +3,10 @@ List Builder
 
 Builder for creating list components with fluent API.
 Single Responsibility: Build ordered/unordered list components.
+Outputs TypeScript-compatible ComponentListProps.
 """
 
 from typing import Dict, Any, List, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class ListBuilder:
@@ -17,30 +17,70 @@ class ListBuilder:
         Initialize ListBuilder
         
         Args:
-            *items: List items as strings
+            *items: List items as strings or dicts
         """
-        self._items = list(items)
-        self._ordered = False
+        self._type = "List"
+        self._items = [{"id": f"item-{i}", "content": item} for i, item in enumerate(items)]
+        self._additional_info = ""
+        self._props = {
+            "ordered": False,
+            "variant": "plain",
+            "spacing": "normal",
+            "marker": "disc"
+        }
+        self._events = {}
         self._classes = []
-        self._id: Optional[str] = None
     
-    def ordered(self) -> 'ListBuilder':
-        """Make this an ordered list (ol)"""
-        self._ordered = True
+    def items(self, items: List[Dict[str, Any]]) -> 'ListBuilder':
+        """
+        Set list items
+        Each item: {id, content, icon?, avatar?}
+        """
+        self._items = items
+        return self
+    
+    def ordered(self, ordered: bool = True) -> 'ListBuilder':
+        """Make this an ordered list"""
+        self._props["ordered"] = ordered
+        if ordered:
+            self._props["marker"] = "decimal"
         return self
     
     def unordered(self) -> 'ListBuilder':
-        """Make this an unordered list (ul)"""
-        self._ordered = False
+        """Make this an unordered list"""
+        self._props["ordered"] = False
+        self._props["marker"] = "disc"
         return self
     
-    def add_item(self, item: str) -> 'ListBuilder':
+    def variant(self, variant: str) -> 'ListBuilder':
+        """Set variant: plain, bordered, divided"""
+        self._props["variant"] = variant
+        return self
+    
+    def spacing(self, spacing: str) -> 'ListBuilder':
+        """Set spacing: compact, normal, relaxed"""
+        self._props["spacing"] = spacing
+        return self
+    
+    def marker(self, marker: str) -> 'ListBuilder':
+        """Set marker: disc, circle, square, decimal, none"""
+        self._props["marker"] = marker
+        return self
+    
+    def add_item(self, content: str, icon: Optional[str] = None, avatar: Optional[str] = None) -> 'ListBuilder':
         """
         Add an item to the list
         
         Args:
-            item: List item text
+            content: List item text
+            icon: Optional icon
+            avatar: Optional avatar
         """
+        item = {"id": f"item-{len(self._items)}", "content": content}
+        if icon:
+            item["icon"] = icon
+        if avatar:
+            item["avatar"] = avatar
         self._items.append(item)
         return self
     
@@ -51,41 +91,24 @@ class ListBuilder:
         Args:
             *items: List item texts
         """
-        self._items.extend(items)
+        for item in items:
+            self.add_item(item)
         return self
     
     def with_disc(self) -> 'ListBuilder':
-        """Use disc bullets (for unordered lists)"""
-        if "bd-list-disc" not in self._classes:
-            self._classes.append("bd-list-disc")
+        """Use disc bullets"""
+        self._props["marker"] = "disc"
         return self
     
     def with_circle(self) -> 'ListBuilder':
-        """Use circle bullets (for unordered lists)"""
-        if "bd-list-circle" not in self._classes:
-            self._classes.append("bd-list-circle")
+        """Use circle bullets"""
+        self._props["marker"] = "circle"
         return self
     
     def with_decimal(self) -> 'ListBuilder':
-        """Use decimal numbers (for ordered lists)"""
-        if "bd-list-decimal" not in self._classes:
-            self._classes.append("bd-list-decimal")
-        return self
-    
-    def with_padding(self) -> 'ListBuilder':
-        """Add left padding"""
-        if "bd-pl-24" not in self._classes:
-            self._classes.append("bd-pl-24")
-        return self
-    
-    def with_classes(self, *classes: str) -> 'ListBuilder':
-        """
-        Add custom CSS classes
-        
-        Args:
-            *classes: CSS class names
-        """
-        self._classes.extend(classes)
+        """Use decimal numbers"""
+        self._props["marker"] = "decimal"
+        self._props["ordered"] = True
         return self
     
     def with_id(self, list_id: str) -> 'ListBuilder':
@@ -95,37 +118,48 @@ class ListBuilder:
         Args:
             list_id: List identifier
         """
-        self._id = list_id
+        self._props["id"] = list_id
         return self
     
-    def build(self) -> Component:
+    def with_classes(self, *classes: str) -> 'ListBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def additional_info(self, info: str) -> 'ListBuilder':
+        """Set additional info"""
+        self._additional_info = info
+        return self
+    
+    def on_item_click(self, handler: str) -> 'ListBuilder':
+        """Set item click event handler"""
+        self._events["onItemClick"] = handler
+        return self
+    
+    def build(self) -> Dict[str, Any]:
         """
         Build and return the List component
         
         Returns:
-            Component instance
+            Dictionary representation
         """
-        list_type = "ol" if self._ordered else "ul"
+        props = self._props.copy()
+        if self._classes:
+            props["className"] = " ".join(self._classes)
         
-        # Default classes
-        default_classes = ["bd-list-disc", "bd-pl-24"] if not self._ordered else ["bd-list-decimal", "bd-pl-24"]
+        result = {
+            "type": self._type,
+            "props": props,
+            "value": {
+                "items": self._items,
+                "additionalInfo": self._additional_info
+            }
+        }
         
-        # Use custom classes if provided, otherwise use defaults
-        classes = self._classes.copy() if self._classes else default_classes
+        if self._events:
+            result["events"] = self._events.copy()
         
-        # Create list items
-        list_items = [
-            {"type": "li", "children": item}
-            for item in self._items
-        ]
-        
-        return Component(
-            type=list_type,
-            classes=classes,
-            props={},
-            children=list_items,
-            id=self._id
-        )
+        return result
     
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -134,4 +168,4 @@ class ListBuilder:
         Returns:
             Dictionary representation
         """
-        return self.build().to_dict()
+        return self.build()

@@ -67,6 +67,8 @@ class LLMLayoutSelectorFiller:
         selected_layout = selection_result["selected_layout"]
         confidence = selection_result["confidence"]
         reasoning = selection_result["reasoning"]
+        is_adapted = selection_result.get("is_adapted", False)
+        adaptations = selection_result.get("adaptations", [])
         
         # AGENT 2: Data Filling - Returns complete layout structure
         filled_layout = self.filling_agent.fill_layout_with_data(
@@ -87,8 +89,8 @@ class LLMLayoutSelectorFiller:
             "selected_layout": filled_layout,
             "confidence": confidence,
             "reasoning": reasoning,
-            "reformed": False,
-            "adaptations": [],
+            "is_adapted": is_adapted,
+            "adaptations": adaptations,
             "llm_powered": True,
             "validation": {
                 "is_valid": validation.is_valid,

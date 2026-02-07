@@ -3,117 +3,118 @@ Chip Builder
 
 Builder for creating chip/tag components (similar to badge but interactive).
 Single Responsibility: Build interactive chips with optional close button.
+Outputs TypeScript-compatible ComponentChipProps.
 """
 
 from typing import Dict, Any, Optional
-from design_system_agent.core.dataset_genertor.component_layout.builder.models import Component
 
 
 class ChipBuilder:
     """Builder for Chip components with fluent interface"""
     
-    def __init__(self, text: str):
+    def __init__(self, label: str):
         """Initialize ChipBuilder"""
-        self._text = text
-        self._variant = "default"
-        self._size = "md"
-        self._closeable = False
-        self._icon: Optional[str] = None
-        self._avatar: Optional[str] = None
-        self._clickable = False
-        self._id: Optional[str] = None
+        self._props = {
+            "type": "Chip",
+            "label": label,
+            "variant": "filled",
+            "color": "brand",
+            "size": "md",
+            "closeable": False,
+            "clickable": False
+        }
+        self._classes = []
     
-    def primary(self) -> 'ChipBuilder':
-        """Set chip variant to primary"""
-        self._variant = "primary"
+    def variant(self, variant: str) -> 'ChipBuilder':
+        """Set variant: filled, outlined"""
+        self._props["variant"] = variant
         return self
     
-    def secondary(self) -> 'ChipBuilder':
-        """Set chip variant to secondary"""
-        self._variant = "secondary"
+    def color(self, color: str) -> 'ChipBuilder':
+        """Set color: brand, success, error, warning, info, gray"""
+        self._props["color"] = color
         return self
     
-    def success(self) -> 'ChipBuilder':
-        """Set chip variant to success"""
-        self._variant = "success"
+    def size(self, size: str) -> 'ChipBuilder':
+        """Set size: sm, md, lg"""
+        self._props["size"] = size
         return self
     
-    def warning(self) -> 'ChipBuilder':
-        """Set chip variant to warning"""
-        self._variant = "warning"
-        return self
-    
-    def danger(self) -> 'ChipBuilder':
-        """Set chip variant to danger"""
-        self._variant = "danger"
-        return self
-    
-    def small(self) -> 'ChipBuilder':
-        """Set chip size to small"""
-        self._size = "sm"
-        return self
-    
-    def large(self) -> 'ChipBuilder':
-        """Set chip size to large"""
-        self._size = "lg"
-        return self
-    
-    def closeable(self) -> 'ChipBuilder':
+    def closeable(self, closeable: bool = True) -> 'ChipBuilder':
         """Make chip closeable"""
-        self._closeable = True
+        self._props["closeable"] = closeable
         return self
     
-    def clickable(self) -> 'ChipBuilder':
+    def clickable(self, clickable: bool = True) -> 'ChipBuilder':
         """Make chip clickable"""
-        self._clickable = True
+        self._props["clickable"] = clickable
+        return self
+    
+    def icon(self, icon: str) -> 'ChipBuilder':
+        """Set icon"""
+        self._props["icon"] = icon
+        return self
+    
+    def avatar(self, avatar: str) -> 'ChipBuilder':
+        """Set avatar"""
+        self._props["avatar"] = avatar
+        return self
+    
+    def on_close(self, callback: str) -> 'ChipBuilder':
+        """Set close callback"""
+        self._props["onClose"] = callback
+        return self
+    
+    def on_click(self, callback: str) -> 'ChipBuilder':
+        """Set click callback"""
+        self._props["onClick"] = callback
         return self
     
     def with_icon(self, icon: str) -> 'ChipBuilder':
-        """Add icon to chip"""
-        self._icon = icon
-        return self
+        return self.icon(icon)
     
     def with_avatar(self, avatar: str) -> 'ChipBuilder':
-        """Add avatar to chip"""
-        self._avatar = avatar
-        return self
+        return self.avatar(avatar)
+    
+    def success(self) -> 'ChipBuilder':
+        return self.color("success")
+    
+    def warning(self) -> 'ChipBuilder':
+        return self.color("warning")
+    
+    def danger(self) -> 'ChipBuilder':
+        return self.color("error")
+    
+    def primary(self) -> 'ChipBuilder':
+        """Set color to brand (alias)"""
+        return self.color("brand")
+    
+    def secondary(self) -> 'ChipBuilder':
+        """Set color to gray (alias)"""
+        return self.color("gray")
+    
+    def small(self) -> 'ChipBuilder':
+        return self.size("sm")
+    
+    def large(self) -> 'ChipBuilder':
+        return self.size("lg")
     
     def with_id(self, id: str) -> 'ChipBuilder':
         """Set component ID"""
-        self._id = id
+        self._props["id"] = id
         return self
     
-    def build(self) -> Component:
+    def with_classes(self, *classes: str) -> 'ChipBuilder':
+        """Add custom CSS classes"""
+        self._classes.extend(classes)
+        return self
+    
+    def build(self) -> Dict[str, Any]:
         """Build the chip component"""
-        classes = [
-            "bd-chip",
-            f"bd-chip-{self._variant}",
-            f"bd-chip-{self._size}"
-        ]
-        
-        if self._clickable:
-            classes.append("bd-chip-clickable")
-        
-        # Use value structure with icon and text
-        icon_value = ""
-        if self._icon:
-            icon_value = self._icon
-        elif self._avatar:
-            icon_value = self._avatar
-        
-        value = {
-            "icon": icon_value,
-            "text": self._text
-        }
-        
-        return Component(
-            type="Chip",
-            classes=classes,
-            props={},
-            value=value,
-            id=self._id
-        )
+        if self._classes:
+            self._props["className"] = " ".join(self._classes)
+        return self._props.copy()
     
     def to_dict(self) -> Dict[str, Any]:
         """Build and convert to dictionary"""
-        return self.build().to_dict()
+        return self.build()
